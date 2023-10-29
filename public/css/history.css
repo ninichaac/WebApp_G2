@@ -272,6 +272,16 @@ nav.close ~ .dashboard .top{
 .dashboard .dash-content{
     padding-top: 100px;
 }
+.dashboard .top .date-picker{
+    width: 200px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+*, *.date-picker::after, *.date-picker::before {
+    box-sizing: border-box;
+  }
 /* .dash-content .title{
     display: flex;
     align-items: center;
