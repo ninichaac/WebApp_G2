@@ -309,6 +309,14 @@ nav.close ~ .dashboard .top{
     color: var(--text-color);
 }
 
+.activity-data .type .data-list{
+    text-align: center;
+}
+
+.activity-data .joined .data-list{
+    text-align: center;
+}
+
 @media (max-width: 1000px) {
     nav{
         width: 73px;
