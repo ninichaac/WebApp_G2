@@ -67,7 +67,7 @@
     <script>
          document.getElementById('student').addEventListener('change', function () {
         if (this.checked) {
-            document.getElementById('p').innerHTML = 'LOG IN as Student';
+            document.getElementById('p').innerHTML = 'Log in as Student';
             document.getElementById('signin').innerHTML = `Not have an account? <a href="">Sign In</a>`;
         } else {
             document.getElementById('p').innerHTML = '';
@@ -77,14 +77,14 @@
 
     document.getElementById('staff').addEventListener('change', function () {
         if (this.checked) {
-            document.getElementById('p').innerHTML = 'LOG IN as Staff';
+            document.getElementById('p').innerHTML = 'Log in as Staff';
             document.getElementById('signin').innerHTML = '';
         }
     });
 
     document.getElementById('lecturer').addEventListener('change', function () {
         if (this.checked) {
-            document.getElementById('p').innerHTML = 'LOG IN as Lecturer';
+            document.getElementById('p').innerHTML = 'Log in as Lecturer';
             document.getElementById('signin').innerHTML = '';
             document.querySelector('button').onclick = () => {
                 window.location.replace('dashboard.html');
