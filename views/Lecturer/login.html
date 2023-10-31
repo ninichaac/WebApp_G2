@@ -13,7 +13,7 @@
 
 <body>
     <div class="container text-center pb-2 text-white" id="login">
-        <h1><b>Log In Account</b></h1>
+        <h1><b>Login Account</b></h1>
     </div>
     <div class="container pt-2" id="input">
         <p class="ps-2 mt-2">Please select your role</p>
@@ -55,12 +55,12 @@
         <div>
             <input type="checkbox" name="" id="savepass"> Save Password
             <a href="/views/forgetpass.html" class="" id="forget">Forget Password?</a>
-            <p id="signin" class="mt-2 ms-4"></p>
+            <p id="signup" class="mt-2 ms-4"></p>
         </div>
 
         <div class="text-center">
             <p id="p"></p>
-            <button type="submit" class="btn btn-dark" id="loginButton">LOG IN</button>
+            <button type="submit" class="btn btn-dark" id="loginButton">LOGIN</button>
         </div>
     </div>
 
@@ -68,24 +68,24 @@
          document.getElementById('student').addEventListener('change', function () {
         if (this.checked) {
             document.getElementById('p').innerHTML = 'Log in as Student';
-            document.getElementById('signin').innerHTML = `Not have an account? <a href="">Sign In</a>`;
+            document.getElementById('signup').innerHTML = `Not have an account? <a href="">Sign Up</a>`;
         } else {
             document.getElementById('p').innerHTML = '';
-            document.getElementById('signin').innerHTML = '';
+            document.getElementById('signup').innerHTML = '';
         }
     });
 
     document.getElementById('staff').addEventListener('change', function () {
         if (this.checked) {
             document.getElementById('p').innerHTML = 'Log in as Staff';
-            document.getElementById('signin').innerHTML = '';
+            document.getElementById('signup').innerHTML = '';
         }
     });
 
     document.getElementById('lecturer').addEventListener('change', function () {
         if (this.checked) {
             document.getElementById('p').innerHTML = 'Log in as Lecturer';
-            document.getElementById('signin').innerHTML = '';
+            document.getElementById('signup').innerHTML = '';
             document.querySelector('button').onclick = () => {
                 window.location.replace('dashboard.html');
             }
