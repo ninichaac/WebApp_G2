@@ -49,7 +49,7 @@ body {
     border-radius: 15px;
     box-shadow: 1px 1px 1px 1px rgb(165, 165, 165);
     width: 650px;
-    height: 450px;
+    height: 470px;
 }
 
 #login {
@@ -58,7 +58,7 @@ body {
 
 #savepass {
     margin-left: 20px;
-    margin-top: 15px;
+    margin-top: 10px;
 
 }
 

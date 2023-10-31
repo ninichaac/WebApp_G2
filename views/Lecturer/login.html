@@ -19,7 +19,7 @@
         <p class="ps-2">Please select your role</p>
         <div class="container text-center">
             <label class="role pe-4">
-                <input type="radio" name="layout" value="L" />
+                <input type="radio" name="role" value="student" id="student" />
                 <div class="image text-center pt-2"><img src="/public/img/student.png"
                         style="width: 70px; height: 75px;">
                     <p>Student</p>
@@ -28,14 +28,14 @@
 
 
             <label class="role pe-4">
-                <input type="radio" name="layout" value="S" />
+                <input type="radio" name="role" value="staff" id="staff" />
                 <div class="image text-center pt-2"><img src="/public/img/staff.png" style="width: 70px; height: 75px;">
                     <p>Staff</p>
                 </div>
             </label>
 
             <label class="role">
-                <input type="radio" name="layout" value="T" />
+                <input type="radio" name="role" value="lecturer" id="lecturer" />
                 <div class="image text-center pt-2"><img src="/public/img/lecturer.png"
                         style="width: 70px; height: 75px;">
                     <p>Lecturer</p>
@@ -55,17 +55,45 @@
         <div>
             <input type="checkbox" name="" id="savepass"> Save Password
             <a href="/views/forgetpass.html" class="" id="forget">Forget Password?</a>
+            <p id="signin" class="mt-2 ms-4"></p>
         </div>
 
-        <div class="text-center mt-5">
-            <button type="submit" class="btn btn-dark">LOGIN</button>
+        <div class="text-center">
+            <p id="p"></p>
+            <button type="submit" class="btn btn-dark" id="loginButton">LOG IN</button>
         </div>
     </div>
 
     <script>
-        document.querySelector('button').onclick = () => {
-            window.location.replace('dashboard.html');
+         document.getElementById('student').addEventListener('change', function () {
+        if (this.checked) {
+            document.getElementById('p').innerHTML = 'LOG IN as Student';
+            document.getElementById('signin').innerHTML = `Not have an account? <a href="">Sign In</a>`;
+        } else {
+            document.getElementById('p').innerHTML = '';
+            document.getElementById('signin').innerHTML = '';
         }
+    });
+
+    document.getElementById('staff').addEventListener('change', function () {
+        if (this.checked) {
+            document.getElementById('p').innerHTML = 'LOG IN as Staff';
+            document.getElementById('signin').innerHTML = '';
+        }
+    });
+
+    document.getElementById('lecturer').addEventListener('change', function () {
+        if (this.checked) {
+            document.getElementById('p').innerHTML = 'LOG IN as Lecturer';
+            document.getElementById('signin').innerHTML = '';
+            document.querySelector('button').onclick = () => {
+                window.location.replace('dashboard.html');
+            }
+        }
+    });
+
+
+
     </script>
 
 </body>
