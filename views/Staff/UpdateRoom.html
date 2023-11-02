@@ -1,186 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="/public/css/Staff/UpdateRoom.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/public/css/Staff/UpdateRoom.css">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <title>UpdateRoom</title>
+  <title>UpdateRoom</title>
 
-  </head>
+</head>
 
 
-  <body>
+<body>
 
-    <!-- nav -->
-    <nav>
-      <div class="logo-name pt-3">
-          <div class="logo-image">
-              <img src="/public/img/staff.png" alt="">
-          </div>
+  <!-- nav -->
+  <nav>
+    <div class="logo-name pt-3">
+      <div class="logo-image">
+        <img src="/public/img/staff.png" alt="">
       </div>
-      <div class="logo-name1">
-          <h3 class="logo_name1">Harry Potter</h3>
-          <!-- <div class="role-box"> -->
-            <p class="logo_name1">Staff</p>
-          <!-- </div> -->
-      </div>
-  
-      <div class="menu-items">
-          <ul class="nav-links">
-              <li>
-                <a href="/views/Staff/dashboard.html">
-                  <i class="uil uil-estate"></i>
-                  <span class="link-name">Dashboard</span>
-                </a>
-              </li>
-              <li>
-                <a href="/views/Staff/UpdateRoom.html">
-                  <i class="uil uil-arrow-circle-up"></i>
-                  <span class="link-name">Update Room</span>
-                </a>                
-              </li>
-              <li>
-                <a href="/views/Staff/roomlist.html">
-                  <i class="uil uil-apps"></i>
-                  <span class="link-name">Room List</span>
-                </a>
-              </li>
-              <li>
-                <a href="/views/Staff/status_staff.html"><!--link -->
-                  <i class="uil uil-chart"></i>
-                  <span class="link-name">Reserving Status</span>
-                </a>
-              </li>
-              <li>
-                <a href="/views/Staff/history.html"><!--link -->
-                  <i class="uil uil-history"></i>
-                  <span class="link-name">History</span>
-                </a>
-              </li>
-            </ul>
-  
-          <ul class="logout-mode">
-              <li>
-                  <a href="/views/login.html">
-                      <i class="uil uil-signout" style="color: red;"></i>
-                      <span class="link-name1 ">Log out</span>
-                  </a>
-              </li>
-          </ul>
-      </div>
+    </div>
+    <div class="logo-name1">
+      <h3 class="logo_name1">Harry Potter</h3>
+      <!-- <div class="role-box"> -->
+      <p class="logo_name1">Staff</p>
+      <!-- </div> -->
+    </div>
+
+    <div class="menu-items">
+      <ul class="nav-links">
+        <li>
+          <a href="/views/Staff/dashboard.html">
+            <i class="uil uil-estate"></i>
+            <span class="link-name">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/views/Staff/UpdateRoom.html">
+            <i class="uil uil-arrow-circle-up"></i>
+            <span class="link-name">Update Room</span>
+          </a>
+        </li>
+        <li>
+          <a href="/views/Staff/roomlist.html">
+            <i class="uil uil-apps"></i>
+            <span class="link-name">Room List</span>
+          </a>
+        </li>
+        <li>
+          <a href="/views/Staff/status_staff.html"><!--link -->
+            <i class="uil uil-chart"></i>
+            <span class="link-name">Reserving Status</span>
+          </a>
+        </li>
+        <li>
+          <a href="/views/Staff/history.html"><!--link -->
+            <i class="uil uil-history"></i>
+            <span class="link-name">History</span>
+          </a>
+        </li>
+      </ul>
+
+      <ul class="logout-mode">
+        <li>
+          <a href="/views/login.html">
+            <i class="uil uil-signout" style="color: red;"></i>
+            <span class="link-name1 ">Log out</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </nav>
 
 
-    <section class="dashboard">
-      <div class="top">
-        <i class="uil uil-bars sidebar-toggle"></i>
-        <h1 class="dash">Update Room</h1>
-        <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
-        <div class="search-box">
-          <i class="uil uil-search"></i>
-          <input type="text" placeholder="Search here...">
-        </div>
+  <section class="dashboard">
+    <div class="top">
+      <i class="uil uil-bars sidebar-toggle"></i>
+      <h1 class="dash">Update Room</h1>
+      <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+      <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search here...">
+      </div>
 
-        <!--<img src="images/profile.jpg" alt="">-->
+      <!--<img src="images/profile.jpg" alt="">-->
+    </div>
+
+
+    <div class="dash-content">
+      <div class="title d-flex justify-content-end">
+        <!-- ADD new room -->
+        <button id="showAddRoom" class="rounded-3 p-1"
+          style="background: #6ab1da; color:white; border: 1px solid white; margin-left: auto;">
+          <span style="display: inline-flex; align-items: center; width: 155px; height: 15px;">
+            <i class="uil uil-plus" style="background: none; border: none;"></i>
+            ADD new room
+          </span>
+        </button>
+
+        <div id="addRoomBox" class="add-room-box">
+          <h2>Add New Room</h2>
+          <form id="roomForm">
+            <label for="roomNum">Room Number:</label>
+            <input type="text" id="roomNum" name="roomNum" required>
+
+            <label for="roomLoca">located(building):</label>
+            <input type="text" id="roomLoca" name="roomLoca" required>
+            <label for="roomLoca">How many people can it accommodate:</label>
+            <input type="text" id="people" name="people" required>
+
+            <span style="display: inline-flex; align-items: center;">
+              <label for="roomStatus">Room Status:</label>
+              <select id="roomStatus" name="roomStatus" required>
+                <option value="Available">Available</option>
+                <option value="Disabled">Disabled</option>
+                <option value="Reserved">Reserved</option>
+              </select>
+            </span>
+
+            <br>
+            <button id="addRoomButton" type="button">Add Room</button>
+            <button id="cancelButton" class="custom-cancel-button" type="button">Cancel</button>
+          </form>
+        </div>
+        <!-- ADD new room -->
+
       </div>
 
 
-      <div class="dash-content">
-        <div class="title d-flex justify-content-end">
-          <!-- ADD new room -->
-          <button id="showAddRoom" class="rounded-3 p-1"
-            style="background: #6ab1da; color:white; border: 1px solid white; margin-left: auto;">
-            <span style="display: inline-flex; align-items: center; width: 155px; height: 15px;">
-              <i class="uil uil-plus" style="background: none; border: none;"></i>
-              ADD new room
+      <div class="boxes">
+        <div class="box box1">
+          <canvas id="donutChart" style="padding:10px;"></canvas>
+        </div>
+
+
+        <div class="box box2">
+          <div class="data1">
+            <span class="data-title text-center" style="font-weight: bold; font-size:large">
+              <i class="uil uil-check-circle" style="color: #8FD88F; font-size: 24px;"></i>
+              Available Room
             </span>
-          </button>
-
-          <div id="addRoomBox" class="add-room-box">
-            <h2>Add New Room</h2>
-            <form id="roomForm">
-              <label for="roomNum">Room Number:</label>
-              <input type="text" id="roomNum" name="roomNum" required>
-
-              <label for="roomLoca">located(building):</label>
-              <input type="text" id="roomLoca" name="roomLoca" required>
-
-              <span style="display: inline-flex; align-items: center;">
-                <label for="roomStatus">Room Status:</label>
-                <select id="roomStatus" name="roomStatus" required>
-                  <option value="Available">Available</option>
-                  <option value="Disabled">Disabled</option>
-                  <option value="Reserved">Reserved</option>
-                </select>
-              </span>
-
-              <br>
-              <button id="addRoomButton" type="button">Add Room</button>
-              <button id="cancelButton" class="custom-cancel-button" type="button">Cancel</button>
-            </form>
+            <hr>
+            <div id="availableRooms" style="padding-left: 35px;" class="data-container">
+              <!-- Available room data will be displayed here -->
+            </div>
           </div>
-          <!-- ADD new room -->
 
+          <div class="data2">
+            <span class="data-title text-center" style="font-weight: bold; font-size:large">
+              <i class="uil uil-times-circle" style="color: #8e2424; font-size: 24px;"></i>
+              Disabled Room
+            </span>
+            <hr>
+            <div id="disabledRooms" style="padding-left: 35px;" class="data-container">
+              <!-- Disabled room data will be displayed here -->
+            </div>
+          </div>
+
+          <div class="row justify-content-center mt-3">
+            <div class="col-4">
+              <button id="Disable" class="rounded-3 p-1 custom-disable-button w-100">
+                Disable
+              </button>
+            </div>
+          </div>
+
+          <div class="row justify-content-center mt-3">
+            <div class="col-4">
+              <button id="Available" class="rounded-3 p-1 custom-available-button w-100">
+                Available
+              </button>
+            </div>
+          </div>
         </div>
 
+      </div>
 
-        <div class="boxes">
-          <div class="box box1">
-            <canvas id="donutChart" style="padding:10px;"></canvas>
-          </div>
-
-
-          <div class="box box2">
-            <div class="data1" >
-              <span class="data-title text-center" style="font-weight: bold; font-size:large">
-                <i class="uil uil-check-circle" style="color: #8FD88F; font-size: 24px;"></i>
-                Available Room
-              </span>
-              <hr>
-              <div id="availableRooms" style="padding-left: 35px;" class="data-container">
-                <!-- Available room data will be displayed here -->
-              </div>
-            </div>
-
-            <div class="data2">
-              <span class="data-title text-center" style="font-weight: bold; font-size:large">
-                <i class="uil uil-times-circle" style="color: #8e2424; font-size: 24px;"></i>
-                Disabled Room
-              </span>
-              <hr>
-              <div id="disabledRooms" style="padding-left: 35px;" class="data-container">
-                <!-- Disabled room data will be displayed here -->
-              </div>
-            </div>
-            
-            <div class="row justify-content-center mt-3">
-              <div class="col-4">
-                <button id="Disable" class="rounded-3 p-1 custom-disable-button w-100">
-                  Disable
-                </button>
-              </div>
-            </div>
-
-            <div class="row justify-content-center mt-3">
-              <div class="col-4">
-                <button id="Available" class="rounded-3 p-1 custom-available-button w-100">
-                  Available
-                </button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-    </section>
-  </body>
-  <script src="/public/js/Update.js"></script>
+  </section>
+</body>
+<script src="/public/js/Update.js"></script>
 
 </html>

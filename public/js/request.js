@@ -593,10 +593,10 @@ showPopupButton.addEventListener("click", function () {
 
 closePopupButton.addEventListener("click", function () {
   popup.style.display = "none";
-  window.location.replace('/views/Lecturer/status.html');
+  // window.location.replace('/views/Lecturer/status.html');
 });
 
-Approve.addEventListener("click", function () {
-  popup.style.display = "none";
-  window.location.replace('/views/Lecturer/status.html');
-});
+// Approve.addEventListener("click", function () {
+//   popup.style.display = "none";
+//   window.location.replace('/views/Lecturer/status.html');
+// });
