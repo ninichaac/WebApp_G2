@@ -1,6 +1,7 @@
 const body = document.querySelector("body"),
-  sidebar = body.querySelector("nav");
-sidebarToggle = body.querySelector(".sidebar-toggle");
+  sidebar = body.querySelector("nav"),
+  sidebarToggle = body.querySelector(".sidebar-toggle"); // เพิ่ม const นี้
+
 
 let getStatus = localStorage.getItem("status");
 if (getStatus && getStatus === "close") {
@@ -14,13 +15,14 @@ sidebarToggle.addEventListener("click", () => {
   } else {
     localStorage.setItem("status", "open");
   }
-})
+});
 
 function getWeekNumber(date) {
   const firstDayOfTheYear = new Date(date.getFullYear(), 0, 1);
-  const pastDaysOfYear = (date.getTime() - firstDayOfTheYear.getTime()) / 86400000;
+  const pastDaysOfYear =
+    (date.getTime() - firstDayOfTheYear.getTime()) / 86400000;
 
-  return Math.ceil((pastDaysOfYear + firstDayOfTheYear.getDay() + 1) / 7)
+  return Math.ceil((pastDaysOfYear + firstDayOfTheYear.getDay() + 1) / 7);
 }
 
 function isLeapYear(year) {
@@ -28,18 +30,18 @@ function isLeapYear(year) {
 }
 
 class Day {
-  constructor(date = null, lang = 'default') {
+  constructor(date = null, lang = "default") {
     date = date ?? new Date();
 
     this.Date = date;
     this.date = date.getDate();
-    this.day = date.toLocaleString("en-us", { weekday: 'long' });
+    this.day = date.toLocaleString("en-us", { weekday: "long" });
     this.dayNumber = date.getDay() + 1;
-    this.dayShort = date.toLocaleString("en-us", { weekday: 'short' });
+    this.dayShort = date.toLocaleString("en-us", { weekday: "short" });
     this.year = date.getFullYear();
-    this.yearShort = date.toLocaleString("en-us", { year: '2-digit' });
-    this.month = date.toLocaleString("en-us", { month: 'long' });
-    this.monthShort = date.toLocaleString("en-us", { month: 'short' });
+    this.yearShort = date.toLocaleString("en-us", { year: "2-digit" });
+    this.month = date.toLocaleString("en-us", { month: "long" });
+    this.monthShort = date.toLocaleString("en-us", { month: "short" });
     this.monthNumber = date.getMonth() + 1;
     this.timestamp = date.getTime();
     this.week = getWeekNumber(date);
@@ -52,30 +54,32 @@ class Day {
   isEqualTo(date) {
     date = date instanceof Day ? date.Date : date;
 
-    return date.getDate() === this.date &&
+    return (
+      date.getDate() === this.date &&
       date.getMonth() === this.monthNumber - 1 &&
-      date.getFullYear() === this.year;
+      date.getFullYear() === this.year
+    );
   }
 
   format(formatStr) {
     return formatStr
       .replace(/\bYYYY\b/, this.year)
       .replace(/\bYYY\b/, this.yearShort)
-      .replace(/\bWW\b/, this.week.toString().padStart(2, '0'))
+      .replace(/\bWW\b/, this.week.toString().padStart(2, "0"))
       .replace(/\bW\b/, this.week)
       .replace(/\bDDDD\b/, this.day)
       .replace(/\bDDD\b/, this.dayShort)
-      .replace(/\bDD\b/, this.date.toString().padStart(2, '0'))
+      .replace(/\bDD\b/, this.date.toString().padStart(2, "0"))
       .replace(/\bD\b/, this.date)
       .replace(/\bMMMM\b/, this.month)
       .replace(/\bMMM\b/, this.monthShort)
-      .replace(/\bMM\b/, this.monthNumber.toString().padStart(2, '0'))
-      .replace(/\bM\b/, this.monthNumber)
+      .replace(/\bMM\b/, this.monthNumber.toString().padStart(2, "0"))
+      .replace(/\bM\b/, this.monthNumber);
   }
 }
 
 class Month {
-  constructor(date = null, lang = 'default') {
+  constructor(date = null, lang = "default") {
     const day = new Day(date, lang);
     const monthsSize = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     this.lang = lang;
@@ -96,7 +100,7 @@ class Month {
         ++number;
         yield this.getDay(number);
       }
-    }
+    };
   }
 
   getDay(date) {
@@ -107,10 +111,13 @@ class Month {
 class Calendar {
   weekDays = Array.from({ length: 7 });
 
-  constructor(year = null, monthNumber = null, lang = 'default') {
+  constructor(year = null, monthNumber = null, lang = "default") {
     this.today = new Day(null, lang);
     this.year = year ?? this.today.year;
-    this.month = new Month(new Date(this.year, (monthNumber || this.today.monthNumber) - 1), lang);
+    this.month = new Month(
+      new Date(this.year, (monthNumber || this.today.monthNumber) - 1),
+      lang
+    );
     this.lang = lang;
 
     this[Symbol.iterator] = function* () {
@@ -120,14 +127,14 @@ class Calendar {
         ++number;
         yield this.getMonth(number);
       }
-    }
+    };
 
     this.weekDays.forEach((_, i) => {
       const day = this.month.getDay(i + 1);
       if (!this.weekDays.includes(day.day)) {
-        this.weekDays[day.dayNumber - 1] = day.day
+        this.weekDays[day.dayNumber - 1] = day.day;
       }
-    })
+    });
   }
 
   get isLeapYear() {
@@ -174,7 +181,10 @@ class Calendar {
       return this.goToNextYear();
     }
 
-    this.month = new Month(new Date(this.year, (this.month.number + 1) - 1), this.lang);
+    this.month = new Month(
+      new Date(this.year, this.month.number + 1 - 1),
+      this.lang
+    );
   }
 
   goToPreviousMonth() {
@@ -182,13 +192,16 @@ class Calendar {
       return this.goToPreviousYear();
     }
 
-    this.month = new Month(new Date(this.year, (this.month.number - 1) - 1), this.lang);
+    this.month = new Month(
+      new Date(this.year, this.month.number - 1 - 1),
+      this.lang
+    );
   }
 }
 
 class DatePicker extends HTMLElement {
-  format = 'MMM DD, YYYY';
-  position = 'bottom';
+  format = "MMM DD, YYYY";
+  position = "bottom";
   visible = false;
   date = null;
   mounted = false;
@@ -203,19 +216,22 @@ class DatePicker extends HTMLElement {
     super();
 
     const lang = window.navigator.language;
-    const date = new Date(this.date ?? (this.getAttribute("date") || Date.now()));
+    const date = new Date(
+      this.date ?? (this.getAttribute("date") || Date.now())
+    );
 
     this.shadow = this.attachShadow({ mode: "open" });
     this.date = new Day(date, lang);
     this.calendar = new Calendar(this.date.year, this.date.monthNumber, lang);
 
-    this.format = this.getAttribute('format') || this.format;
-    this.position = DatePicker.position.includes(this.getAttribute('position'))
-      ? this.getAttribute('position')
+    this.format = this.getAttribute("format") || this.format;
+    this.position = DatePicker.position.includes(this.getAttribute("position"))
+      ? this.getAttribute("position")
       : this.position;
-    this.visible = this.getAttribute('visible') === ''
-      || this.getAttribute('visible') === 'true'
-      || this.visible;
+    this.visible =
+      this.getAttribute("visible") === "" ||
+      this.getAttribute("visible") === "true" ||
+      this.visible;
 
     this.render();
   }
@@ -223,17 +239,18 @@ class DatePicker extends HTMLElement {
   connectedCallback() {
     this.mounted = true;
 
-    this.toggleButton = this.shadow.querySelector('.date-toggle');
-    this.calendarDropDown = this.shadow.querySelector('.calendar-dropdown');
-    const [prevBtn, calendarDateElement, nextButton] = this.calendarDropDown
-      .querySelector('.header').children;
+    this.toggleButton = this.shadow.querySelector(".date-toggle");
+    this.calendarDropDown = this.shadow.querySelector(".calendar-dropdown");
+    const [prevBtn, calendarDateElement, nextButton] =
+      this.calendarDropDown.querySelector(".header").children;
     this.calendarDateElement = calendarDateElement;
-    this.calendarDaysContainer = this.calendarDropDown.querySelector('.month-days');
+    this.calendarDaysContainer =
+      this.calendarDropDown.querySelector(".month-days");
 
-    this.toggleButton.addEventListener('click', () => this.toggleCalendar());
-    prevBtn.addEventListener('click', () => this.prevMonth());
-    nextButton.addEventListener('click', () => this.nextMonth());
-    document.addEventListener('click', (e) => this.handleClickOut(e));
+    this.toggleButton.addEventListener("click", () => this.toggleCalendar());
+    prevBtn.addEventListener("click", () => this.prevMonth());
+    nextButton.addEventListener("click", () => this.nextMonth());
+    document.addEventListener("click", (e) => this.handleClickOut(e));
 
     this.renderCalendarDays();
   }
@@ -253,8 +270,8 @@ class DatePicker extends HTMLElement {
         this.updateToggleText();
         break;
       case "visible":
-        this.visible = ['', 'true', 'false'].includes(newValue)
-          ? newValue === '' || newValue === 'true'
+        this.visible = ["", "true", "false"].includes(newValue)
+          ? newValue === "" || newValue === "true"
           : this.visible;
         this.toggleCalendar(this.visible);
         break;
@@ -262,22 +279,23 @@ class DatePicker extends HTMLElement {
         this.position = DatePicker.position.includes(newValue)
           ? newValue
           : this.position;
-        this.calendarDropDown.className =
-          `calendar-dropdown ${this.visible ? 'visible' : ''} ${this.position}`;
+        this.calendarDropDown.className = `calendar-dropdown ${
+          this.visible ? "visible" : ""
+        } ${this.position}`;
         break;
     }
   }
 
   toggleCalendar(visible = null) {
     if (visible === null) {
-      this.calendarDropDown.classList.toggle('visible');
+      this.calendarDropDown.classList.toggle("visible");
     } else if (visible) {
-      this.calendarDropDown.classList.add('visible');
+      this.calendarDropDown.classList.add("visible");
     } else {
-      this.calendarDropDown.classList.remove('visible');
+      this.calendarDropDown.classList.remove("visible");
     }
 
-    this.visible = this.calendarDropDown.className.includes('visible');
+    this.visible = this.calendarDropDown.className.includes("visible");
 
     if (this.visible) {
       this.calendarDateElement.focus();
@@ -302,22 +320,27 @@ class DatePicker extends HTMLElement {
   }
 
   updateHeaderText() {
-    this.calendarDateElement.textContent =
-      `${this.calendar.month.name}, ${this.calendar.year}`;
-    const monthYear = `${this.calendar.month.name}, ${this.calendar.year}`
-    this.calendarDateElement
-      .setAttribute('aria-label', `current month ${monthYear}`);
+    this.calendarDateElement.textContent = `${this.calendar.month.name}, ${this.calendar.year}`;
+    const monthYear = `${this.calendar.month.name}, ${this.calendar.year}`;
+    this.calendarDateElement.setAttribute(
+      "aria-label",
+      `current month ${monthYear}`
+    );
   }
 
   isSelectedDate(date) {
-    return date.date === this.date.date &&
+    return (
+      date.date === this.date.date &&
       date.monthNumber === this.date.monthNumber &&
-      date.year === this.date.year;
+      date.year === this.date.year
+    );
   }
 
   isCurrentCalendarMonth() {
-    return this.calendar.month.number === this.date.monthNumber &&
-      this.calendar.year === this.date.year;
+    return (
+      this.calendar.month.number === this.date.monthNumber &&
+      this.calendar.year === this.date.year
+    );
   }
 
   selectDay(el, day) {
@@ -328,8 +351,8 @@ class DatePicker extends HTMLElement {
     if (day.monthNumber !== this.calendar.month.number) {
       this.prevMonth();
     } else {
-      el.classList.add('selected');
-      this.selectedDayElement.classList.remove('selected');
+      el.classList.add("selected");
+      this.selectedDayElement.classList.remove("selected");
       this.selectedDayElement = el;
     }
 
@@ -338,26 +361,29 @@ class DatePicker extends HTMLElement {
   }
 
   handleClickOut(e) {
-    if (this.visible && (this !== e.target)) {
+    if (this.visible && this !== e.target) {
       this.toggleCalendar(false);
     }
   }
 
   getWeekDaysElementStrings() {
     return this.calendar.weekDays
-      .map(weekDay => `<span>${weekDay.substring(0, 3)}</span>`)
-      .join('');
+      .map((weekDay) => `<span>${weekDay.substring(0, 3)}</span>`)
+      .join("");
   }
 
   getMonthDaysGrid() {
     const firstDayOfTheMonth = this.calendar.month.getDay(1);
     const prevMonth = this.calendar.getPreviousMonth();
     const totalLastMonthFinalDays = firstDayOfTheMonth.dayNumber - 1;
-    const totalDays = this.calendar.month.numberOfDays + totalLastMonthFinalDays;
+    const totalDays =
+      this.calendar.month.numberOfDays + totalLastMonthFinalDays;
     const monthList = Array.from({ length: totalDays });
 
     for (let i = totalLastMonthFinalDays; i < totalDays; i++) {
-      monthList[i] = this.calendar.month.getDay(i + 1 - totalLastMonthFinalDays)
+      monthList[i] = this.calendar.month.getDay(
+        i + 1 - totalLastMonthFinalDays
+      );
     }
 
     for (let i = 0; i < totalLastMonthFinalDays; i++) {
@@ -369,31 +395,31 @@ class DatePicker extends HTMLElement {
   }
 
   updateToggleText() {
-    const date = this.date.format(this.format)
+    const date = this.date.format(this.format);
     this.toggleButton.textContent = date;
   }
 
   updateMonthDays() {
-    this.calendarDaysContainer.innerHTML = '';
+    this.calendarDaysContainer.innerHTML = "";
 
-    this.getMonthDaysGrid().forEach(day => {
-      const el = document.createElement('button');
-      el.className = 'month-day';
+    this.getMonthDaysGrid().forEach((day) => {
+      const el = document.createElement("button");
+      el.className = "month-day";
       el.textContent = day.date;
-      el.addEventListener('click', (e) => this.selectDay(el, day));
-      el.setAttribute('aria-label', day.format(this.format));
+      el.addEventListener("click", (e) => this.selectDay(el, day));
+      el.setAttribute("aria-label", day.format(this.format));
 
       if (day.monthNumber === this.calendar.month.number) {
-        el.classList.add('current');
+        el.classList.add("current");
       }
 
       if (this.isSelectedDate(day)) {
-        el.classList.add('selected');
+        el.classList.add("selected");
         this.selectedDayElement = el;
       }
 
       this.calendarDaysContainer.appendChild(el);
-    })
+    });
   }
 
   renderCalendarDays() {
@@ -403,11 +429,11 @@ class DatePicker extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['date', 'format', 'visible', 'position'];
+    return ["date", "format", "visible", "position"];
   }
 
   static get position() {
-    return ['top', 'left', 'bottom', 'right'];
+    return ["top", "left", "bottom", "right"];
   }
 
   get style() {
@@ -559,11 +585,13 @@ class DatePicker extends HTMLElement {
 
   render() {
     const monthYear = `${this.calendar.month.name}, ${this.calendar.year}`;
-    const date = this.date.format(this.format)
+    const date = this.date.format(this.format);
     this.shadow.innerHTML = `
         <style>${this.style}</style>
         <button type="button" class="date-toggle">${date}</button>
-        <div class="calendar-dropdown ${this.visible ? 'visible' : ''} ${this.position}">
+        <div class="calendar-dropdown ${this.visible ? "visible" : ""} ${
+      this.position
+    }">
           <div class="header">
               <button type="button" class="prev-month" aria-label="previous month"></button>
               <h4 tabindex="0" aria-label="current month ${monthYear}">
@@ -574,29 +602,135 @@ class DatePicker extends HTMLElement {
           <div class="week-days">${this.getWeekDaysElementStrings()}</div>
           <div class="month-days"></div>
         </div>
-      `
-
+      `;
   }
 }
 
+// Your JSON data
+var jsonData = {
+  availableRooms: [
+      { name: "Meeting Room 3", capacity: "6-8 persons", status: "STATUS1" },
+      { name: "Meeting Room 1", capacity: "6-10 persons", status: "STATUS2" },
+      { name: "Meeting Room 6", capacity: "6-8 persons", status: "STATUS3" },
+      { name: "Meeting Room 5", capacity: "6-8 persons", status: "STATUS1" },
+      { name: "Meeting Room 4", capacity: "6-10 persons", status: "STATUS2" },
+      { name: "Meeting Room 8", capacity: "6-8 persons", status: "STATUS3" },
+      { name: "Meeting Room 2", capacity: "6-8 persons", status: "STATUS1" },
+      { name: "Meeting Room 7", capacity: "6-8 persons", status: "STATUS1" },
+      { name: "Meeting Room 9", capacity: "6-8 persons", status: "STATUS1" },
+  ],
+  disabledRooms: [
+      { name: "Meeting Room 10", capacity: "8-12 persons", status: "STATUS4" },
+      { name: "Meeting Room 11", capacity: "4-6 persons", status: "STATUS5" },
+      { name: "Meeting Room 16", capacity: "8-12 persons", status: "STATUS4" },
+      { name: "Meeting Room 15", capacity: "4-6 persons", status: "STATUS5" },
+      { name: "Meeting Room 14", capacity: "8-12 persons", status: "STATUS4" },
+      { name: "Meeting Room 24", capacity: "4-6 persons", status: "STATUS5" },
+      { name: "Meeting Room 22", capacity: "8-12 persons", status: "STATUS4" },
+  ],
+};
+
+// ADD new room
+const showAddRoomButton = document.getElementById('showAddRoom');
+const addRoomBox = document.getElementById('addRoomBox');
+
+showAddRoomButton.addEventListener('click', () => {
+  addRoomBox.style.display = 'block';
+});
+
+const addRoomButton = document.getElementById('addRoomButton');
+const cancelButton = document.getElementById('cancelButton');
+
+addRoomButton.addEventListener('click', () => {
+  // Get the values from the form and perform your room addition logic here
+  const roomNum = document.getElementById('roomNum').value;
+  const roomLoca = document.getElementById('roomLoca').value;
+  const roomStatus = document.getElementById('roomStatus').value;
+
+  // Add your code to add the room using the collected data
+
+  // After adding the room, hide the box
+  addRoomBox.style.display = 'none';
+});
+
+cancelButton.addEventListener('click', () => {
+  // If the user clicks "Cancel," simply hide the box
+  addRoomBox.style.display = 'none';
+});
+// ADD new room
+
+
+//Box1
+var availableRoomCount = jsonData.availableRooms.length;
+var disabledRoomCount = jsonData.disabledRooms.length;
+
+var donutChartCanvas = document.getElementById('donutChart').getContext('2d');
+
+var donutChart = new Chart(donutChartCanvas, {
+  type: 'doughnut',
+  data: {
+      labels: ['Available Rooms', 'Disabled Rooms'],
+      datasets: [{
+          data: [availableRoomCount, disabledRoomCount],
+          backgroundColor: ['#8FD88F', '#8e2424'],
+      }],
+  },
+});
+//Box1
+
+
+function createDetails(data, container) {
+  var details = document.createElement("div");
+  details.classList.add("data-details");
+
+  // Create and append detailsContent with additional data
+  var detailsContent = document.createTextNode("Capacity: " + data.capacity + ", Status: " + data.status);
+
+  details.appendChild(detailsContent);
+  container.appendChild(details);
+}
+
+function createCheckboxes(data, containerId) {
+  var container = document.getElementById(containerId);
+  data.forEach(function (item) {
+    var label = document.createElement("label");
+    var checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("checkbox"); // You can add additional styling here
+    var text = document.createTextNode(item.name);
+    
+    checkbox.style.marginRight = "20px";
+
+    label.appendChild(checkbox);
+    label.appendChild(text);
+    container.appendChild(label);
+    container.appendChild(document.createElement("br"));
+  });
+}
+createCheckboxes(jsonData.availableRooms, "availableRooms");
+createCheckboxes(jsonData.disabledRooms, "disabledRooms");
+
+//MouseOver
+var labels = document.querySelectorAll(".my-custom-data-list");
+
+labels.forEach(function (label, index) {
+  label.addEventListener("mouseover", function () {
+      var details = this.nextElementSibling;
+      details.style.display = "block";
+  });
+
+  label.addEventListener("mouseout", function () {
+      var details = this.nextElementSibling;
+      details.style.display = "none";
+  });
+});
+
+function openNav() {
+  document.getElementById("sidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("sidenav").style.width = "0";
+}
+
 customElements.define("date-picker", DatePicker);
-
-const showPopupButton = document.getElementById("showPopupButton");
-const Approve = document.getElementById("Approve");
-const popup = document.getElementById("popup");
-const closePopupButton = document.getElementById("closePopupButton");
-
-showPopupButton.addEventListener("click", function () {
-  popup.style.display = "block";
-  popup.style.zIndex = "999";
-});
-
-closePopupButton.addEventListener("click", function () {
-  popup.style.display = "none";
-  window.location.replace('/views/Lecturer/status.html');
-});
-
-Approve.addEventListener("click", function () {
-  popup.style.display = "none";
-  window.location.replace('/views/Lecturer/status.html');
-});

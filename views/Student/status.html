@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <script src="/public/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/public/css/Student/status.css">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Booking Status</title>
+</head>
+
+<body>
+    <nav>
+        <div class="logo-name">
+            <div class="logo-image">
+                <img src="/public/img/student.png" alt="">
+            </div>
+        </div>
+        <div class="logo-name1">
+            <h3 class="logo_name1">Student 1</h3>
+            <p class="logo_name1">Student</p>
+        </div>
+
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li>
+                    <a href="/views/Student/homepage.html">
+                        <i class="uil uil-estate"></i>
+                        <span class="link-name">Home Page</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/views/Student/search.html">
+                        <i class="uil uil-search"></i>
+                        <span class="link-name">Search Room</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/views/Student/status.html">
+                        <i class="uil uil-notes"></i>
+                        <span class="link-name">Booking Status</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/views/Student/profile.html">
+                        <i class="uil uil-user"></i>
+                        <span class="link-name">Profile</span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="logout-mode">
+                <li>
+                    <a href="/views/login.html">
+                        <i class="uil uil-signout" style="color: red;"></i>
+                        <span class="link-name1">Log out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="dashboard">
+        <div class="top">
+            <i class="uil uil-bars sidebar-toggle"></i>
+            <h1 class="dash">Booking Status</h1>
+            <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+      <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search here...">
+      </div>
+        </div>
+
+        <div class="dash-content">
+            <div class="row1" id="row">
+                <div class="container">
+                    <div class="meeting">
+                        <div class="img">
+                            <img src="/public/img/room1.webp">
+                        </div>
+                        <div class="info">
+                            <h6 class="mt-2"><b>Meeting Room 1</b></h6>
+                            <i class="uil uil-map-marker"></i>
+                            <span> C1 101</span> <br>
+                            <i class="uil uil-user"></i>
+                            <span>6-8 persons</span>
+                        </div>
+                    </div>
+                    <table class="table table-bordered text-center mt-2">
+
+                        <tr>
+                            <td>31 oct. 2023 8-10 A.M.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="dot bg-success" style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;"></span>
+                                Your request has been accepted.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="container">
+                    <div class="meeting">
+                        <div class="img">
+                            <img src="/public/img/room1.webp">
+                        </div>
+                        <div class="info">
+                            <h6 class="mt-2"><b>Meeting Room 2</b></h6>
+                            <i class="uil uil-map-marker"></i>
+                            <span> C1 101</span> <br>
+                            <i class="uil uil-user"></i>
+                            <span>6-8 persons</span>
+                        </div>
+                    </div>
+                    <table class="table table-bordered text-center mt-2">
+
+                        <tr>
+                            <td>31 oct. 2023 10-12 A.M.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="dot bg-warning" style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;"></span>
+                                Wait for the teacher to accept your request.
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="container">
+                    <div class="meeting">
+                        <div class="img">
+                            <img src="\public\img\meeting2.jpg">
+                        </div>
+                        <div class="info">
+                            <h6 class="mt-2"><b>Meeting Room 3</b></h6>
+                            <i class="uil uil-map-marker"></i>
+                            <span> C1 101</span> <br>
+                            <i class="uil uil-user"></i>
+                            <span>6-8 persons</span>
+                        </div>
+                    </div>
+                    <table class="table table-bordered text-center mt-2">
+                        <tr>
+                            <td>31 oct. 2023 10-12 A.M.</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="dot bg-danger" style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;">
+                                </span>
+                                Your request was rejected.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="bg-danger text-white">
+                                This rooms are undergoing renovation and modification.
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="/public/js/roomlist.js"></script>
+</body>
+
+</html>

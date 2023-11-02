@@ -9,67 +9,70 @@
     <script src="/public/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/public/css/Lucterer/dashboard.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="/public/css/STAFFUpdateRoom.css">
 
     <title>Dashboard</title>
 </head>
 
 <body>
-    <!-- navbar -->
-    <nav>
-        <div class="logo-name">
-            <div class="logo-image">
-                <img src="/public/img/lecturer.png" alt="">
-            </div>
+   <!-- nav -->
+   <nav>
+    <div class="logo-name pt-3">
+        <div class="logo-image">
+            <img src="/public/img/staff.png" alt="">
         </div>
-        <div class="logo-name1">
-            <h3 class="logo_name1">ABDHSBS</h3>
-            <p class="logo_name1">Lecturer</p>
+    </div>
+    <div class="logo-name1">
+        <h3 class="logo_name1">Harry Potter</h3>
+        <div class="role-box">
+          <p id="role">Staff</p>
         </div>
+    </div>
 
-        <div class="menu-items">
-            <ul class="nav-links">
-                <li>
-                    <a href="/views/Lecturer/dashboard.html">
-                        <i class="uil uil-estate"></i>
-                        <span class="link-name">Dahsboard</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/views/Lecturer/roomlist.html">
-                        <i class="uil uil-apps"></i>
-                        <span class="link-name">Room List</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/views/Lecturer/request.html">
-                        <i class="uil uil-envelope-download"></i>
-                        <span class="link-name">Reserving Request</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/views/Lecturer/status.html">
-                        <i class="uil uil-chart"></i>
-                        <span class="link-name">Reserving Status</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/views/Lecturer/history.html">
-                        <i class="uil uil-history"></i>
-                        <span class="link-name">History</span>
-                    </a>
-                </li>
-            </ul>
+    <div class="menu-items">
+        <ul class="nav-links">
+            <li>
+              <a href="/views/Staff/dashboard.html">
+                <i class="uil uil-estate"></i>
+                <span class="link-name">Dashboard</span>
+              </a>
+            </li>
+            <li>
+              <a href="/views/Staff/UpdateRoom.html">
+                <i class="uil uil-arrow-circle-up"></i>
+                <span class="link-name">Update Room</span>
+              </a>                
+            </li>
+            <li>
+              <a href="/views/Staff/roomlist.html">
+                <i class="uil uil-apps"></i>
+                <span class="link-name">Room List</span>
+              </a>
+            </li>
+            <li>
+              <a href="/views/Staff/status_staff.html"><!--link -->
+                <i class="uil uil-chart"></i>
+                <span class="link-name">Reserving Status</span>
+              </a>
+            </li>
+            <li>
+              <a href="/views/Staff/history.html"><!--link -->
+                <i class="uil uil-history"></i>
+                <span class="link-name">History</span>
+              </a>
+            </li>
+          </ul>
 
-            <ul class="logout-mode">
-                <li>
-                    <a href="/views/login.html">
-                        <i class="uil uil-signout" style="color: red;"></i>
-                        <span class="link-name1">Log out</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+        <ul class="logout-mode mb-5">
+            <li>
+                <a href="/views/login.html">
+                    <i class="uil uil-signout" style="color: red;"></i>
+                    <span class="link-name1 ">Log out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
     <!-- dashboard -->
     <section class="dashboard">

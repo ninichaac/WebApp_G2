@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/public/css/bootstrap.min.css">
     <script src="/public/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="/public/css/request.css">
+    <link rel="stylesheet" href="/public/css/Lucterer/request.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
     <title>Reserving Request</title>
 </head>
 
 <body>
-    <nav class="">
+    <nav>
         <div class="logo-name">
             <div class="logo-image">
                 <img src="/public/img/lecturer.png" alt="">
@@ -59,7 +59,7 @@
 
             <ul class="logout-mode">
                 <li>
-                    <a href="/views/Lecturer/login.html">
+                    <a href="/views/login.html">
                         <i class="uil uil-signout" style="color: red;"></i>
                         <span class="link-name1">Log out</span>
                     </a>
@@ -77,17 +77,165 @@
                 <i class="uil uil-search"></i>
                 <input type="text" placeholder="Search here...">
             </div>
-
-            <!--<img src="images/profile.jpg" alt="">-->
         </div>
 
         <div class="dash-content">
-           
-            
+            <table class="table table-bordered text-center mt-2">
+                <tr>
+                    <td>
+                        <div class="cell-container">
+                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
+                            <div class="info">
+                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
+                                <i class="uil uil-map-marker"></i>
+                                <span> C1 101</span> <br>
+                                <i class="uil uil-user"></i>
+                                <span>8-11 persons</span>
+                            </div>
+                            <div class="vertical-buttons">
+                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
+                                <button id="Approve" class="btn btn-success ">Approve</button>
+                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
+
+                                <div class="popup" id="popup">
+                                    <div class="popup-content rounded">
+                                        <h2>Comment</h2>
+                                        <textarea id="popupTextArea" rows="4" cols="50"
+                                            placeholder="Enter your text"></textarea>
+                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered text-center mt-2">
+                <tr>
+                    <td>
+                        <div class="cell-container">
+                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
+                            <div class="info">
+                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
+                                <i class="uil uil-map-marker"></i>
+                                <span> C1 101</span> <br>
+                                <i class="uil uil-user"></i>
+                                <span>8-11 persons</span>
+                            </div>
+                            <div class="vertical-buttons">
+                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
+                                <button id="Approve" class="btn btn-success ">Approve</button>
+                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
+
+                                <div class="popup" id="popup">
+                                    <div class="popup-content rounded">
+                                        <h2>Reason</h2>
+                                        <textarea id="popupTextArea" rows="4" cols="50"
+                                            placeholder="Enter your text"></textarea>
+                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered text-center mt-2">
+                <tr>
+                    <td>
+                        <div class="cell-container">
+                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
+                            <div class="info">
+                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
+                                <i class="uil uil-map-marker"></i>
+                                <span> C1 101</span> <br>
+                                <i class="uil uil-user"></i>
+                                <span>8-11 persons</span>
+                            </div>
+                            <div class="vertical-buttons">
+                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
+                                <button id="Approve" class="btn btn-success ">Approve</button>
+                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
+
+                                <div class="popup" id="popup">
+                                    <div class="popup-content rounded">
+                                        <h2>Reason</h2>
+                                        <textarea id="popupTextArea" rows="4" cols="50"
+                                            placeholder="Enter your text"></textarea>
+                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered text-center mt-2">
+                <tr>
+                    <td>
+                        <div class="cell-container">
+                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
+                            <div class="info">
+                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
+                                <i class="uil uil-map-marker"></i>
+                                <span> C1 101</span> <br>
+                                <i class="uil uil-user"></i>
+                                <span>8-11 persons</span>
+                            </div>
+                            <div class="vertical-buttons">
+                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
+                                <button id="Approve" class="btn btn-success ">Approve</button>
+                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
+
+                                <div class="popup" id="popup">
+                                    <div class="popup-content rounded">
+                                        <h2>Reason</h2>
+                                        <textarea id="popupTextArea" rows="4" cols="50"
+                                            placeholder="Enter your text"></textarea>
+                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                    </td>
+                </tr>
+            </table>
+
+            <table class="table table-bordered text-center mt-2">
+                <tr>
+                    <td>
+                        <div class="cell-container">
+                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
+                            <div class="info">
+                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
+                                <i class="uil uil-map-marker"></i>
+                                <span> C1 101</span> <br>
+                                <i class="uil uil-user"></i>
+                                <span>8-11 persons</span>
+                            </div>
+                            <div class="vertical-buttons">
+                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
+                                <button id="Approve" class="btn btn-success ">Approve</button>
+                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
+
+                                <div class="popup" id="popup">
+                                    <div class="popup-content rounded">
+                                        <h2>Reason</h2>
+                                        <textarea id="popupTextArea" rows="4" cols="50"
+                                            placeholder="Enter your text"> </textarea>
+                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
+
     </section>
 
-    <script src="/public/js/request.js"></script>
+<script src="/public/js/request.js"></script>
+
 </body>
 
 </html>

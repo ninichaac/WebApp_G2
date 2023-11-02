@@ -68,7 +68,10 @@
          document.getElementById('student').addEventListener('change', function () {
         if (this.checked) {
             document.getElementById('p').innerHTML = 'Log in as Student';
-            document.getElementById('signup').innerHTML = `Not have an account? <a href="">Sign Up</a>`;
+            document.getElementById('signup').innerHTML = `Not have an account? <a href="/views/Student/register.html">Sign Up</a>`;
+            document.querySelector('button').onclick = () => {
+                window.location.replace('/views/Student/homepage.html');
+            }
         } else {
             document.getElementById('p').innerHTML = '';
             document.getElementById('signup').innerHTML = '';
@@ -79,6 +82,9 @@
         if (this.checked) {
             document.getElementById('p').innerHTML = 'Log in as Staff';
             document.getElementById('signup').innerHTML = '';
+            document.querySelector('button').onclick = () => {
+                window.location.replace('/views/Staff/dashboard.html');
+            }
         }
     });
 
@@ -87,10 +93,12 @@
             document.getElementById('p').innerHTML = 'Log in as Lecturer';
             document.getElementById('signup').innerHTML = '';
             document.querySelector('button').onclick = () => {
-                window.location.replace('dashboard.html');
+                window.location.replace('/views/Lecturer/dashboard.html');
             }
         }
     });
+
+    
 
 
 
