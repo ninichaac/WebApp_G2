@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,32 +11,39 @@
             background-color: #333;
             color: black;
         }
+
         .container {
             background-color: #444;
             border-radius: 10px;
             padding: 20px;
         }
+
         .form-control {
             background-color: #fff;
             color: black;
         }
+
         .card {
             background-color: #fff;
             border: none;
         }
+
         .card-header {
             background-color: black;
             color: #fff;
         }
+
         .btn-primary {
             background-color: #000;
             border: none;
         }
+
         .btn-primary:hover {
             background-color: #333;
         }
     </style>
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -45,22 +53,26 @@
                         <h2>Register</h2>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form id="form_regis">
                             <div class="form-group">
-                                <label for="name">Full Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Enter your full name">
+                                <label for="username">Full Name</label>
+                                <input type="text" class="form-control" id="username" name="username"
+                                    placeholder="Enter your full name">
                             </div>
                             <div class="form-group">
                                 <label for="email">Email Address</label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter your email address">
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter your email address">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input type="password" class="form-control"  id="password" placeholder="Enter your password">
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Enter your password">
                             </div>
                             <div class="form-group">
                                 <label for="confirmPassword">Confirm Password</label>
-                                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                                    placeholder="Confirm your password">
                             </div>
                             <button type="submit" class="btn btn-primary btn-block">Register</button>
                         </form>
@@ -69,9 +81,48 @@
             </div>
         </div>
     </div>
+<script>
+        const form_regis = document.getElementById('form_regis');
+        form_regis.onsubmit = async function (e) {
+            e.preventDefault();
+            const data = {
+                "username": form_regis.elements['username'].value,
+                "email": form_regis.elements['email'].value,
+                "password": form_regis.elements['password'].value,
+                "compassword": form_regis.elements['confirmPassword'].value,
+            }
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                }
+                const response = await fetch('/register', options);
+                if (response.ok) {
+                    const data = await response.text();
+                    form_regis.reset();
+                    window.location.replace(data);
+                    alert('OK');
+                } else if (response.status == 401) {
+                    const data = await response.text();
+                    throw Error(data);
+                }
+                // else {
+                //     const data = await response.text();
+                //     throw Error(data);
+                // }
+            } catch (err) {
+                console.error(err.message);
+                alert(err.message);
+            }
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    
 </body>
+
 </html>
