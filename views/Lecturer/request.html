@@ -26,31 +26,31 @@
         <div class="menu-items">
             <ul class="nav-links">
                 <li>
-                    <a href="/views/Lecturer/dashboard.html">
+                    <a href="/Lecturer/dashboard">
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Dahsboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/views/Lecturer/roomlist.html">
+                    <a href="/Lecturer/room-list">
                         <i class="uil uil-apps"></i>
                         <span class="link-name">Room List</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/views/Lecturer/request.html">
+                    <a href="/Lecturer/request">
                         <i class="uil uil-envelope-download"></i>
                         <span class="link-name">Reserving Request</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/views/Lecturer/status.html">
+                    <a href="/Lecturer/status">
                         <i class="uil uil-chart"></i>
                         <span class="link-name">Reserving Status</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/views/Lecturer/history.html">
+                    <a href="/Lecturer/history">
                         <i class="uil uil-history"></i>
                         <span class="link-name">History</span>
                     </a>
@@ -59,7 +59,7 @@
 
             <ul class="logout-mode">
                 <li>
-                    <a href="/views/login.html">
+                    <a href="/logout">
                         <i class="uil uil-signout" style="color: red;"></i>
                         <span class="link-name1">Log out</span>
                     </a>
@@ -81,155 +81,59 @@
 
         <div class="dash-content">
             <table class="table table-bordered text-center mt-2">
-                <tr>
-                    <td>
-                        <div class="cell-container">
-                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
-                            <div class="info">
-                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
-                                <i class="uil uil-map-marker"></i>
-                                <span> C1 101</span> <br>
-                                <i class="uil uil-user"></i>
-                                <span>8-11 persons</span>
-                            </div>
-                            <div class="vertical-buttons">
-                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
-                                <button id="Approve" class="btn btn-success ">Approve</button>
-                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
+                <thead>
+                    <th class="col-3">Name</th>
+                    <th class="col-2">Room Reserved</th>
+                    <th class="col-2">Time Reserved</th>
+                    <th class="col-3">Status</th>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mr. Asususus Ffhdhfd</td>
+                        <td>Meeting Room 2</td>
+                        <td>8-10 A.M.</td>
+                        <td>
+                            <button id="Approve" class="btn btn-success me-3">Approve</button>
+                            <button id="showPopupButton" class="btn btn-danger "
+                                onclick="openPopup()">Disapprove</button>
+                        </td>
+                    </tr>
 
-                                <div class="popup" id="popup">
-                                    <div class="popup-content rounded">
-                                        <h2>Comment</h2>
-                                        <textarea id="popupTextArea" rows="4" cols="50"
-                                            placeholder="Enter your text"></textarea>
-                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>Mr. Asususus Ffhdhfd</td>
+                        <td>Meeting Room 2</td>
+                        <td>8-10 A.M.</td>
+                        <td>
+                            <button id="Approve" class="btn btn-success me-3">Approve</button>
+                            <button id="showPopupButton" class="btn btn-danger "
+                                onclick="openPopup()">Disapprove</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Mr. Asususus Ffhdhfd</td>
+                        <td>Meeting Room 2</td>
+                        <td>8-10 A.M.</td>
+                        <td>
+                            <button id="Approve" class="btn btn-success me-3">Approve</button>
+                            <button id="showPopupButton" class="btn btn-danger "
+                                onclick="openPopup()">Disapprove</button>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
 
-            <table class="table table-bordered text-center mt-2">
-                <tr>
-                    <td>
-                        <div class="cell-container">
-                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
-                            <div class="info">
-                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
-                                <i class="uil uil-map-marker"></i>
-                                <span> C1 101</span> <br>
-                                <i class="uil uil-user"></i>
-                                <span>8-11 persons</span>
-                            </div>
-                            <div class="vertical-buttons">
-                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
-                                <button id="Approve" class="btn btn-success ">Approve</button>
-                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
-
-                                <div class="popup" id="popup">
-                                    <div class="popup-content rounded">
-                                        <h2>Reason</h2>
-                                        <textarea id="popupTextArea" rows="4" cols="50"
-                                            placeholder="Enter your text"></textarea>
-                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                    </td>
-                </tr>
-            </table>
-
-            <table class="table table-bordered text-center mt-2">
-                <tr>
-                    <td>
-                        <div class="cell-container">
-                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
-                            <div class="info">
-                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
-                                <i class="uil uil-map-marker"></i>
-                                <span> C1 101</span> <br>
-                                <i class="uil uil-user"></i>
-                                <span>8-11 persons</span>
-                            </div>
-                            <div class="vertical-buttons">
-                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
-                                <button id="Approve" class="btn btn-success ">Approve</button>
-                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
-
-                                <div class="popup" id="popup">
-                                    <div class="popup-content rounded">
-                                        <h2>Reason</h2>
-                                        <textarea id="popupTextArea" rows="4" cols="50"
-                                            placeholder="Enter your text"></textarea>
-                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                    </td>
-                </tr>
-            </table>
-
-            <table class="table table-bordered text-center mt-2">
-                <tr>
-                    <td>
-                        <div class="cell-container">
-                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
-                            <div class="info">
-                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
-                                <i class="uil uil-map-marker"></i>
-                                <span> C1 101</span> <br>
-                                <i class="uil uil-user"></i>
-                                <span>8-11 persons</span>
-                            </div>
-                            <div class="vertical-buttons">
-                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
-                                <button id="Approve" class="btn btn-success ">Approve</button>
-                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
-
-                                <div class="popup" id="popup">
-                                    <div class="popup-content rounded">
-                                        <h2>Reason</h2>
-                                        <textarea id="popupTextArea" rows="4" cols="50"
-                                            placeholder="Enter your text"></textarea>
-                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                    </td>
-                </tr>
-            </table>
-
-            <table class="table table-bordered text-center mt-2">
-                <tr>
-                    <td>
-                        <div class="cell-container">
-                            <img src="/public/img/room1.webp" width="300" alt="Description" class="cell-image">
-                            <div class="info">
-                                <h6 class="mt-2"><b>Meeting Room 11</b></h6>
-                                <i class="uil uil-map-marker"></i>
-                                <span> C1 101</span> <br>
-                                <i class="uil uil-user"></i>
-                                <span>8-11 persons</span>
-                            </div>
-                            <div class="vertical-buttons">
-                                <!-- <input type="button" value="Approve" class="btn btn-success "> -->
-                                <button id="Approve" class="btn btn-success ">Approve</button>
-                                <button id="showPopupButton" class="btn btn-danger ">Disapprove</button>
-
-                                <div class="popup" id="popup">
-                                    <div class="popup-content rounded">
-                                        <h2>Reason</h2>
-                                        <textarea id="popupTextArea" rows="4" cols="50"
-                                            placeholder="Enter your text"> </textarea>
-                                        <button id="closePopupButton" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </table>
+            <div class="popup" id="myPopup">
+                <div class="popup-content rounded">
+                    <span class="close" onclick="closePopup()">&times;</span>
+                    <h3>Give reasons for disapprove</h3>
+                    <div class="form-floating">
+                        <textarea class="form-control" id="textInput" style="height: 150px;width: 500px;" placeholder="Leave a comment here"> </textarea></div>
+                    <div>
+                        <button onclick="submitText()" class="btn btn-primary mt-3">Submit</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </section>

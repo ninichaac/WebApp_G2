@@ -34,47 +34,47 @@
 
     <div class="menu-items">
       <ul class="nav-links">
-        <li>
-          <a href="/views/Staff/dashboard.html">
-            <i class="uil uil-estate"></i>
-            <span class="link-name">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a href="/views/Staff/UpdateRoom.html">
-            <i class="uil uil-arrow-circle-up"></i>
-            <span class="link-name">Update Room</span>
-          </a>
-        </li>
-        <li>
-          <a href="/views/Staff/roomlist.html">
-            <i class="uil uil-apps"></i>
-            <span class="link-name">Room List</span>
-          </a>
-        </li>
-        <li>
-          <a href="/views/Staff/status_staff.html"><!--link -->
-            <i class="uil uil-chart"></i>
-            <span class="link-name">Reserving Status</span>
-          </a>
-        </li>
-        <li>
-          <a href="/views/Staff/history.html"><!--link -->
-            <i class="uil uil-history"></i>
-            <span class="link-name">History</span>
-          </a>
-        </li>
-      </ul>
+          <li>
+            <a href="/Staff/dashboard">
+              <i class="uil uil-estate"></i>
+              <span class="link-name">Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="/Staff/update-room">
+              <i class="uil uil-arrow-circle-up"></i>
+              <span class="link-name">Update Room</span>
+            </a>                
+          </li>
+          <li>
+            <a href="/Staff/room-list">
+              <i class="uil uil-apps"></i>
+              <span class="link-name">Room List</span>
+            </a>
+          </li>
+          <li>
+            <a href="/Staff/reservations"><!--link -->
+              <i class="uil uil-chart"></i>
+              <span class="link-name">Reserving Status</span>
+            </a>
+          </li>
+          <li>
+            <a href="/Staff/history"><!--link -->
+              <i class="uil uil-history"></i>
+              <span class="link-name">History</span>
+            </a>
+          </li>
+        </ul>
 
-      <ul class="logout-mode">
-        <li>
-          <a href="/views/login.html">
-            <i class="uil uil-signout" style="color: red;"></i>
-            <span class="link-name1 ">Log out</span>
-          </a>
-        </li>
+      <ul class="logout-mode mb-5">
+          <li>
+              <a href="/logout">
+                  <i class="uil uil-signout" style="color: red;"></i>
+                  <span class="link-name1 ">Log out</span>
+              </a>
+          </li>
       </ul>
-    </div>
+  </div>
   </nav>
 
 
@@ -116,15 +116,15 @@
 
             <span style="display: inline-flex; align-items: center;">
               <label for="roomStatus">Room Status:</label>
-              <select id="roomStatus" name="roomStatus" required>
+              <!-- <select id="roomStatus" name="roomStatus" required>
                 <option value="Available">Available</option>
                 <option value="Disabled">Disabled</option>
                 <option value="Reserved">Reserved</option>
-              </select>
+              </select> -->
             </span>
 
             <br>
-            <button id="addRoomButton" type="button">Add Room</button>
+            <button id="addRoomButton" type="submit">Add Room</button>
             <button id="cancelButton" class="custom-cancel-button" type="button">Cancel</button>
           </form>
         </div>

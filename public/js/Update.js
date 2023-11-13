@@ -1,3 +1,52 @@
+fetch('/user')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('username').innerText = data.username;
+  })
+  .catch(error => console.error('Error:', error));
+
+  
+const roomForm = document.querySelector('#roomForm');
+roomForm.onsubmit = async function (e) {
+  e.preventDefault();
+  const data = {
+    "roomNum": roomForm['roomNum'].value,
+    "roomLoca": roomForm['roomLoca'].value,
+    "people": roomForm['people'].value,
+  }
+  try {
+    const options = {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    };
+    const response = await fetch('/Staff/update-room/add', options);
+    if (response.ok) {
+      const data = await response.text();
+      // Notiflix.Report.success('Success', data, 'OK');
+      window.location.replace(data);
+    }
+    else if (response.status == 401) {
+      const data = await response.text();
+      throw Error(data);
+    }
+    else {
+      throw Error('Connection error');
+    }
+  } catch (err) {
+    console.error(err.message);
+    // Notiflix.Report.failure('Error', err.message, 'Close');
+    console.error(err.message);
+  }
+}
+
+fetch('/user')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('username').innerText = data.username;
+  })
+  .catch(error => console.error('Error:', error));
+
 const body = document.querySelector("body"),
   sidebar = body.querySelector("nav"),
   sidebarToggle = body.querySelector(".sidebar-toggle"); // เพิ่ม const นี้
@@ -279,9 +328,8 @@ class DatePicker extends HTMLElement {
         this.position = DatePicker.position.includes(newValue)
           ? newValue
           : this.position;
-        this.calendarDropDown.className = `calendar-dropdown ${
-          this.visible ? "visible" : ""
-        } ${this.position}`;
+        this.calendarDropDown.className = `calendar-dropdown ${this.visible ? "visible" : ""
+          } ${this.position}`;
         break;
     }
   }
@@ -589,9 +637,8 @@ class DatePicker extends HTMLElement {
     this.shadow.innerHTML = `
         <style>${this.style}</style>
         <button type="button" class="date-toggle">${date}</button>
-        <div class="calendar-dropdown ${this.visible ? "visible" : ""} ${
-      this.position
-    }">
+        <div class="calendar-dropdown ${this.visible ? "visible" : ""} ${this.position
+      }">
           <div class="header">
               <button type="button" class="prev-month" aria-label="previous month"></button>
               <h4 tabindex="0" aria-label="current month ${monthYear}">
@@ -609,24 +656,24 @@ class DatePicker extends HTMLElement {
 // Your JSON data
 var jsonData = {
   availableRooms: [
-      { name: "Meeting Room 3", capacity: "6-8 persons", status: "STATUS1" },
-      { name: "Meeting Room 1", capacity: "6-10 persons", status: "STATUS2" },
-      { name: "Meeting Room 6", capacity: "6-8 persons", status: "STATUS3" },
-      { name: "Meeting Room 5", capacity: "6-8 persons", status: "STATUS1" },
-      { name: "Meeting Room 4", capacity: "6-10 persons", status: "STATUS2" },
-      { name: "Meeting Room 8", capacity: "6-8 persons", status: "STATUS3" },
-      { name: "Meeting Room 2", capacity: "6-8 persons", status: "STATUS1" },
-      { name: "Meeting Room 7", capacity: "6-8 persons", status: "STATUS1" },
-      { name: "Meeting Room 9", capacity: "6-8 persons", status: "STATUS1" },
+    { name: "Meeting Room 3", capacity: "6-8 persons", status: "STATUS1" },
+    { name: "Meeting Room 1", capacity: "6-10 persons", status: "STATUS2" },
+    { name: "Meeting Room 6", capacity: "6-8 persons", status: "STATUS3" },
+    { name: "Meeting Room 5", capacity: "6-8 persons", status: "STATUS1" },
+    { name: "Meeting Room 4", capacity: "6-10 persons", status: "STATUS2" },
+    { name: "Meeting Room 8", capacity: "6-8 persons", status: "STATUS3" },
+    { name: "Meeting Room 2", capacity: "6-8 persons", status: "STATUS1" },
+    { name: "Meeting Room 7", capacity: "6-8 persons", status: "STATUS1" },
+    { name: "Meeting Room 9", capacity: "6-8 persons", status: "STATUS1" },
   ],
   disabledRooms: [
-      { name: "Meeting Room 10", capacity: "8-12 persons", status: "STATUS4" },
-      { name: "Meeting Room 11", capacity: "4-6 persons", status: "STATUS5" },
-      { name: "Meeting Room 16", capacity: "8-12 persons", status: "STATUS4" },
-      { name: "Meeting Room 15", capacity: "4-6 persons", status: "STATUS5" },
-      { name: "Meeting Room 14", capacity: "8-12 persons", status: "STATUS4" },
-      { name: "Meeting Room 24", capacity: "4-6 persons", status: "STATUS5" },
-      { name: "Meeting Room 22", capacity: "8-12 persons", status: "STATUS4" },
+    { name: "Meeting Room 10", capacity: "8-12 persons", status: "STATUS4" },
+    { name: "Meeting Room 11", capacity: "4-6 persons", status: "STATUS5" },
+    { name: "Meeting Room 16", capacity: "8-12 persons", status: "STATUS4" },
+    { name: "Meeting Room 15", capacity: "4-6 persons", status: "STATUS5" },
+    { name: "Meeting Room 14", capacity: "8-12 persons", status: "STATUS4" },
+    { name: "Meeting Room 24", capacity: "4-6 persons", status: "STATUS5" },
+    { name: "Meeting Room 22", capacity: "8-12 persons", status: "STATUS4" },
   ],
 };
 
@@ -669,11 +716,11 @@ var donutChartCanvas = document.getElementById('donutChart').getContext('2d');
 var donutChart = new Chart(donutChartCanvas, {
   type: 'doughnut',
   data: {
-      labels: ['Available Rooms', 'Disabled Rooms'],
-      datasets: [{
-          data: [availableRoomCount, disabledRoomCount],
-          backgroundColor: ['#8FD88F', '#8e2424'],
-      }],
+    labels: ['Available Rooms', 'Disabled Rooms'],
+    datasets: [{
+      data: [availableRoomCount, disabledRoomCount],
+      backgroundColor: ['#8FD88F', '#8e2424'],
+    }],
   },
 });
 //Box1
@@ -698,7 +745,7 @@ function createCheckboxes(data, containerId) {
     checkbox.type = "checkbox";
     checkbox.classList.add("checkbox"); // You can add additional styling here
     var text = document.createTextNode(item.name);
-    
+
     checkbox.style.marginRight = "20px";
 
     label.appendChild(checkbox);
@@ -715,13 +762,13 @@ var labels = document.querySelectorAll(".my-custom-data-list");
 
 labels.forEach(function (label, index) {
   label.addEventListener("mouseover", function () {
-      var details = this.nextElementSibling;
-      details.style.display = "block";
+    var details = this.nextElementSibling;
+    details.style.display = "block";
   });
 
   label.addEventListener("mouseout", function () {
-      var details = this.nextElementSibling;
-      details.style.display = "none";
+    var details = this.nextElementSibling;
+    details.style.display = "none";
   });
 });
 

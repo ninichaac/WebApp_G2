@@ -2,182 +2,182 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
-    <script src="/public/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="/public/css/Lucterer/history.css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <title>History</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+  <script src="/public/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" href="/public/css/Lucterer/history.css">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+  <title>History</title>
 </head>
 
 <body>
   <nav>
     <div class="logo-name pt-3">
-        <div class="logo-image">
-            <img src="/public/img/staff.png" alt="">
-        </div>
+      <div class="logo-image">
+        <img src="/public/img/staff.png" alt="">
+      </div>
     </div>
     <div class="logo-name1">
-        <h3 class="logo_name1">Harry Potter</h3>
-        <div class="role-box">
-          <p id="role">Staff</p>
-        </div>
+      <h3 class="logo_name1">Harry Potter</h3>
+      <div class="role-box">
+        <p id="role">Staff</p>
+      </div>
     </div>
 
     <div class="menu-items">
-        <ul class="nav-links">
-            <li>
-              <a href="/views/Staff/dashboard.html">
-                <i class="uil uil-estate"></i>
-                <span class="link-name">Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a href="/views/Staff/UpdateRoom.html">
-                <i class="uil uil-arrow-circle-up"></i>
-                <span class="link-name">Update Room</span>
-              </a>                
-            </li>
-            <li>
-              <a href="/views/Staff/roomlist.html">
-                <i class="uil uil-apps"></i>
-                <span class="link-name">Room List</span>
-              </a>
-            </li>
-            <li>
-              <a href="/views/Staff/status_staff.html"><!--link -->
-                <i class="uil uil-chart"></i>
-                <span class="link-name">Reserving Status</span>
-              </a>
-            </li>
-            <li>
-              <a href="/views/Staff/history.html"><!--link -->
-                <i class="uil uil-history"></i>
-                <span class="link-name">History</span>
-              </a>
-            </li>
-          </ul>
+      <ul class="nav-links">
+        <li>
+          <a href="/Staff/dashboard">
+            <i class="uil uil-estate"></i>
+            <span class="link-name">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="/Staff/update-room">
+            <i class="uil uil-arrow-circle-up"></i>
+            <span class="link-name">Update Room</span>
+          </a>
+        </li>
+        <li>
+          <a href="/Staff/room-list">
+            <i class="uil uil-apps"></i>
+            <span class="link-name">Room List</span>
+          </a>
+        </li>
+        <li>
+          <a href="/Staff/reservations"><!--link -->
+            <i class="uil uil-chart"></i>
+            <span class="link-name">Reserving Status</span>
+          </a>
+        </li>
+        <li>
+          <a href="/Staff/history"><!--link -->
+            <i class="uil uil-history"></i>
+            <span class="link-name">History</span>
+          </a>
+        </li>
+      </ul>
 
-        <ul class="logout-mode mb-5">
-            <li>
-                <a href="/views/login.html">
-                    <i class="uil uil-signout" style="color: red;"></i>
-                    <span class="link-name1 ">Log out</span>
-                </a>
-            </li>
-        </ul>
+      <ul class="logout-mode mb-5">
+        <li>
+          <a href="/logout">
+            <i class="uil uil-signout" style="color: red;"></i>
+            <span class="link-name1 ">Log out</span>
+          </a>
+        </li>
+      </ul>
     </div>
-</nav>
+  </nav>
 
-    <section class="dashboard">
-        <div class="top">
-            <i class="uil uil-bars sidebar-toggle"></i>
-            <h1 class="dash uil uil-history"> History</h1>
-            <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
-            <div class="search-box">
-                <i class="uil uil-search"></i>
-                <input type="text" placeholder="Search here...">
-            </div>
+  <section class="dashboard">
+    <div class="top">
+      <i class="uil uil-bars sidebar-toggle"></i>
+      <h1 class="dash uil uil-history"> History</h1>
+      <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+      <div class="search-box">
+        <i class="uil uil-search"></i>
+        <input type="text" placeholder="Search here...">
+      </div>
 
-            <!--<img src="images/profile.jpg" alt="">-->
+      <!--<img src="images/profile.jpg" alt="">-->
+    </div>
+
+    <!-------------- DATA --------------->
+    <div class="dash-content">
+      <div class="activity-data">
+        <div class="data names">
+          <span class="data-title">Name</span>
+          <span class="data-list">Prem Shahi</span>
+          <span class="data-list">Deepa Chand</span>
+          <span class="data-list">Manisha Chand</span>
+          <span class="data-list">Pratima Shahi</span>
+          <span class="data-list">Man Shahi</span>
+          <span class="data-list">Ganesh Chand</span>
+          <span class="data-list">Bikash Chand</span>
+          <span class="data-list">Prem Shahi</span>
+          <span class="data-list">Deepa Chand</span>
+          <span class="data-list">Manisha Chand</span>
+          <span class="data-list">Pratima Shahi</span>
+          <span class="data-list">Man Shahi</span>
+          <span class="data-list">Ganesh Chand</span>
+          <span class="data-list">Bikash Chand</span>
         </div>
+        <div class="data email">
+          <span class="data-title">Room Reserved</span>
+          <span class="data-list">Meeting Room 3</span>
+          <span class="data-list">Meeting Room 1</span>
+          <span class="data-list">Meeting Room 6</span>
+          <span class="data-list">Meeting Room 5</span>
+          <span class="data-list">Meeting Room 4</span>
+          <span class="data-list">Meeting Room 4</span>
+          <span class="data-list">Meeting Room 2</span>
+          <span class="data-list">Meeting Room 3</span>
+          <span class="data-list">Meeting Room 1</span>
+          <span class="data-list">Meeting Room 6</span>
+          <span class="data-list">Meeting Room 5</span>
+          <span class="data-list">Meeting Room 4</span>
+          <span class="data-list">Meeting Room 4</span>
+          <span class="data-list">Meeting Room 2</span>
+        </div>
+        <div class="data joined">
+          <span class="data-title">Date Reserved</span>
+          <span class="data-list">21 October 2023</span>
+          <span class="data-list">24 October 2023</span>
+          <span class="data-list">24 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">21 October 2023</span>
+          <span class="data-list">24 October 2023</span>
+          <span class="data-list">24 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+          <span class="data-list">25 October 2023</span>
+        </div>
+        <div class="data type">
+          <span class="data-title">Time Reserved</span>
+          <span class="data-list">12-15 P.M.</span>
+          <span class="data-list">10-12 P.M.</span>
+          <span class="data-list">10-12 P.M.</span>
+          <span class="data-list">12-15 P.M.</span>
+          <span class="data-list">15-17 P.M.</span>
+          <span class="data-list">8-10 P.M.</span>
+          <span class="data-list">12-15 P.M.</span>
+          <span class="data-list">12-15 P.M.</span>
+          <span class="data-list">10-12 P.M.</span>
+          <span class="data-list">10-12 P.M.</span>
+          <span class="data-list">12-15 P.M.</span>
+          <span class="data-list">15-17 P.M.</span>
+          <span class="data-list">8-10 P.M.</span>
+          <span class="data-list">12-15 P.M.</span>
 
-            <!-------------- DATA --------------->
-            <div class="dash-content">
-                    <div class="activity-data">
-                        <div class="data names">
-                            <span class="data-title">Name</span>
-                            <span class="data-list">Prem Shahi</span>
-                            <span class="data-list">Deepa Chand</span>
-                            <span class="data-list">Manisha Chand</span>
-                            <span class="data-list">Pratima Shahi</span>
-                            <span class="data-list">Man Shahi</span>
-                            <span class="data-list">Ganesh Chand</span>
-                            <span class="data-list">Bikash Chand</span>
-                            <span class="data-list">Prem Shahi</span>
-                            <span class="data-list">Deepa Chand</span>
-                            <span class="data-list">Manisha Chand</span>
-                            <span class="data-list">Pratima Shahi</span>
-                            <span class="data-list">Man Shahi</span>
-                            <span class="data-list">Ganesh Chand</span>
-                            <span class="data-list">Bikash Chand</span>
-                        </div>
-                        <div class="data email">
-                            <span class="data-title">Room Reserved</span>
-                            <span class="data-list">Meeting Room 3</span>
-                            <span class="data-list">Meeting Room 1</span>
-                            <span class="data-list">Meeting Room 6</span>
-                            <span class="data-list">Meeting Room 5</span>
-                            <span class="data-list">Meeting Room 4</span>
-                            <span class="data-list">Meeting Room 4</span>
-                            <span class="data-list">Meeting Room 2</span>
-                            <span class="data-list">Meeting Room 3</span>
-                            <span class="data-list">Meeting Room 1</span>
-                            <span class="data-list">Meeting Room 6</span>
-                            <span class="data-list">Meeting Room 5</span>
-                            <span class="data-list">Meeting Room 4</span>
-                            <span class="data-list">Meeting Room 4</span>
-                            <span class="data-list">Meeting Room 2</span>
-                        </div>
-                        <div class="data joined">
-                            <span class="data-title">Date Reserved</span>
-                            <span class="data-list">21 October 2023</span>
-                            <span class="data-list">24 October 2023</span>
-                            <span class="data-list">24 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">21 October 2023</span>
-                            <span class="data-list">24 October 2023</span>
-                            <span class="data-list">24 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                            <span class="data-list">25 October 2023</span>
-                        </div>
-                        <div class="data type">
-                            <span class="data-title">Time Reserved</span>
-                            <span class="data-list">12-15 P.M.</span>
-                            <span class="data-list">10-12 P.M.</span>
-                            <span class="data-list">10-12 P.M.</span>
-                            <span class="data-list">12-15 P.M.</span>
-                            <span class="data-list">15-17 P.M.</span>
-                            <span class="data-list">8-10 P.M.</span>
-                            <span class="data-list">12-15 P.M.</span>
-                            <span class="data-list">12-15 P.M.</span>
-                            <span class="data-list">10-12 P.M.</span>
-                            <span class="data-list">10-12 P.M.</span>
-                            <span class="data-list">12-15 P.M.</span>
-                            <span class="data-list">15-17 P.M.</span>
-                            <span class="data-list">8-10 P.M.</span>
-                            <span class="data-list">12-15 P.M.</span>
+        </div>
+        <div class="data status">
+          <span class="data-title">Approver</span>
+          <span class="data-list">Ajarn Dr. Monkey D. Luffy</span>
+          <span class="data-list">Ajarn Donald Clinton</span>
+          <span class="data-list">Ajarn Satoru Gojo</span>
+          <span class="data-list">Ajarn Tanjiro Kamado</span>
+          <span class="data-list">Ajarn Nezuko Kamado</span>
+          <span class="data-list">Ajarn Roronoa Zoro</span>
+          <span class="data-list">Ajarn Roronoa Zoro</span>
+          <span class="data-list">Ajarn Suguru Geto</span>
+          <span class="data-list">Ajarn Donald Clinton</span>
+          <span class="data-list">Ajarn Dr. Monkey D. Luffy</span>
+          <span class="data-list">Ajarn Satoru Gojo</span>
+          <span class="data-list">Ajarn Suguru Geto</span>
+          <span class="data-list">Ajarn Donald Clinton</span>
+          <span class="data-list">Ajarn Dr. Monkey D. Luffy</span>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
 
-                        </div>
-                        <div class="data status">
-                            <span class="data-title">Approver</span>
-                            <span class="data-list">Ajarn Dr. Monkey D. Luffy</span>
-                            <span class="data-list">Ajarn Donald Clinton</span>
-                            <span class="data-list">Ajarn Satoru Gojo</span>
-                            <span class="data-list">Ajarn Tanjiro Kamado</span>
-                            <span class="data-list">Ajarn Nezuko Kamado</span>
-                            <span class="data-list">Ajarn Roronoa Zoro</span>
-                            <span class="data-list">Ajarn Roronoa Zoro</span>
-                            <span class="data-list">Ajarn Suguru Geto</span>
-                            <span class="data-list">Ajarn Donald Clinton</span>
-                            <span class="data-list">Ajarn Dr. Monkey D. Luffy</span>
-                            <span class="data-list">Ajarn Satoru Gojo</span>
-                            <span class="data-list">Ajarn Suguru Geto</span>
-                            <span class="data-list">Ajarn Donald Clinton</span>
-                            <span class="data-list">Ajarn Dr. Monkey D. Luffy</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </section>
-
-    <script src="/public/js/history.js"></script>
+  <script src="/public/js/history.js"></script>
 </body>
 
 </html>

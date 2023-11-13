@@ -21,27 +21,28 @@
             </div>
         </div>
         <div class="logo-name1">
-            <h3 class="logo_name1">Student 1</h3>
+            <h3 class="logo_name1" id="username"></h3>
+            <h6 id="email"></h6>
             <p class="logo_name1">Student</p>
         </div>
 
         <div class="menu-items">
             <ul class="nav-links">
                 <li>
-                    <a href="/views/Student/homepage.html">
+                    <a href="/Student/homepage">
                         <i class="uil uil-estate"></i>
                         <span class="link-name">Home Page</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/views/Student/search.html">
+                    <a href="/Student/rooms/:id">
                         <i class="uil uil-search"></i>
-                        <span class="link-name">Search Room</span>
+                        <span class="link-name">Room List</span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="/views/Student/status.html">
+                    <a href="/Student/status">
                         <i class="uil uil-notes"></i>
                         <span class="link-name">Booking Status</span>
                     </a>
@@ -50,7 +51,7 @@
 
             <ul class="logout-mode">
                 <li>
-                    <a href="/views/login.html">
+                    <a href="/logout">
                         <i class="uil uil-signout" style="color: red;"></i>
                         <span class="link-name1">Log out</span>
                     </a>
@@ -81,7 +82,7 @@
                     </div>
                 </div>
             </header>
-        
+
             <!-- About Section -->
             <section id="about" class="about">
                 <div class="container">
@@ -90,31 +91,32 @@
                             <h2>New office room</h2>
                             <p>Open the door to creativity in a new workspace.</p>
                         </div>
-        
+
                         <div class="col-md-3">
                             <img src="/public/img/meeting4.gif" alt="ห้องประชุมใหม่" class="img-fluid">
                         </div>
                     </div>
                 </div>
             </section>
-        
+
             <!-- Reserve Section -->
             <section id="reserve" class="reserve">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6">
                             <h2>Request to close room number 3</h2>
-                            <p>Some students secretly brought a group of elementary school children to hang out in the room and
+                            <p>Some students secretly brought a group of elementary school children to hang out in the
+                                room and
                                 cause damage, causing room number three to be temporarily closed.</p>
                         </div>
-        
+
                         <div class="col-md-3">
                             <img src="/public/img/meeting3.jpg" alt="ห้องพัง" class="img-fluid">
                         </div>
                     </div>
                 </div>
             </section>
-        
+
             <!-- Contact Section -->
             <section id="contact" class="contact">
                 <div class="container">
@@ -123,8 +125,8 @@
                     <p>@Group 2 Section 2</p>
                 </div>
             </section>
-        
-        
+
+
             <!-- Footer -->
             <footer class="footer bg-dark text-light">
                 <div class="container">

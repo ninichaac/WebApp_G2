@@ -1,3 +1,10 @@
+fetch('/user')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('username').innerText = data.username;
+  })
+  .catch(error => console.error('Error:', error));
+
 const body = document.querySelector("body"),
       sidebar = body.querySelector("nav");
       sidebarToggle = body.querySelector(".sidebar-toggle");

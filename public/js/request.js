@@ -1,3 +1,18 @@
+function openPopup() {
+  document.getElementById('myPopup').style.display = 'block';
+}
+
+function closePopup() {
+  document.getElementById('myPopup').style.display = 'none';
+}
+
+function submitText() {
+  const userInput = document.getElementById('textInput').value;
+  console.log(userInput);
+  closePopup();
+}
+
+
 const body = document.querySelector("body"),
   sidebar = body.querySelector("nav");
 sidebarToggle = body.querySelector(".sidebar-toggle");

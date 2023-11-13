@@ -38,16 +38,18 @@ app.post('/register', function (req, res) {
                 }
                 // correct data
                 const sql = `INSERT INTO user (username, email, password,role) VALUES (?,?,?,1)`;
-                con.query(sql, [username, email], function (err, _results) {
+                con.query(sql, [username, email, hash], function (err, _results) {
                     if (err) {
                         console.error(err);
                         res.status(500).send("Server error insert data!");
                     } else {
                         res.send('views/Student/login');
                     }
-                });
-            }
-        })
+                  }
+            
+                
+        )};
+        });
     });
 });
 

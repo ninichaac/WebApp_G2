@@ -8,6 +8,7 @@
     <script src="/public/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/public/css/login.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Login</title>
 </head>
 
@@ -44,59 +45,98 @@
         </div>
 
         <div class="input">
-            <div id="input1">
-                <label for="">Email Address</label>
-                <input type="text" class="form-control mb-2">
+            <form id="input1">
+                <label for="">Username</label>
+                <input type="text" class="form-control mb-2" name="txtUsername">
                 <label for="">Password</label>
-                <input type="password" class="form-control">
-            </div>
+                <input type="password" class="form-control" name="txtPassword">
 
-        </div>
-        <div>
-            <input type="checkbox" name="" id="savepass"> Save Password
-            <a href="/views/forgetpass.html" class="" id="forget">Forget Password?</a>
-            <p id="signup" class="mt-2 ms-4"></p>
-        </div>
+                <div>
+                    <input type="checkbox" name="" id="savepass"> Save Password
+                    <a href="/forgot-password" class="" id="forget">Forget Password?</a>
+                    <p id="signup" class="mt-2 ms-4">Not have an account? <a href="/register">Sign Up</a></p>
+                </div>
 
-        <div class="text-center">
-            <p id="p"></p>
-            <button type="submit" class="btn btn-dark" id="loginButton">LOGIN</button>
+                <div class="text-center">
+                    <p id="p"></p>
+                    <button type="submit" class="btn btn-dark" id="loginButton">LOGIN</button>
+                </div>
         </div>
+        </form>
     </div>
 
     <script>
-         document.getElementById('student').addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById('p').innerHTML = 'Log in as Student';
-            document.getElementById('signup').innerHTML = `Not have an account? <a href="/views/Student/register.html">Sign Up</a>`;
-            document.querySelector('button').onclick = () => {
-                window.location.replace('/views/Student/homepage.html');
-            }
-        } else {
-            document.getElementById('p').innerHTML = '';
-            document.getElementById('signup').innerHTML = '';
-        }
-    });
+        const input1 = document.querySelector('#input1');
+        input1.onsubmit = async function (e) {
+            e.preventDefault();
+            const username = input1['txtUsername'].value;
+            const password = input1['txtPassword'].value;
 
-    document.getElementById('staff').addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById('p').innerHTML = 'Log in as Staff';
-            document.getElementById('signup').innerHTML = '';
-            document.querySelector('button').onclick = () => {
-                window.location.replace('/views/Staff/dashboard.html');
+            console.log(username, password);
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ "username": username, "password": password }),
+                };
+                const response = await fetch('/login', options);
+                if (response.ok) {
+                    const data = await response.text();
+                    // Notiflix.Report.success('Success', data, 'OK');
+                    window.location.replace(data);
+                }
+                else if (response.status == 401) {
+                    const data = await response.text();
+                    throw Error(data);
+                }
+                else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err.message);
+                // Notiflix.Report.failure('Error', err.message, 'Close');
+                console.error(err.message);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: err.message
+                });
             }
         }
-    });
+        //      document.getElementById('student').addEventListener('change', function () {
+        //     if (this.checked) {
+        //         document.getElementById('p').innerHTML = 'Log in as Student';
+        //         document.getElementById('signup').innerHTML = `Not have an account? <a href="/views/Student/register.html">Sign Up</a>`;
+        //         document.querySelector('button').onclick = () => {
+        //             window.location.replace('/views/Student/homepage.html');
+        //         }
+        //     } else {
+        //         document.getElementById('p').innerHTML = '';
+        //         document.getElementById('signup').innerHTML = '';
+        //     }
+        // });
 
-    document.getElementById('lecturer').addEventListener('change', function () {
-        if (this.checked) {
-            document.getElementById('p').innerHTML = 'Log in as Lecturer';
-            document.getElementById('signup').innerHTML = '';
-            document.querySelector('button').onclick = () => {
-                window.location.replace('/views/Lecturer/dashboard.html');
-            }
-        }
-    });
+        // document.getElementById('staff').addEventListener('change', function () {
+        //     if (this.checked) {
+        //         document.getElementById('p').innerHTML = 'Log in as Staff';
+        //         document.getElementById('signup').innerHTML = '';
+        //         document.querySelector('button').onclick = () => {
+        //             window.location.replace('/views/Staff/dashboard.html');
+        //         }
+        //     }
+        // });
+
+        // document.getElementById('lecturer').addEventListener('change', function () {
+        //     if (this.checked) {
+        //         document.getElementById('p').innerHTML = 'Log in as Lecturer';
+        //         document.getElementById('signup').innerHTML = '';
+        //         document.querySelector('button').onclick = () => {
+        //             window.location.replace('/views/Lecturer/dashboard.html');
+        //         }
+        //     }
+        // });
+
+
 
     </script>
 

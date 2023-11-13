@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/public/css/bootstrap.min.css">
     <script src="/public/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Forget Password</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
@@ -29,17 +30,80 @@
 <body>
     <div class="container mt-5">
         <h2>Forget Password?</h2>
-        <h5>Please enter your email to reset password</h5>
-        <div class="input">
+        <h5>Please enter your new password</h5>
+        <form class="input" id="repass">
             <div id="input1">
-                <label for="">Email Address</label>
-                <input type="text" class="form-control mb-2">
+                <label for="">New Password</label>
+                <input type="text" class="form-control mb-2" name="newpass">
+            </div>
+            <div id="input1">
+                <label for="">Confirm Password</label>
+                <input type="text" class="form-control mb-2" name="Confirmpass">
             </div>
             <div>
                 <button class="btn btn-dark">Reset Password</button>
             </div>
+        </form>
 
-        </div>
+        <script>
+            const repass = document.querySelector('#repass');
+            repass.onsubmit = async function (e) {
+                e.preventDefault();
+                const password = repass.elements['newpass'].value;
+                const rePassword = repass.elements['Confirmpass'].value;
+                const repassID = localStorage.getItem('repassID');
+
+                const data = {
+                    "password": password
+                }
+                const options = {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                }
+                try {
+                    // check pass word match or not
+                    if (password != rePassword) {
+                        throw Error('Password not match!');
+                    }
+                    const response = await fetch('/forgot-password', options);
+                    if (response.ok) {
+                        const data = await response.text();
+                        Swal.fire({
+                            icon: "success",
+                            title: "Complete",
+                            text: data
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                localStorage.removeItem('repassID');
+                                window.location.replace('/');
+                            }
+                        })
+
+                    } else if (response == 401) {
+                        const data = await response.text();
+                        throw Error(data);
+                    } else {
+                        const data = await response.text();
+                        throw Error(data);
+                    }
+                } catch (err) {
+                    console.error(err.message);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: err.message
+                    }
+                    );
+                }
+            }
+
+
+            // when click cancel
+            function goBack() {
+                window.location.replace('/login');
+            }
+        </script>
 </body>
 
 </html>

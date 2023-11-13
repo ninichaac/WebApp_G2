@@ -288,47 +288,27 @@ nav.close ~ .dashboard .top{
     flex-direction: row;
     margin-right: 650px;
 }
-  .popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-  }
+.popup {
+    display: none; /* Hide the popup by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #000;
+    z-index: 9999;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+}
 
-  .popup-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgb(255, 255, 255);
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  }
+.popup-content {
+    text-align: center;
+}
 
-  .dash-content .table .cell-container {
-      display: flex;
-      align-items: center;
-  }
-
-  .dash-content .table .cell-image {
-      margin-right: 10px;
-  }
-
-  .dash-content .table .vertical-buttons {
-      display: flex;
-      flex-direction: column;
-  }
-
-  .dash-content .table .vertical-buttons .btn {
-      margin-bottom: 20px;
-  }
-
-  .dash-content .table .vertical-buttons #closePopupButton {
-    margin-bottom: 20px;
-    margin-left: 700px;
+.close {
+    float: right;
+    cursor: pointer;
+    font-size: 24px;
 }
 
 

@@ -333,21 +333,15 @@ nav.close~.dashboard .top {
     margin-right: 600px;
 }
 
-.table tr {
-    font-size: 12px;
-}
-
 .table {
     margin-bottom: 0;
 }
 
-.dash-content .table .cell-container {
-    display: flex;
-    align-items: center;
+.table th {
+    font-size: 16px;
 }
-
-.dash-content .table .cell-image {
-    margin-right: 20px;
+.table td {
+    font-size: 14px;
 }
 
 .approve-button {
