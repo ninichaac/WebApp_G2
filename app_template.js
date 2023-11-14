@@ -286,12 +286,37 @@ app.post('/Staff/update-room/update-room-status', (req, res) => {
 
 
 
-// ===============forget password
+// ===============forget password==============
 app.get('/forgot-password', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/forgetpass.html'))
 });
 
 app.post('/forgot-password', function (req, res) {
+    const { email } = req.body;
+    const sql = `SELECT email,user_id FROM user WHERE email = ?`;
+    con.query(sql, [email], function (err, result) {
+        // check for error
+        if (err) {
+            res.status(500).send('Server Error!');
+        } else if (result.length != 1) {
+            res.status(401).send('Email not found!');
+        } else {
+            //check email 
+            if (result[0].user_id == 2 || result[0].user_id == 3) {
+                res.status(400).send("This is Aj or Admin email!");
+            } else {
+                res.send(`${result[0].user_id}`);
+            }
+        }
+    });
+});
+
+// =============reset password==========
+app.get('/forgot-password/reset-password', function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/resetpass.html'))
+});
+
+app.post('/forgot-password/reset-password/:id', function (req, res) {
     const id = req.params.id;
     const { password } = req.body;
     // find older password
@@ -328,7 +353,6 @@ app.post('/forgot-password', function (req, res) {
         });
     });
 })
-
 
 
 
