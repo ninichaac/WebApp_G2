@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="/public/css/Staff/UpdateRoom.css">
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <title>UpdateRoom</title>
 
@@ -87,8 +88,6 @@
         <i class="uil uil-search"></i>
         <input type="text" placeholder="Search here...">
       </div>
-
-      <!--<img src="images/profile.jpg" alt="">-->
     </div>
 
 
@@ -106,22 +105,16 @@
         <div id="addRoomBox" class="add-room-box">
           <h2>Add New Room</h2>
           <form id="roomForm">
+            <label for="roomImg" class="form-label">Room Image:</label>
+            <input type="text" id="roomImg" name="roomImg" class="form-control" required>
+
             <label for="roomNum">Room Number:</label>
-            <input type="text" id="roomNum" name="roomNum" required>
+            <input type="text" id="roomNum" name="roomNum" class="form-control" required>
 
             <label for="roomLoca">located(building):</label>
-            <input type="text" id="roomLoca" name="roomLoca" required>
-            <label for="roomLoca">How many people can it accommodate:</label>
-            <input type="text" id="people" name="people" required>
-
-            <span style="display: inline-flex; align-items: center;">
-              <label for="roomStatus">Room Status:</label>
-              <!-- <select id="roomStatus" name="roomStatus" required>
-                <option value="Available">Available</option>
-                <option value="Disabled">Disabled</option>
-                <option value="Reserved">Reserved</option>
-              </select> -->
-            </span>
+            <input type="text" id="roomLoca" name="roomLoca" class="form-control" required>
+            <label for="people">How many people can it accommodate:</label>
+            <input type="text" id="people" name="people" class="form-control"  required>
 
             <br>
             <button id="addRoomButton" type="submit">Add Room</button>
@@ -137,7 +130,6 @@
         <div class="box box1">
           <canvas id="donutChart" style="padding:10px;"></canvas>
         </div>
-
 
         <div class="box box2">
           <div class="data1">
@@ -161,7 +153,6 @@
               <!-- Disabled room data will be displayed here -->
             </div>
           </div>
-
           <div class="row justify-content-center mt-3">
             <div class="col-4">
               <button id="Disable" class="rounded-3 p-1 custom-disable-button w-100">

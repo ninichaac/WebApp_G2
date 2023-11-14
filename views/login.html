@@ -82,8 +82,12 @@
                 const response = await fetch('/login', options);
                 if (response.ok) {
                     const data = await response.text();
-                    // Notiflix.Report.success('Success', data, 'OK');
-                    window.location.replace(data);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Login successful",
+                    }).then(() => {
+                        window.location.replace(data);
+                    });
                 }
                 else if (response.status == 401) {
                     const data = await response.text();
@@ -93,8 +97,6 @@
                     throw Error('Connection error');
                 }
             } catch (err) {
-                console.error(err.message);
-                // Notiflix.Report.failure('Error', err.message, 'Close');
                 console.error(err.message);
                 Swal.fire({
                     icon: "error",

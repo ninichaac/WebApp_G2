@@ -3,7 +3,10 @@ const path = require('path');
 const bcrypt = require("bcrypt");
 const con = require('./config/db');
 const session = require('express-session');
+const { error } = require('console');
 const memorystore = require('memorystore')(session);
+// const multer = require('multer');
+// const upload = multer({ dest: 'uploads/img' });
 
 const app = express();
 
@@ -25,14 +28,14 @@ app.get('/logout', function (req, res) {
         if (err) {
             return res.status(500).send('Session error');
         }
-        res.redirect('/');
+        res.redirect('/login');
     })
 });
 
 //-------------- Get User info ---------------
 app.get('/user', function (req, res) {
     // res.send(req.session.username);
-    res.json({ "id": req.session.user_id, "username": req.session.username, "role": req.session.role ,"email": req.session.email});
+    res.json({ "id": req.session.user_id, "username": req.session.username, "role": req.session.role, "email": req.session.email });
 });
 
 
@@ -50,21 +53,22 @@ app.get('/register', function (_req, res) {
 app.post('/register', function (req, res) {
     const { username, email, password, compass } = req.body;
     if (!username || !email || !password || !compass) {
-        return res.status(400).send("Please fill out all information completely.");
+        return res.status(400).send("Registration failed - Invalid data");
     }
     // hash pass
     bcrypt.hash(password, 10, function (err, hash) {
         if (err) {
-            return res.status(500).send(err.message);
-        } else {
-            res.send(hash);
+            return res.status(500).send("Registration failed - Server error");
+        }else{
+            res.send('Registration successful');
         }
+
         // find email
         const findEmail = 'SELECT email FROM user WHERE email = ?';
         con.query(findEmail, [email], function (err, result) {
             if (err) {
                 console.error(err);
-                res.status(500).send("Server error!");
+                res.status(500).send("Registration failed - Server error");
             }
             else if (result.length > 0) {
                 res.status(401).send("Email has already used!");
@@ -78,9 +82,9 @@ app.post('/register', function (req, res) {
                 con.query(sql, [username, email, hash], function (err, _results) {
                     if (err) {
                         console.error(err);
-                        res.status(500).send("Server error insert data!");
+                        res.status(500).send("Registration failed - Server error");
                     } else {
-                        res.send('views/login');
+                        res.send('/');
                     }
                 }
                 )
@@ -131,6 +135,16 @@ app.get("/Staff/dashboard", function (req, res) {
 app.get("/Staff/room-list", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
 });
+app.get("/room-list", function (req, res) {
+    const sql = "SELECT * FROM room";
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    })
+})
 
 // -----status------
 app.get("/Staff/reservations", function (req, res) {
@@ -147,27 +161,86 @@ app.get("/Staff/update-room", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
 });
 
-app.post("/Staff/update-room/add", function (req, res) {
-    const {roomNum, roomLoca,people} = req.body;
-    if (!roomNum || !roomLoca || !people) {
+app.post("/Staff/update-room", function (req, res) {
+    const { roomImg, roomNum, roomLoca, people } = req.body;
+    if (!roomImg || !roomNum || !roomLoca || !people) {
         return res.status(400).send("Please fill out all information completely.");
     }
-    const sql = `INSERT INTO room (room_name, room_place, room_people) VALUES (?,?,?)`;
-    con.query(sql, [roomNum,roomLoca,people], function (err, _results) {
+    const sql = `INSERT INTO room (room_img,room_name, room_place, room_people, time_slots,room_status) VALUES (?,?,?,?,'8-10 A.M.,10-12 P.M.,12-15 P.M.,15-17 P.M.','Available')`;
+    con.query(sql, [roomImg, roomNum, roomLoca, people], function (err, _results) {
         if (err) {
             console.error(err);
-            res.status(500).send("Server error insert data!");
+            res.status(500).send("Incomplete data: Missing fields");
         } else {
-            res.send('views/Staff/UpdateRoom.html');
-      }
-
+            // res.send('Room added successfully');
+            res.send('/Staff/update-room');
+        }
     });
 });
 
 // ------------- disabled a room --------------
-app.delete("/products/:id", function (req, res) {
+// app.post("Staff/update-room/update-status"),function (req, res){
+//     if(req.session.role != undefined && req.session.role == 3) {
+//         let sql='';
+//         let status = req.body.status
+//         if(status == 'Available') {
+//             sql = `UPDATE room SET room_status = 'Disabled' WHERE room_id = ?`
+//         }else{
+//             sql = `UPDATE room SET room_status = 'Available' WHERE room_id = ?`
+//         }
+//         let params = [req.body.room_id]
+//         con.query(sql,params,(err,result)=>{
+//             if(err){
+//                 res.status(500).send("DB error");
+//                 throw err;
+//             }
+//             console.log(req.session.email + 'open and close room')
+//             res.send('/Staff/update-room')
+//         })
+//     }
+// }
 
-});
+// app.post('/Staff/update-room/update-status', function (req, res) {
+//     if (req.session.role != undefined && req.session.role == 3) {
+//         let sql = '';
+//         let room_status = req.body.room_status;
+//         let room_id = req.body.params;
+
+//         if (room_status == 'Available') {
+//             sql = `UPDATE room SET room_status = 'Disabled' WHERE room_id = ?`;
+//         } else {
+//             sql = `UPDATE room SET room_status = 'Available' WHERE room_id = ?`;
+//         }
+
+//         let params = [room_id];
+//         con.query(sql, params, (err, result) => {
+//             if (err) {
+//                 res.status(500).send("DB error");
+//                 throw err;
+//             }
+//             // console.log(req.session.email + ' open and close room');
+//             res.send('/Staff/update-room');
+//         });
+//     }
+// });
+
+app.post('/Staff/update-room/update-room-status', (req, res) => {
+    const { room_id, room_status } = req.body;
+    const sql = `UPDATE room SET room_status = ? WHERE room_id = ?`;
+  
+    con.query(sql, [room_status, room_id], (err, result) => {
+      if (err) {
+        console.error('Error updating room status:', err);
+        res.status(500).send('Error updating room status');
+        return;
+      }
+      console.log('Room status updated successfully');
+      res.status(200).send('Room status updated successfully');
+    });
+  });
+
+
+
 
 // ===============forget password
 app.get('/forgot-password', function (req, res) {
@@ -211,9 +284,6 @@ app.post('/forgot-password', function (req, res) {
         });
     });
 })
-
-
-
 
 
 
@@ -274,8 +344,8 @@ app.get('/password/:raw', function (req, res) {
 
 
 // ---------- login -----------
-app.get('/login', function (_req, res) {
-    res.sendFile(path.join(__dirname, 'views/login.html'));
+app.get('/login', function (req, res) {
+    res.sendFile(path.join(__dirname, '/views/login.html'));
 });
 
 app.post('/login', function (req, res) {
@@ -297,9 +367,17 @@ app.post('/login', function (req, res) {
                         req.session.username = username;
                         req.session.userID = results[0].id;
                         req.session.role = results[0].role;
-                        res.send('/');
+                        if (results[0].role == 1) {
+                            res.send('/Student/homepage');
+                        }
+                        if (results[0].role == 2) {
+                            res.send('/Lecturer/dashboard');
+                        }
+                        if (results[0].role == 3) {
+                            res.send('/Staff/dashboard');
+                        }
                     } else {
-                        res.status(401).send('Wrong password');
+                        res.status(401).send('Login failed - Invalid credentials');
                     }
                 }
             });
@@ -337,15 +415,6 @@ app.get('/Student/homepage', function (req, res) {
 
 // ------------ root service ----------
 app.get('/', function (req, res) {
-    if (req.session.role == 1) {
-        res.redirect('/Student/homepage');
-    }
-    if (req.session.role == 2) {
-        res.redirect('/Lecturer/dashboard');
-    }
-    if (req.session.role == 3) {
-        res.redirect('/Staff/dashboard');
-    }
     res.sendFile(path.join(__dirname, 'views/login.html'))
 });
 

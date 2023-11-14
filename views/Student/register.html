@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #333;
@@ -81,7 +82,7 @@
             </div>
         </div>
     </div>
-<script>
+    <script>
         const form_regis = document.getElementById('form_regis');
         form_regis.onsubmit = async function (e) {
             e.preventDefault();
@@ -89,7 +90,7 @@
                 "username": form_regis.elements['username'].value,
                 "email": form_regis.elements['email'].value,
                 "password": form_regis.elements['password'].value,
-                "compassword": form_regis.elements['confirmPassword'].value,
+                "compass": form_regis.elements['confirmPassword'].value,
             }
             try {
                 const options = {
@@ -101,16 +102,20 @@
                 if (response.ok) {
                     const data = await response.text();
                     form_regis.reset();
-                    window.location.replace(data);
-                    alert('OK');
+                    Swal.fire({
+                        icon: "success",
+                        title: "Registration successful",
+                    }).then(() => {
+                        window.location.replace(data);
+                    });
                 } else if (response.status == 401) {
                     const data = await response.text();
                     throw Error(data);
                 }
-                // else {
-                //     const data = await response.text();
-                //     throw Error(data);
-                // }
+                else {
+                    const data = await response.text();
+                    throw Error(data);
+                }
             } catch (err) {
                 console.error(err.message);
                 alert(err.message);
@@ -121,8 +126,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-    
+
+
 </body>
 
 </html>
