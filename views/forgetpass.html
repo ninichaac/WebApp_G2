@@ -18,92 +18,135 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        body {
-            /* background-image: url('/public/img/room_.png'); */
+        body::before {
+            content: "";
+            background-image: url('/public/img/room.jpg');
             background-size: cover;
             background-attachment: fixed;
-            /* background-color: rgb(44, 101, 158); */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .image {
+            font-size: 12px;
+            color: black;
+            font-weight: bold;
+            opacity: 0.8;
+            width: 110px;
+            height: 110px;
+            background-position: center center;
+            background-color: white;
+            display: inline-block;
+            margin: 10px;
+            border-radius: 15px;
+            box-shadow: 2px 2px 2px 2px rgb(165, 165, 165);
+        }
+
+        #regis {
+            padding-top: 130px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h2>Forget Password?</h2>
-        <h5>Please enter your new password</h5>
-        <form class="input" id="repass">
-            <div id="input1">
-                <label for="">New Password</label>
-                <input type="text" class="form-control mb-2" name="newpass">
-            </div>
-            <div id="input1">
-                <label for="">Confirm Password</label>
-                <input type="text" class="form-control mb-2" name="Confirmpass">
-            </div>
-            <div>
-                <button class="btn btn-dark">Reset Password</button>
-            </div>
-        </form>
+    <div class="container mt-5" id="regis">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <h2 class="text-center mt-3">Forget Password?</h2>
+                    <div class="card-body">
+                        <h6>Please enter your new password</h6>
+                        <form class="input" id="repass">
+                            <div id="input1">
+                                <label for="">New Password</label>
+                                <input type="text" class="form-control mb-2" name="newpass">
+                            </div>
+                            <div id="input1">
+                                <label for="">Confirm Password</label>
+                                <input type="text" class="form-control mb-2" name="Confirmpass">
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-dark">Reset Password</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-        <script>
-            const repass = document.querySelector('#repass');
-            repass.onsubmit = async function (e) {
-                e.preventDefault();
-                const password = repass.elements['newpass'].value;
-                const rePassword = repass.elements['Confirmpass'].value;
-                const repassID = localStorage.getItem('repassID');
+            </div>
+        </div>
 
-                const data = {
-                    "password": password
+    </div>
+
+
+    <script>
+        const repass = document.querySelector('#repass');
+        repass.onsubmit = async function (e) {
+            e.preventDefault();
+            const password = repass.elements['newpass'].value;
+            const rePassword = repass.elements['Confirmpass'].value;
+            const repassID = localStorage.getItem('repassID');
+
+            const data = {
+                "password": password
+            }
+            const options = {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            }
+            try {
+                // check pass word match or not
+                if (password != rePassword) {
+                    throw Error('Password not match!');
                 }
-                const options = {
-                    method: 'POST',
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(data)
-                }
-                try {
-                    // check pass word match or not
-                    if (password != rePassword) {
-                        throw Error('Password not match!');
-                    }
-                    const response = await fetch('/forgot-password', options);
-                    if (response.ok) {
-                        const data = await response.text();
-                        Swal.fire({
-                            icon: "success",
-                            title: "Complete",
-                            text: data
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                localStorage.removeItem('repassID');
-                                window.location.replace('/');
-                            }
-                        })
-
-                    } else if (response == 401) {
-                        const data = await response.text();
-                        throw Error(data);
-                    } else {
-                        const data = await response.text();
-                        throw Error(data);
-                    }
-                } catch (err) {
-                    console.error(err.message);
+                const response = await fetch('/forgot-password', options);
+                if (response.ok) {
+                    const data = await response.text();
                     Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: err.message
-                    }
-                    );
+                        icon: "success",
+                        title: "Complete",
+                        text: data
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            localStorage.removeItem('repassID');
+                            window.location.replace('/');
+                        }
+                    })
+
+                } else if (response == 401) {
+                    const data = await response.text();
+                    throw Error(data);
+                } else {
+                    const data = await response.text();
+                    throw Error(data);
                 }
+            } catch (err) {
+                console.error(err.message);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: err.message
+                }
+                );
             }
+        }
 
-
-            // when click cancel
-            function goBack() {
-                window.location.replace('/login');
-            }
-        </script>
+        // when click cancel
+        function goBack() {
+            window.location.replace('/login');
+        }
+    </script>
 </body>
 
 </html>

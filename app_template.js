@@ -59,9 +59,7 @@ app.post('/register', function (req, res) {
     bcrypt.hash(password, 10, function (err, hash) {
         if (err) {
             return res.status(500).send("Registration failed - Server error");
-        }else{
-            res.send('Registration successful');
-        }
+        } 
 
         // find email
         const findEmail = 'SELECT email FROM user WHERE email = ?';
@@ -84,7 +82,7 @@ app.post('/register', function (req, res) {
                         console.error(err);
                         res.status(500).send("Registration failed - Server error");
                     } else {
-                        res.send('/');
+                        res.send('/login');
                     }
                 }
                 )
@@ -108,15 +106,61 @@ app.get("/Student/booking", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
 });
 
+app.post("/Student/booking/book-room", function (req, res) {
+    const { userId, room, date, time } = req.body;
+    // const userId = req.session.user_id;
+    if (!room || !date || !time) {
+        return res.status(400).send("Please fill out all information completely.");
+    }
+
+    // Assuming default values for new columns
+    const insertBooking = `
+        INSERT INTO reserving 
+        ( room_id,user_id,time_reserving, date_reserving,approved, message, comment_user, approver) 
+        VALUES (?, ?, ?, ?, DEFAULT, DEFAULT, DEFAULT, DEFAULT)
+    `;
+
+    con.query(insertBooking, [room, userId, time, date], function (err, results) {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Server error during booking");
+        } else {
+            res.send('Booking successful!');
+        }
+    });
+});
 
 // ------------booking status--------------
 app.get("/Student/status", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
 });
 
-
-
-
+app.put('/Student/status', function (req, res) {
+    let id = req.body.id;
+    let status = req.body.status;
+    if (!id || !status) {
+        return res.send({ msg: 'error' });
+    }
+    let data;
+    // Map status values to appropriate data values
+    switch (parseInt(status)) {
+        case 1:
+            data = 1; // Waiting
+            break;
+        case 2:
+            data = 2; // Approved
+            break;
+        case 3:
+            data = 3; // Disapproved
+            break;
+        default:
+            return res.send({ msg: 'Invalid status' });
+    }
+    con.query("UPDATE reserving SET approved = ? WHERE reserving_id = ?", [data, id], function (error, result, field) {
+        if (error) throw error;
+        return res.send({ data: result, msg: 'update Successfully' });
+    });
+});
 
 
 
@@ -227,17 +271,17 @@ app.post("/Staff/update-room", function (req, res) {
 app.post('/Staff/update-room/update-room-status', (req, res) => {
     const { room_id, room_status } = req.body;
     const sql = `UPDATE room SET room_status = ? WHERE room_id = ?`;
-  
+
     con.query(sql, [room_status, room_id], (err, result) => {
-      if (err) {
-        console.error('Error updating room status:', err);
-        res.status(500).send('Error updating room status');
-        return;
-      }
-      console.log('Room status updated successfully');
-      res.status(200).send('Room status updated successfully');
+        if (err) {
+            console.error('Error updating room status:', err);
+            res.status(500).send('Error updating room status');
+            return;
+        }
+        console.log('Room status updated successfully');
+        res.status(200).send('Room status updated successfully');
     });
-  });
+});
 
 
 
@@ -309,17 +353,41 @@ app.get('/Lecturer/status', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/status.html'))
 });
 
+app.put('/Lecturer/status', function (req, res) {
+    let id = req.body.id;
+    let status = req.body.status;  // Assuming you pass the status in the request body
+
+    if (!id || !status) {
+        return res.send({ msg: 'error' });
+    }
+
+    let data;
+
+    // Map status values to appropriate data values
+    switch (parseInt(status)) {
+        case 1:
+            data = 1; // Waiting
+            break;
+        case 2:
+            data = 2; // Approved
+            break;
+        case 3:
+            data = 3; // Disapproved
+            break;
+        default:
+            return res.send({ msg: 'Invalid status' });
+    }
+
+    con.query("UPDATE reserving SET approved = ? WHERE reserving_id = ?", [data, id], function (error, result, field) {
+        if (error) throw error;
+        return res.send({ data: result, msg: 'update Successfully' });
+    });
+});
+
 // -----history----
 app.get('/Lecturer/history', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
 });
-
-
-
-
-
-
-
 
 
 
@@ -340,7 +408,6 @@ app.get('/password/:raw', function (req, res) {
 
     });
 });
-
 
 
 // ---------- login -----------
@@ -415,7 +482,7 @@ app.get('/Student/homepage', function (req, res) {
 
 // ------------ root service ----------
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/login.html'))
+    res.sendFile(path.join(__dirname, '/views/login.html'))
 });
 
 const PORT = 3000;
