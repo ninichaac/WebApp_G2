@@ -395,7 +395,7 @@ nav.close ~ .dashboard .top {
 .boxes .box.box2 {
   width: calc(68%);
   background-color: #e6e5e5;
-  height: 600px;
+  height: 520px;
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* แบ่งออกเป็น 2 คอลัมน์ */
   gap: 10px; /* ระยะห่างระหว่างข้อมูล */

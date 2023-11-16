@@ -218,7 +218,7 @@ body.dark .nav-links li a:hover .link-name {
 
 .menu-items .logout-mode {
     padding-top: 10px;
-    padding-bottom: 90px;
+    padding-bottom: 110px;
     border-top: 1px solid var(--border-color);
 }
 
@@ -317,7 +317,7 @@ nav.close~.dashboard .top {
 }
 
 .dashboard .dash-content .row1 {
-    padding-top: 30px;
+    padding-top: 20px;
     display:flex;
     /* flex-direction:row; */
     align-items: center;
@@ -331,30 +331,26 @@ nav.close~.dashboard .top {
     margin-right: 10px;
 }
 
-
-
 .dash-content .container img {
     width: 140px;
     border-radius: 10px 0px 0px 10px;
     margin-right: 15px;
 }
 
-.dashboard .dash-content .meeting {
-    display: flex;
-}
-
-.dash-content .container .info {
+.dash-content .card .card-body {
     font-size: 14px;
 }
 
 
 table tr {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .table {
     margin-bottom: 0;
 }
+
+
 
 
 @media (max-width: 1000px) {

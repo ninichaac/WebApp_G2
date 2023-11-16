@@ -72,7 +72,7 @@
                     <h2 class="text-center mt-3">Forget Password?</h2>
                     <div class="card-body">
                         <h6>Please enter your email</h6>
-                        <form class="input" id="repass">
+                        <form class="input" id="forgot">
                             <div id="input1">
                                 <label for="">Email Address</label>
                                 <input type="text" class="form-control mb-2" name="email">
@@ -92,7 +92,7 @@
 
 
     <script>
-        const formForgot = document.querySelector('#repass');
+        const formForgot = document.querySelector('#forgot');
         formForgot.onsubmit = async function (e) {
             e.preventDefault();
             const email = formForgot.elements['email'].value

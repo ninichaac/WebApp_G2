@@ -1,3 +1,11 @@
+fetch('/user')
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('username').innerText = data.username;
+    document.getElementById('email').innerText = data.email;
+  })
+  .catch(error => console.error('Error:', error));
+
 const roomForm = document.querySelector('#roomForm');
 roomForm.onsubmit = async function (e) {
   e.preventDefault();
@@ -663,7 +671,7 @@ function createDonutChart(availableRoomCount, disabledRoomCount) {
 
 async function getroom() {
   try {
-    const response = await fetch('/room-list');
+    const response = await fetch('/Staff/room');
     if (response.ok) {
       const data = await response.json();
       let rows = '';
@@ -695,44 +703,6 @@ async function getroom() {
 }
 
 getroom()
-
-// function handleStatusChange(room_status) {
-//   return async () => {
-//     const checkboxes = document.querySelectorAll(`input[name="${room_status == 'Available' ? 'disable' : 'available'}"]:checked`);
-//     const checkedRooms = Array.from(checkboxes).map(checkbox => checkbox.value);
-    
-//     if (checkedRooms.length == 0) {
-//       Swal.fire({
-//         title: 'No rooms selected',
-//         text: 'Please select at least one room.',
-//         icon: 'warning'
-//       });
-//       return;
-//     }
-
-//     Swal.fire({
-//       title: `Are you sure?`,
-//       text: `Do you want to ${room_status == 'Available' ? 'Available' : 'Disabled'} selected rooms?`,
-//       icon: 'warning',
-//       showCancelButton: true,
-//       confirmButtonColor: '#3085d6',
-//       cancelButtonColor: '#d33',
-//       confirmButtonText: room_status == 'Available' ? 'Available' : 'Disabled'
-//     }).then(async (result) => {
-//       if (result.isConfirmed) {
-//         await updateRoomStatus(checkedRooms, room_status);
-//         Swal.fire({
-//           title: `${room_status}!`,
-//           text: `Your selected rooms have been ${room_status.toLowerCase()}.`,
-//           icon: 'success'
-//         });
-//       }
-//     });
-//   };
-// }
-
-// document.getElementById('Disable').addEventListener('click', handleStatusChange('Disabled'));
-// document.getElementById('Available').addEventListener('click', handleStatusChange('Available'));
 
 
 document.getElementById('Disable').addEventListener('click', async () => {
@@ -794,102 +764,103 @@ async function updateRoomStatus(checkedRooms, room_status) {
 
     if (response.ok) {
       console.log(`Rooms updated to ${room_status} successfully`);
-       getroom()
-       location.reload();
+      getroom()
+      location.reload();
     } else {
       const errorMessage = await response.text();
       throw new Error(errorMessage);
     }
   } catch (error) {
     console.error('Error updating room status:', error.message);
-    
   }
 }
 
-  // ADD new room
-  const showAddRoomButton = document.getElementById('showAddRoom');
-  const addRoomBox = document.getElementById('addRoomBox');
 
-  showAddRoomButton.addEventListener('click', () => {
-    addRoomBox.style.display = 'block';
+
+// ADD new room
+const showAddRoomButton = document.getElementById('showAddRoom');
+const addRoomBox = document.getElementById('addRoomBox');
+
+showAddRoomButton.addEventListener('click', () => {
+  addRoomBox.style.display = 'block';
+});
+
+const addRoomButton = document.getElementById('addRoomButton');
+const cancelButton = document.getElementById('cancelButton');
+
+addRoomButton.addEventListener('click', () => {
+  // Get the values from the form and perform your room addition logic here
+  const roomImg = document.getElementById('roomImg').value;
+  const roomNum = document.getElementById('roomNum').value;
+  const roomLoca = document.getElementById('roomLoca').value;
+  const people = document.getElementById('people').value;
+  // const roomStatus = document.getElementById('roomStatus').value;
+
+  // Add your code to add the room using the collected data
+
+  // After adding the room, hide the box
+  addRoomBox.style.display = 'none';
+});
+
+cancelButton.addEventListener('click', () => {
+  // If the user clicks "Cancel," simply hide the box
+  addRoomBox.style.display = 'none';
+});
+// ADD new room
+
+function createDetails(data, container) {
+  var details = document.createElement("div");
+  details.classList.add("data-details");
+
+  // Create and append detailsContent with additional data
+  var detailsContent = document.createTextNode("Capacity: " + data.capacity + ", Status: " + data.status);
+
+  details.appendChild(detailsContent);
+  container.appendChild(details);
+}
+
+// function createCheckboxes(data, containerId) {
+//   var container = document.getElementById(containerId);
+//   data.forEach(function (item) {
+//     var label = document.createElement("label");
+//     var checkbox = document.createElement("input");
+//     checkbox.type = "checkbox";
+//     checkbox.classList.add("checkbox"); // You can add additional styling here
+//     var text = document.createTextNode(item.name);
+
+//     checkbox.style.marginRight = "20px";
+
+//     label.appendChild(checkbox);
+//     label.appendChild(text);
+//     container.appendChild(label);
+//     container.appendChild(document.createElement("br"));
+//   });
+// }
+// createCheckboxes(data.filter(room => room.room_status === 'Available'), "availableRooms");
+//       createCheckboxes(data.filter(room => room.room_status === 'Disabled'), "disabledRooms");
+
+
+//MouseOver
+var labels = document.querySelectorAll(".my-custom-data-list");
+
+labels.forEach(function (label, index) {
+  label.addEventListener("mouseover", function () {
+    var details = this.nextElementSibling;
+    details.style.display = "block";
   });
 
-  const addRoomButton = document.getElementById('addRoomButton');
-  const cancelButton = document.getElementById('cancelButton');
-
-  addRoomButton.addEventListener('click', () => {
-    // Get the values from the form and perform your room addition logic here
-    const roomImg = document.getElementById('roomImg').value;
-    const roomNum = document.getElementById('roomNum').value;
-    const roomLoca = document.getElementById('roomLoca').value;
-    const people = document.getElementById('people').value;
-    // const roomStatus = document.getElementById('roomStatus').value;
-
-    // Add your code to add the room using the collected data
-
-    // After adding the room, hide the box
-    addRoomBox.style.display = 'none';
+  label.addEventListener("mouseout", function () {
+    var details = this.nextElementSibling;
+    details.style.display = "none";
   });
+});
 
-  cancelButton.addEventListener('click', () => {
-    // If the user clicks "Cancel," simply hide the box
-    addRoomBox.style.display = 'none';
-  });
-  // ADD new room
+function openNav() {
+  document.getElementById("sidenav").style.width = "250px";
+}
 
-  function createDetails(data, container) {
-    var details = document.createElement("div");
-    details.classList.add("data-details");
+function closeNav() {
+  document.getElementById("sidenav").style.width = "0";
+}
 
-    // Create and append detailsContent with additional data
-    var detailsContent = document.createTextNode("Capacity: " + data.capacity + ", Status: " + data.status);
-
-    details.appendChild(detailsContent);
-    container.appendChild(details);
-  }
-
-  // function createCheckboxes(data, containerId) {
-  //   var container = document.getElementById(containerId);
-  //   data.forEach(function (item) {
-  //     var label = document.createElement("label");
-  //     var checkbox = document.createElement("input");
-  //     checkbox.type = "checkbox";
-  //     checkbox.classList.add("checkbox"); // You can add additional styling here
-  //     var text = document.createTextNode(item.name);
-
-  //     checkbox.style.marginRight = "20px";
-
-  //     label.appendChild(checkbox);
-  //     label.appendChild(text);
-  //     container.appendChild(label);
-  //     container.appendChild(document.createElement("br"));
-  //   });
-  // }
-  // createCheckboxes(data.filter(room => room.room_status === 'Available'), "availableRooms");
-  //       createCheckboxes(data.filter(room => room.room_status === 'Disabled'), "disabledRooms");
-
-
-  //MouseOver
-  var labels = document.querySelectorAll(".my-custom-data-list");
-
-  labels.forEach(function (label, index) {
-    label.addEventListener("mouseover", function () {
-      var details = this.nextElementSibling;
-      details.style.display = "block";
-    });
-
-    label.addEventListener("mouseout", function () {
-      var details = this.nextElementSibling;
-      details.style.display = "none";
-    });
-  });
-
-  function openNav() {
-    document.getElementById("sidenav").style.width = "250px";
-  }
-
-  function closeNav() {
-    document.getElementById("sidenav").style.width = "0";
-  }
-
-  customElements.define("date-picker", DatePicker);
+customElements.define("date-picker", DatePicker);
