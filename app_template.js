@@ -115,43 +115,79 @@ app.get("/Student/booking", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
 });
 
-app.post("/Student/booking/book-room", function (req, res) {
-    const { user_id, room_id, time_reserving, date_reserving } = req.body;
-
-    // Check role of the user
-    con.query('SELECT role FROM user WHERE user_id = ?', [user_id], function (error, results, fields) {
-        if (error) {
-            console.error(error);
-            return res.status(500).send("Server error");
+app.post("/Student/booking/:id", function (req, res) {
+    const roomID = req.params.room_id
+    let sql = 'INSERT INTO reserving (room_id,user_id,time_reserving,date_reserving,comment_user) VALUES ?';
+    let params = [
+        [
+            // req.session.user_id,
+            // req.params.room_id,
+            req.body.user_id,
+            req.body.room_id,
+            req.body.time_reserving,
+            req.body.date_reserving,
+            req.body.comment_user
+        ]
+    ]
+    con.query(sql,[params],(err,result) => {
+        if(err){
+            res.status(500).send("DB error");
+            throw err;
         }
-
-        // Check if the user has role = 1 (student)
-        if (results.length > 0 && results[0].role == 1) {
-            if (!room_id || !time_reserving || !date_reserving) {
-                return res.status(400).send("Please fill out all information completely.");
+        sql = `UPDATE room SET time_slots = ? WHERE room_id =?`;
+        params =[
+            req.body.UpdateData,
+            req.params.room_id
+        ]
+        con.query(sql,params,(err,result) => {
+            if(err){
+                res.status(500).send("DB error");
+                throw err;
+            }else{
+                res.send('/Student/status');
             }
-
-            // Assuming default values for new columns
-            const insertBooking = ` INSERT INTO reserving(room_id, user_id, time_reserving, date_reserving, approved, message, comment_user, approver) 
-            SELECT ?, ?, ?, ?, 'Waiting', 'Default', 'Default', 'Default' 
-            FROM room
-            WHERE room_id = ? AND room_status = 'Available'`;
-
-            con.query(insertBooking, [room_id, user_id, time_reserving, date_reserving, room_id], function (err, results) {
-                if (err) {
-                    console.error(err);
-                    if (err.code == 'ER_DUP_ENTRY') {
-                        return res.status(409).send('Room already booked');
-                    }
-                    return res.status(500).send('Server error during booking');
-                } else if (results.affectedRows == 0) {
-                    return res.status(404).send('Room not available for booking');
-                } else {
-                    return res.send('Booking successful!');
-                }
-            });
-        }
+          
     });
+});
+
+
+
+    //     const { user_id, room_id, time_reserving, date_reserving } = req.body;
+
+    //     // Check role of the user
+    //     con.query('SELECT role FROM user WHERE user_id = ?', [user_id], function (error, results, fields) {
+    //         if (error) {
+    //             console.error(error);
+    //             return res.status(500).send("Server error");
+    //         }
+
+    //         // Check if the user has role = 1 (student)
+    //         if (results.length > 0 && results[0].role == 1) {
+    //             if (!room_id || !time_reserving || !date_reserving) {
+    //                 return res.status(400).send("Please fill out all information completely.");
+    //             }
+
+    //             // Assuming default values for new columns
+    //             const insertBooking = ` INSERT INTO reserving(room_id, user_id, time_reserving, date_reserving, approved, message, comment_user, approver) 
+    //             SELECT ?, ?, ?, ?, 'Waiting', 'Default', 'Default', 'Default' 
+    //             FROM room
+    //             WHERE room_id = ? AND room_status = 'Available'`;
+
+    //             con.query(insertBooking, [room_id, user_id, time_reserving, date_reserving, room_id], function (err, results) {
+    //                 if (err) {
+    //                     console.error(err);
+    //                     if (err.code == 'ER_DUP_ENTRY') {
+    //                         return res.status(409).send('Room already booked');
+    //                     }
+    //                     return res.status(500).send('Server error during booking');
+    //                 } else if (results.affectedRows == 0) {
+    //                     return res.status(404).send('Room not available for booking');
+    //                 } else {
+    //                     return res.send('Booking successful!');
+    //                 }
+    //             });
+    //         }
+    //     });
 });
 
 
@@ -325,10 +361,6 @@ app.post('/forgot-password/reset-password/:id', function (req, res) {
         });
     });
 })
-
-
-
-
 
 
 

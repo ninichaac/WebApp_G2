@@ -64,11 +64,14 @@
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <h1 class="dash">Booking Status</h1>
-            <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
-      <div class="search-box">
-        <i class="uil uil-search"></i>
-        <input type="text" placeholder="Search here...">
-      </div>
+            <div class="date">
+                <i class="uil uil-calendar-alt me-2"></i>
+                <span id="current-date" class="fw-bold"></span>
+            </div>
+            <div class="search-box">
+                <i class="uil uil-search"></i>
+                <input type="text" placeholder="Search here...">
+            </div>
         </div>
 
         <div class="dash-content">
@@ -93,7 +96,8 @@
                         </tr>
                         <tr>
                             <td>
-                                <span class="dot bg-success" style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;"></span>
+                                <span class="dot bg-success"
+                                    style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;"></span>
                                 Your request has been accepted.
                             </td>
                         </tr>
@@ -120,7 +124,8 @@
                         </tr>
                         <tr>
                             <td>
-                                <span class="dot bg-warning" style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;"></span>
+                                <span class="dot bg-warning"
+                                    style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;"></span>
                                 Wait for the teacher to accept your request.
                             </td>
                         </tr>
@@ -146,7 +151,8 @@
                         </tr>
                         <tr>
                             <td>
-                                <span class="dot bg-danger" style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;">
+                                <span class="dot bg-danger"
+                                    style="height: 12px;width: 12px;border-radius: 50%;display: inline-block;">
                                 </span>
                                 Your request was rejected.
                             </td>
@@ -163,7 +169,7 @@
         </div>
     </section>
 
-    <script src="/public/js/roomlist.js"></script>
+    <script src="/public/js/std_status.js"></script>
 </body>
 
 </html>

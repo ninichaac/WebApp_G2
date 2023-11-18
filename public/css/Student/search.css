@@ -245,21 +245,26 @@ nav.close~.dashboard {
     width: calc(100% - 250px);
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 30px 14px;
     background-color: var(--panel-color);
     transition: var(--tran-05);
     z-index: 10;
 }
-.dashboard .top .date-picker{
-    width: 200px;
-    height: 100px;
+.dashboard .top .date{
+    border-radius: 5px;
+    padding: 3px 5px;
+    background-color: rgba(215, 215, 215, 0.553);
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 14px;
 }
-*, *.date-picker::after, *.date-picker::before {
+*, *.date::after, *.date::before {
     box-sizing: border-box;
   }
+
+
 .dashboard .top .dash {
     font-size: 35px;
     flex: 3;
@@ -319,7 +324,6 @@ nav.close~.dashboard .top {
 .dashboard .dash-content .row1 {
     padding-top: 20px;
     display:flex;
-    /* flex-direction:row; */
     align-items: center;
 }
 
@@ -331,14 +335,17 @@ nav.close~.dashboard .top {
     margin-right: 10px;
 }
 
-.dash-content .container img {
-    width: 140px;
+.dash-content .container #img {
+    width: 150px;
     border-radius: 10px 0px 0px 10px;
     margin-right: 15px;
 }
 
 .dash-content .card .card-body {
     font-size: 14px;
+}
+.dash-content .card {
+        margin: 10px;
 }
 
 

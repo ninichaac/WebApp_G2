@@ -64,7 +64,10 @@
     <div class="top">
       <i class="uil uil-bars sidebar-toggle"></i>
       <h1 class="dash">Room List</h1>
-      <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+      <div class="date">
+        <i class="uil uil-calendar-alt me-2"></i>
+        <span id="current-date" class="fw-bold"></span>
+      </div>
       <div class="search-box">
         <i class="uil uil-search"></i>
         <input type="text" placeholder="Search here...">
@@ -73,8 +76,11 @@
 
     <div class="dash-content">
       <div class="row1" id="row">
-        <div class="card" style="width: 350px;" id="roomlist">
-          <div class="row g-0">
+        <div id="roomlist" class="row">
+
+        </div>
+        <!-- <div class="card" style="width: 350px;"> -->
+        <!-- <div class="row g-0">
             <div class="col-md-4 mt-2">
               <img src="/public/img/room1.webp" class="ms-2 img-fluid rounded-start">
             </div>
@@ -86,56 +92,52 @@
                 <i class="uil uil-user"></i>
                 <span class="card-text">6-8 persons</span>
               </div>
-            </div>
-          </div>
-          <table class="table table-bordered text-center">
-            <tr>
-              <td>8-10 A.M.</td>
-              <td class="text-success"> 
-                <span class="dot bg-success" style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
-                Available
-              </td>
-              <!-- <td>
-                <button class="btn btn-success btn-sm" onclick="booking()">Booking</button>
-              </td> -->
+            </div> -->
+        <!-- </div> -->
 
-            </tr>
-            <tr>
-              <td>10-12 P.M.</td>
-              <td class="text-warning">
-                <span class="dot bg-warning" style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
-                Reserved
-              </td>
-              <!-- <td>
-                <button class="btn btn-primary btn-sm btn-warning ">Reserved</button>
-              </td> -->
-            </tr>
-            <tr>
-              <td>12-15 P.M.</td>
-              <td class="text-success">
-                 <span class="dot bg-success" style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
-                Available</td>
-              <!-- <td>
-                <button class="btn btn-primary btn-sm btn-success ">Booking</button>
-              </td> -->
-            </tr>
-            <tr>
-              <td>15-17 P.M.</td>
-              <td  class="text-info"> 
-                <span class="dot bg-info" style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
-                Waiting</td>
-              <!-- <td>
-                <button class="btn btn-primary btn-sm btn-info">Waiting</button>
-              </td> -->
-            </tr>
-          </table>
-          <a href="/Student/booking" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</a>
-        </div>
+        <!-- <div class="mx-2">
+            <table class="table table-bordered text-center">
+              <tr>
+                <td>8-10 A.M.</td>
+                <td class="text-success">
+                  <span class="dot bg-success"
+                    style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
+                  Available
+                </td>
+              </tr>
+              <tr>
+                <td>10-12 P.M.</td>
+                <td class="text-warning">
+                  <span class="dot bg-warning"
+                    style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
+                  Reserved
+                </td>
+              </tr>
+              <tr>
+                <td>12-15 P.M.</td>
+                <td class="text-success">
+                  <span class="dot bg-success"
+                    style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
+                  Available
+                </td>
+              </tr>
+              <tr>
+                <td>15-17 P.M.</td>
+                <td class="text-info">
+                  <span class="dot bg-info"
+                    style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span>
+                  Waiting
+                </td>
+              </tr>
+            </table>
+          </div> -->
+        <!-- <a href="/Student/booking" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</a> -->
+        <!-- </div> -->
       </div>
     </div>
   </section>
 
-<script src="/public/js/search.js"></script>
+  <script src="/public/js/search.js"></script>
 </body>
 
 </html>
