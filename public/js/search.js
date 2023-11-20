@@ -56,7 +56,7 @@ async function getroomlist() {
                         rows += '</tr>';
                     });
                     rows += '</table> </div>';
-                    rows += `<button onclick="redirectToBooking('${room.room_id}')" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</button></div>`;
+                    rows += `<button onclick="Booking('${room.room_id}')" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</button></div>`;
                 }
 
             });
@@ -72,8 +72,8 @@ async function getroomlist() {
 
 getroomlist()
 
-function redirectToBooking(roomId) {
-    window.location.href = `/Student/booking?${roomId}`;
+function Booking(roomId) {
+    window.location.href = `/Student/booking?room_id=${roomId}`;
 }
 
 

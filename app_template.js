@@ -110,85 +110,69 @@ app.get("/Student/rooms-list", function (req, res) {
 });
 
 
-// --------------booking room-----------
+// --------------booking room page-----------
 app.get("/Student/booking", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
 });
 
-app.post("/Student/booking/:id", function (req, res) {
-    const roomID = req.params.room_id
-    let sql = 'INSERT INTO reserving (room_id,user_id,time_reserving,date_reserving,comment_user) VALUES ?';
-    let params = [
-        [
-            // req.session.user_id,
-            // req.params.room_id,
-            req.body.user_id,
-            req.body.room_id,
-            req.body.time_reserving,
-            req.body.date_reserving,
-            req.body.comment_user
-        ]
-    ]
-    con.query(sql,[params],(err,result) => {
-        if(err){
-            res.status(500).send("DB error");
-            throw err;
+// get room for booking room of room_id
+app.get('/Student/booking/:roomId', (req, res) => {
+    const roomId = req.params.roomId;
+    const sql = 'SELECT * FROM room WHERE room_id = ?';
+
+    con.query(sql, roomId, function (err, result) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Database error');
         }
-        sql = `UPDATE room SET time_slots = ? WHERE room_id =?`;
-        params =[
-            req.body.UpdateData,
-            req.params.room_id
-        ]
-        con.query(sql,params,(err,result) => {
-            if(err){
-                res.status(500).send("DB error");
-                throw err;
-            }else{
-                res.send('/Student/status');
-            }
-          
+        if (result.length == 0) {
+            return res.status(404).json({ error: 'Room not found' });
+        }
+        res.json(result[0]);
     });
 });
 
-
-
-    //     const { user_id, room_id, time_reserving, date_reserving } = req.body;
-
-    //     // Check role of the user
-    //     con.query('SELECT role FROM user WHERE user_id = ?', [user_id], function (error, results, fields) {
-    //         if (error) {
-    //             console.error(error);
-    //             return res.status(500).send("Server error");
-    //         }
-
-    //         // Check if the user has role = 1 (student)
-    //         if (results.length > 0 && results[0].role == 1) {
-    //             if (!room_id || !time_reserving || !date_reserving) {
-    //                 return res.status(400).send("Please fill out all information completely.");
-    //             }
-
-    //             // Assuming default values for new columns
-    //             const insertBooking = ` INSERT INTO reserving(room_id, user_id, time_reserving, date_reserving, approved, message, comment_user, approver) 
-    //             SELECT ?, ?, ?, ?, 'Waiting', 'Default', 'Default', 'Default' 
-    //             FROM room
-    //             WHERE room_id = ? AND room_status = 'Available'`;
-
-    //             con.query(insertBooking, [room_id, user_id, time_reserving, date_reserving, room_id], function (err, results) {
-    //                 if (err) {
-    //                     console.error(err);
-    //                     if (err.code == 'ER_DUP_ENTRY') {
-    //                         return res.status(409).send('Room already booked');
-    //                     }
-    //                     return res.status(500).send('Server error during booking');
-    //                 } else if (results.affectedRows == 0) {
-    //                     return res.status(404).send('Room not available for booking');
-    //                 } else {
-    //                     return res.send('Booking successful!');
-    //                 }
-    //             });
-    //         }
-    //     });
+// booking room to database
+app.post("/Student/booking-room", function (req, res) {
+    const { room_id, date, time } = req.body;
+    // Check
+    const checkUserBooking = "SELECT * FROM booking WHERE user_id = ? AND status IN (1, 2) AND date = ?;"
+    con.query(checkUserBooking, [req.session.userID, date], function (checkErr, checkResult) {
+        if (checkErr) {
+            res.status(500).send('DB error');
+        } else {
+            if (checkResult.length > 0) {
+                res.status(400).send('You can booking only 1 Request');
+            } else {
+                const checkBookingQuery = "SELECT * FROM booking WHERE  room_id = ? AND time = ? AND date = ? AND status IN (1, 2)";
+                con.query(checkBookingQuery, [room_id, time, date], function (checkErr, checkResult) {
+                    if (checkErr) {
+                        res.status(500).send('DB error');
+                    } else {
+                        if (checkResult.length > 0) {
+                            res.status(400).send('This Time already booking');
+                        } else {
+                            const insertBookingQuery = "INSERT INTO booking (room_id, user_id, date,time,status) VALUES (?, ?, ?, ?,2)";
+                            con.query(insertBookingQuery, [room_id, req.session.userID, date, time], function (insertErr, insertResult) {
+                                if (insertErr) {
+                                    res.status(500).send('DB error');
+                                } else {
+                                    res.send('/Student/status')
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    }
+    );
 });
+
+
+
+
+
 
 
 
@@ -197,9 +181,10 @@ app.get("/Student/status", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
 });
 
-
-
-
+// ----------forfile------------
+app.get("/Student/profile", function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
+});
 
 
 
