@@ -5,6 +5,7 @@ const con = require('./config/db');
 const session = require('express-session');
 const { error } = require('console');
 const memorystore = require('memorystore')(session);
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(session({
     saveUninitialized: true,
     store: new memorystore({ checkPeriod: 24 * 60 * 60 * 1000 })
 }));
+
 
 // ------------- logout --------------
 app.get('/logout', function (req, res) {
@@ -98,16 +100,32 @@ app.get("/Student/rooms/:id", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/search.html'));
 });
 
+// app.get("/Student/rooms-list", function (req, res) {
+//     const sql = "SELECT * FROM room";
+//     con.query(sql, function (err, results) {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).send("DB error");
+//         }
+//         res.json(results);
+//     })
+// });
+
+
+
 app.get("/Student/rooms-list", function (req, res) {
-    const sql = "SELECT * FROM room";
+    const sql = "SELECT room.*, reserving.date_reserving, reserving.time_reserving FROM room LEFT JOIN reserving ON room.room_id = reserving.room_id";
     con.query(sql, function (err, results) {
         if (err) {
             console.error(err);
             return res.status(500).send("DB error");
         }
         res.json(results);
-    })
+    });
 });
+
+
+
 
 
 // --------------booking room page-----------
@@ -132,35 +150,28 @@ app.get('/Student/booking/:roomId', (req, res) => {
     });
 });
 
+
+
 // booking room to database
 app.post("/Student/booking-room", function (req, res) {
-    const { room_id, date, time } = req.body;
-    // Check
-    const checkUserBooking = "SELECT * FROM booking WHERE user_id = ? AND status IN (1, 2) AND date = ?;"
-    con.query(checkUserBooking, [req.session.userID, date], function (checkErr, checkResult) {
+    const { room_id, date_reserving, time_reserving, comment_user } = req.body;
+    user_id = req.session.user_id;
+
+    const checkUserBooking = "SELECT * FROM reserving WHERE user_id = ? AND approved IN ('Waiting', 'Reserved') AND date_reserving = ? AND time_reserving = ?"
+    con.query(checkUserBooking, [user_id, date_reserving,time_reserving], function (checkErr, checkResult) {
         if (checkErr) {
             res.status(500).send('DB error');
         } else {
             if (checkResult.length > 0) {
-                res.status(400).send('You can booking only 1 Request');
+                res.status(400).send('This time has already been booked by another user.');
             } else {
-                const checkBookingQuery = "SELECT * FROM booking WHERE  room_id = ? AND time = ? AND date = ? AND status IN (1, 2)";
-                con.query(checkBookingQuery, [room_id, time, date], function (checkErr, checkResult) {
-                    if (checkErr) {
-                        res.status(500).send('DB error');
+                const insertBookingQuery = `INSERT INTO reserving (room_id, user_id,time_reserving, date_reserving, approved, comment_user) VALUES (?, ?, ?, ?, 'Waiting', ?)`;
+                con.query(insertBookingQuery, [room_id, user_id, time_reserving, date_reserving, comment_user], function (err, result) {
+                    if (err) {
+                        console.error(err.message);
+                        res.status(500).send(err.message);
                     } else {
-                        if (checkResult.length > 0) {
-                            res.status(400).send('This Time already booking');
-                        } else {
-                            const insertBookingQuery = "INSERT INTO booking (room_id, user_id, date,time,status) VALUES (?, ?, ?, ?,2)";
-                            con.query(insertBookingQuery, [room_id, req.session.userID, date, time], function (insertErr, insertResult) {
-                                if (insertErr) {
-                                    res.status(500).send('DB error');
-                                } else {
-                                    res.send('/Student/status')
-                                }
-                            });
-                        }
+                        res.send('/Student/status');
                     }
                 });
             }
@@ -170,6 +181,22 @@ app.post("/Student/booking-room", function (req, res) {
 });
 
 
+
+app.get('/Student/get-booked-times', (req, res) => {
+    const roomId = req.query.room_id;
+    const CurrentDate = req.query.date;
+
+    const checkBookingQuery = `SELECT time_reserving FROM reserving WHERE room_id = ? AND date_reserving = ? AND approved IN ('Waiting', 'Approved')`;
+    con.query(checkBookingQuery, [roomId, CurrentDate], (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Database error' });
+        } else {
+            const bookedTimes = result.map(row => row.time_reserving);
+            res.json(bookedTimes);
+        }
+    });
+});
 
 
 
@@ -185,6 +212,36 @@ app.get("/Student/status", function (req, res) {
 app.get("/Student/profile", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
 });
+
+// update frofile
+app.put('/Student/editprofile/:id', function (req, res) {
+    const userid = req.params.id;
+    const updatedProduct = req.body;
+    bcrypt.hash(updatedProduct.password, 10, function (err, hash) {
+        if (err) {
+            return res.status(500).send('Hash error!');
+        }
+        const updateSql = `UPDATE user SET username = ?, password = ? WHERE user_id = ?`;
+        con.query(updateSql, [updatedProduct.username, hash, userid], function (err, result) {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Database error!');
+            }
+            if (result.affectedRows !== 1) {
+                return res.status(500).send('More than one row deleted');
+            }
+            res.send({ status: 'success', message: 'Username and Password has been changed!!!' });
+        })
+    });
+});
+
+
+
+
+
+
+
+
 
 
 
@@ -470,10 +527,8 @@ app.post('/login', function (req, res) {
                 if (err) {
                     res.status(500).send('Password error');
                 } else if (same) {
-                    // if (same) 
-                    // {
                     req.session.username = username;
-                    req.session.userID = results[0].id;
+                    req.session.user_id = results[0].user_id;
                     req.session.email = results[0].email;
                     req.session.role = results[0].role;
                     if (results[0].role == 1) {
@@ -488,7 +543,6 @@ app.post('/login', function (req, res) {
                 } else {
                     res.status(401).send('Login failed - Invalid credentials');
                 }
-                // }
             });
         }
     });

@@ -7,9 +7,9 @@ fetch('/user')
     .catch(error => console.error('Error:', error));
 
 
-function booking() {
-    window.location.replace("/Student/booking");
-}
+// function booking() {
+//     window.location.replace("/Student/booking");
+// }
 
 const timeSet = new Set(["8-10 A.M.", "10-12 P.M.", "12-15 P.M.", "15-17 P.M."]);
 const roomlist = document.querySelector('#roomlist');
@@ -35,6 +35,7 @@ async function getroomlist() {
 
                     rows += `<div class="mx-2">`;
                     rows += ' <table class="table table-bordered text-center">';
+
                     timeSet.forEach(function (time) {
                         rows += '<tr>';
                         rows += `<td>${time}</td>`;
@@ -55,6 +56,7 @@ async function getroomlist() {
 
                         rows += '</tr>';
                     });
+                    
                     rows += '</table> </div>';
                     rows += `<button onclick="Booking('${room.room_id}')" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</button></div>`;
                 }
@@ -72,9 +74,16 @@ async function getroomlist() {
 
 getroomlist()
 
+
 function Booking(roomId) {
     window.location.href = `/Student/booking?room_id=${roomId}`;
 }
+
+
+
+
+
+
 
 
 
