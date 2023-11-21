@@ -39,30 +39,16 @@ async function getroomlist() {
                     timeSet.forEach(function (time) {
                         rows += '<tr>';
                         rows += `<td>${time}</td>`;
-
-                        const isReserved = room.reservations && room.reservations.some(reservation => reservation.time === time);
-                        const isWaiting = room.waitingList && room.waitingList.some(waiting => waiting.time === time);
-
-                        if (isReserved) {
-                            rows += `<td class="text-warning"> <span class="dot bg-warning"
-                            style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span> Reserved</td>`;
-                        } else if (isWaiting) {
-                            rows += `<td class="text-info"> <span class="dot bg-info"
-                            style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span> Waiting</td>`;
-                        } else {
-                            rows += `<td class="text-success"><span class="dot bg-success"
-                            style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span> Available</td>`;
-                        }
-
                         rows += '</tr>';
                     });
-                    
+
                     rows += '</table> </div>';
                     rows += `<button onclick="Booking('${room.room_id}')" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</button></div>`;
                 }
 
             });
             roomlist.innerHTML = rows;
+
         } else if (response.status == 500) {
             const data = await response.text();
             throw Error(data);
@@ -72,14 +58,13 @@ async function getroomlist() {
     }
 }
 
+
 getroomlist()
 
 
 function Booking(roomId) {
     window.location.href = `/Student/booking?room_id=${roomId}`;
 }
-
-
 
 
 

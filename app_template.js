@@ -100,19 +100,6 @@ app.get("/Student/rooms/:id", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/search.html'));
 });
 
-// app.get("/Student/rooms-list", function (req, res) {
-//     const sql = "SELECT * FROM room";
-//     con.query(sql, function (err, results) {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).send("DB error");
-//         }
-//         res.json(results);
-//     })
-// });
-
-
-
 app.get("/Student/rooms-list", function (req, res) {
     const sql = "SELECT room.*, reserving.date_reserving, reserving.time_reserving FROM room LEFT JOIN reserving ON room.room_id = reserving.room_id";
     con.query(sql, function (err, results) {
@@ -123,10 +110,6 @@ app.get("/Student/rooms-list", function (req, res) {
         res.json(results);
     });
 });
-
-
-
-
 
 // --------------booking room page-----------
 app.get("/Student/booking", function (req, res) {
@@ -150,22 +133,20 @@ app.get('/Student/booking/:roomId', (req, res) => {
     });
 });
 
-
-
 // booking room to database
 app.post("/Student/booking-room", function (req, res) {
     const { room_id, date_reserving, time_reserving, comment_user } = req.body;
     user_id = req.session.user_id;
 
-    const checkUserBooking = "SELECT * FROM reserving WHERE user_id = ? AND approved IN ('Waiting', 'Reserved') AND date_reserving = ? AND time_reserving = ?"
-    con.query(checkUserBooking, [user_id, date_reserving,time_reserving], function (checkErr, checkResult) {
+    const checkExistingBooking = "SELECT * FROM reserving WHERE room_id = ? AND date_reserving = ? AND time_reserving = ?";
+    con.query(checkExistingBooking, [room_id, date_reserving, time_reserving], function (checkErr, checkResult) {
         if (checkErr) {
             res.status(500).send('DB error');
         } else {
             if (checkResult.length > 0) {
                 res.status(400).send('This time has already been booked by another user.');
             } else {
-                const insertBookingQuery = `INSERT INTO reserving (room_id, user_id,time_reserving, date_reserving, approved, comment_user) VALUES (?, ?, ?, ?, 'Waiting', ?)`;
+                const insertBookingQuery = `INSERT INTO reserving (room_id, user_id, time_reserving, date_reserving, approved, comment_user) VALUES (?, ?, ?, ?, 'Waiting', ?)`;
                 con.query(insertBookingQuery, [room_id, user_id, time_reserving, date_reserving, comment_user], function (err, result) {
                     if (err) {
                         console.error(err.message);
@@ -176,8 +157,7 @@ app.post("/Student/booking-room", function (req, res) {
                 });
             }
         }
-    }
-    );
+    });
 });
 
 
@@ -207,6 +187,18 @@ app.get('/Student/get-booked-times', (req, res) => {
 app.get("/Student/status", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
 });
+
+app.post("/Student/status", function (req, res) {
+    const sql = "SELECT * FROM reserving";
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    })
+});
+
 
 // ----------forfile------------
 app.get("/Student/profile", function (req, res) {

@@ -750,8 +750,8 @@ document.getElementById('Available').addEventListener('click', async () => {
 });
 
 
-async function updateRoomStatus(checkedRooms, room_status) {
-  const room_id = Array.from(checkedRooms).map(room => room.value);
+async function updateRoomStatus(checkedRooms, status) {
+  const rooms = Array.from(checkedRooms).map(room => room.value);
 
   try {
     const response = await fetch('/Staff/update-room/update-room-status', {
@@ -759,11 +759,11 @@ async function updateRoomStatus(checkedRooms, room_status) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ room_id, room_status })
+      body: JSON.stringify({ rooms, status })
     });
 
     if (response.ok) {
-      console.log(`Rooms updated to ${room_status} successfully`);
+      console.log(`Rooms updated to ${status} successfully`);
       getroom()
       location.reload();
     } else {

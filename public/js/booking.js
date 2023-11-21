@@ -128,6 +128,7 @@ async function bookRoom() {
         else {
             throw Error('Connection error');
         }
+        updateTimeSlotStatus(roomId, time_reserving, approved)
     } catch (err) {
         console.error(err.message);
         alert(err.message);
