@@ -234,18 +234,20 @@ nav.close ~ .dashboard .top {
   cursor: pointer;
 }
 
-.dashboard .top .date-picker {
-  width: 200px;
-  height: 100px;
+.dashboard .top .date{
+  border-radius: 5px;
+  padding: 3px 5px;
+  background-color: rgba(215, 215, 215, 0.553);
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 14px;
 }
-*,
-*.date-picker::after,
-*.date-picker::before {
+*, *.date::after, *.date::before {
   box-sizing: border-box;
 }
+
 .dashboard .top .search-box {
   position: relative;
   height: 45px;

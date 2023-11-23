@@ -8,6 +8,7 @@
     <script src="/public/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/public/css/Lucterer/request.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Reserving Request</title>
 </head>
 
@@ -73,7 +74,10 @@
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <h1 class="dash">Reserving Request</h1>
-            <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+            <div class="date">
+                <i class="uil uil-calendar-alt me-2"></i>
+                <span id="current-date" class="fw-bold"></span>
+            </div>
             <div class="search-box">
                 <i class="uil uil-search"></i>
                 <input type="text" placeholder="Search here...">
@@ -83,13 +87,15 @@
         <div class="dash-content">
             <table class="table table-bordered text-center mt-2">
                 <thead>
-                    <th class="col-3">Name</th>
-                    <th class="col-2">Room Reserved</th>
-                    <th class="col-2">Time Reserved</th>
+                    <th class="col-2">Name</th>
+                    <th class="col">Room Reserved</th>
+                    <th class="col">Time Reserved</th>
+                    <th class="col">Date Reserved</th>
+                    <th class="col-2">Reason for Reserve</th>
                     <th class="col-3">Status</th>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody id="request">
+                    <!-- <tr>
                         <td>Mr. Asususus Ffhdhfd</td>
                         <td>Meeting Room 2</td>
                         <td>8-10 A.M.</td>
@@ -98,48 +104,29 @@
                             <button id="showPopupButton" class="btn btn-danger "
                                 onclick="openPopup()">Disapprove</button>
                         </td>
-                    </tr>
-
-                    <tr>
-                        <td>Mr. Asususus Ffhdhfd</td>
-                        <td>Meeting Room 2</td>
-                        <td>8-10 A.M.</td>
-                        <td>
-                            <button id="Approve" class="btn btn-success me-3">Approve</button>
-                            <button id="showPopupButton" class="btn btn-danger "
-                                onclick="openPopup()">Disapprove</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Mr. Asususus Ffhdhfd</td>
-                        <td>Meeting Room 2</td>
-                        <td>8-10 A.M.</td>
-                        <td>
-                            <button id="Approve" class="btn btn-success me-3">Approve</button>
-                            <button id="showPopupButton" class="btn btn-danger "
-                                onclick="openPopup()">Disapprove</button>
-                        </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
 
-            <div class="popup" id="myPopup">
-                <div class="popup-content rounded">
+
+            <form class="popup" id="myPopup">
+                <!-- <div class="popup-content rounded" >
                     <span class="close" onclick="closePopup()">&times;</span>
                     <h3>Give reasons for disapprove</h3>
                     <div class="form-floating">
-                        <textarea class="form-control" id="textInput" style="height: 150px;width: 500px;" placeholder="Leave a comment here"> </textarea></div>
+                        <textarea class="form-control" id="textInput" style="height: 150px;width: 500px;"
+                            placeholder="Leave a comment here"> </textarea>
+                    </div>
                     <div>
                         <button onclick="submitText()" class="btn btn-primary mt-3">Submit</button>
                     </div>
-                </div>
-            </div>
+                </div> -->
+            </form>
         </div>
 
     </section>
 
-<script src="/public/js/request.js"></script>
+    <script src="/public/js/request.js"></script>
 
 </body>
 

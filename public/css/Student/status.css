@@ -335,20 +335,17 @@ nav.close~.dashboard .top {
     margin-right: 10px;
 }
 
-
-
-.dash-content .container img {
-    width: 140px;
+.dash-content .container #img {
+    width: 150px;
     border-radius: 10px 0px 0px 10px;
     margin-right: 15px;
 }
 
-.dashboard .dash-content .meeting {
-    display: flex;
+.dash-content .card .card-body {
+    font-size: 12px;
 }
-
-.dash-content .container .info {
-    font-size: 14px;
+.dash-content .card {
+        margin: 10px;
 }
 
 
@@ -357,8 +354,9 @@ table tr {
 }
 
 .table {
-    margin-bottom: 0;
+    margin-bottom: 10px;
 }
+
 
 
 @media (max-width: 1000px) {

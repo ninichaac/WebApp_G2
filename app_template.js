@@ -100,16 +100,106 @@ app.get("/Student/rooms/:id", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/search.html'));
 });
 
+app.get("/Student/getallrooms", function (req, res) {
+    const sql = `
+    SELECT room.*, reserving.approved, reserving.date_reserving, reserving.time_reserving
+    FROM room 
+    LEFT JOIN reserving ON room.room_id = reserving.room_id`;
+
+    con.query(sql, (err, result) => {
+        if (err) {
+            console.error('มีข้อผิดพลาดในการดึงข้อมูล: ', err);
+            res.status(500).send('ข้อผิดพลาดของเซิร์ฟเวอร์');
+            return;
+        }
+
+        if (result.length <= 0) {
+            return res.status(400).send("ไม่มีรายการห้อง");
+        }
+
+        // สร้างแผนที่เพื่อเก็บรายละเอียดห้อง
+        const roomMap = new Map();
+
+        // ประมวลผลข้อมูลแต่ละรายการและจัดกลุ่มตามรายละเอียดห้อง
+        result.forEach((row) => {
+            const { room_id, room_name, room_people, room_place, time_slots, approved, date_reserving, time_reserving } = row;
+
+            if (!roomMap.has(room_id)) {
+                roomMap.set(room_id, {
+                    room_id,
+                    room_name,
+                    room_people,
+                    room_place,
+                    reservations: [],
+                });
+            }
+
+            // เพิ่มรายละเอียดการจองหรือทำเครื่องหมายว่า available
+            if (approved !== null) {
+                roomMap.get(room_id).reservations.push({
+                    time_slots,
+                    approved,
+                    date_reserving,
+                });
+            } else {
+                const today = new Date();
+                const date_show = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+                const availableTimeslots = time_reserving ? 'Available' : time_slots; // ตรวจสอบว่ามีการจองหรือไม่
+
+                roomMap.get(room_id).reservations.push({
+                    time_slots: availableTimeslots,
+                    approved: availableTimeslots == 'Available' ? 'Available' : 'Available',
+                    date_reserving: date_show,
+                });
+            }
+        });
+
+        // แปลงค่าในแผนที่ (รายละเอียดห้องพร้อมกับการจอง) เป็นอาร์เรย์
+        const groupedResult = Array.from(roomMap.values());
+
+        res.json(groupedResult);
+    });
+});
+
 app.get("/Student/rooms-list", function (req, res) {
-    const sql = "SELECT room.*, reserving.date_reserving, reserving.time_reserving FROM room LEFT JOIN reserving ON room.room_id = reserving.room_id";
+    const sql = `SELECT * FROM room`;
     con.query(sql, function (err, results) {
         if (err) {
-            console.error(err);
+            console.log(err.message);
             return res.status(500).send("DB error");
         }
         res.json(results);
     });
 });
+
+
+app.get("/Student/rooms-status", function (req, res) {
+    const roomId = req.query.roomId;
+    const timeReserving = req.query.time;
+    const sql = `
+    SELECT r.approved 
+    FROM reserving r 
+    INNER JOIN (
+        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
+        FROM reserving 
+        WHERE room_id = ? AND time_reserving = ?
+        GROUP BY room_id, time_reserving
+    ) latest 
+    ON r.reserving_id = latest.latest_reserving_id`;
+    con.query(sql, [roomId, timeReserving], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        if (results.length > 0) {
+            res.json({ status: results[0].approved });
+        } else {
+            res.json({ status: "Available" });
+        }
+    });
+});
+
+
 
 // --------------booking room page-----------
 app.get("/Student/booking", function (req, res) {
@@ -138,13 +228,13 @@ app.post("/Student/booking-room", function (req, res) {
     const { room_id, date_reserving, time_reserving, comment_user } = req.body;
     user_id = req.session.user_id;
 
-    const checkExistingBooking = "SELECT * FROM reserving WHERE room_id = ? AND date_reserving = ? AND time_reserving = ?";
+    const checkExistingBooking = "SELECT * FROM reserving WHERE room_id = ? AND date_reserving = ? AND time_reserving = ? AND (approved = 'Waiting' OR approved = 'Disapprove')";
     con.query(checkExistingBooking, [room_id, date_reserving, time_reserving], function (checkErr, checkResult) {
         if (checkErr) {
             res.status(500).send('DB error');
         } else {
-            if (checkResult.length > 0) {
-                res.status(400).send('This time has already been booked by another user.');
+            if (checkResult.length > 0 && checkResult[0].approved === 'Waiting') {
+                res.status(400).send('This time has already been booked');
             } else {
                 const insertBookingQuery = `INSERT INTO reserving (room_id, user_id, time_reserving, date_reserving, approved, comment_user) VALUES (?, ?, ?, ?, 'Waiting', ?)`;
                 con.query(insertBookingQuery, [room_id, user_id, time_reserving, date_reserving, comment_user], function (err, result) {
@@ -159,7 +249,6 @@ app.post("/Student/booking-room", function (req, res) {
         }
     });
 });
-
 
 
 app.get('/Student/get-booked-times', (req, res) => {
@@ -180,24 +269,27 @@ app.get('/Student/get-booked-times', (req, res) => {
 
 
 
-
-
-
 // ------------booking status--------------
 app.get("/Student/status", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
 });
 
-app.post("/Student/status", function (req, res) {
-    const sql = "SELECT * FROM reserving";
-    con.query(sql, function (err, results) {
+app.get("/Student/status_booking", function (req, res) {
+    const user_id = req.session.user_id;
+    const sql = `SELECT reserving.*, room.room_img, room.room_name, room.room_place, room.room_people
+    FROM reserving
+    INNER JOIN room ON reserving.room_id = room.room_id
+    WHERE reserving.user_id = ?`;
+
+    con.query(sql, [user_id], function (err, results) {
         if (err) {
             console.error(err);
             return res.status(500).send("DB error");
         }
         res.json(results);
-    })
+    });
 });
+
 
 
 // ----------forfile------------
@@ -260,16 +352,43 @@ app.get("/Staff/room-list", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
 });
 
-app.get("/Staff/room", function (req, res) {
-    const sql = "SELECT * FROM room";
+app.get("/Staff/roomslist", function (req, res) {
+    const sql = `SELECT * FROM room`;
     con.query(sql, function (err, results) {
         if (err) {
-            console.error(err);
+            console.log(err.message);
             return res.status(500).send("DB error");
         }
         res.json(results);
-    })
-})
+    });
+});
+
+app.get("/Staff/rooms-status", function (req, res) {
+    const roomId = req.query.roomId;
+    const timeReserving = req.query.time;
+    const sql = `
+    SELECT r.approved 
+    FROM reserving r 
+    INNER JOIN (
+        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
+        FROM reserving 
+        WHERE room_id = ? AND time_reserving = ?
+        GROUP BY room_id, time_reserving
+    ) latest 
+    ON r.reserving_id = latest.latest_reserving_id`;
+    con.query(sql, [roomId, timeReserving], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        if (results.length > 0) {
+            res.json({ status: results[0].approved });
+        } else {
+            res.json({ status: "Available" });
+        }
+    });
+});
+
 
 // -----status------
 app.get("/Staff/reservations", function (req, res) {
@@ -305,10 +424,10 @@ app.post("/Staff/update-room", function (req, res) {
 
 // ------------- disabled a room --------------
 app.post('/Staff/update-room/update-room-status', (req, res) => {
-    const { room_id, room_status } = req.body;
-    const sql = `UPDATE room SET room_status = ? WHERE room_id = ?`;
+    const { rooms, status } = req.body;
+    const sql = `UPDATE room SET room_status = ? WHERE room_id IN (?)`;
 
-    con.query(sql, [room_status, room_id], (err, result) => {
+    con.query(sql, [status, rooms], (err, result) => {
         if (err) {
             console.error('Error updating room status:', err);
             res.status(500).send('Error updating room status');
@@ -407,67 +526,113 @@ app.get('/Lecturer/dashboard', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'))
 });
 
+app.get("/Lecturer/dashboard-list", function (req, res) {
+    const sql = "SELECT room_status FROM room";
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
 // -----roomlist----
 app.get('/Lecturer/room-list', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
 });
+
+app.get("/Lecturer/roomslist", function (req, res) {
+    const sql = `SELECT * FROM room`;
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+app.get("/Lecturer/rooms-status", function (req, res) {
+    const roomId = req.query.roomId;
+    const timeReserving = req.query.time;
+    const sql = `
+    SELECT r.approved 
+    FROM reserving r 
+    INNER JOIN (
+        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
+        FROM reserving 
+        WHERE room_id = ? AND time_reserving = ?
+        GROUP BY room_id, time_reserving
+    ) latest 
+    ON r.reserving_id = latest.latest_reserving_id`;
+    con.query(sql, [roomId, timeReserving], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        if (results.length > 0) {
+            res.json({ status: results[0].approved });
+        } else {
+            res.json({ status: "Available" });
+        }
+    });
+});
+
 
 // ---request---
 app.get('/Lecturer/request', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
 });
 
-// ----update status----
-app.get('/Lecturer/status', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Lecturer/status.html'))
+// get allrequest 
+app.get('/Lecturer/allrequest', function (req, res) {
+    const sql = `
+    SELECT reserving.*, user.username AS username, room.room_name AS room_name
+    FROM reserving
+    INNER JOIN user ON reserving.user_id = user.user_id
+    INNER JOIN room ON reserving.room_id = room.room_id
+    WHERE reserving.approved = 'Waiting'`;
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
 });
 
-app.put('/Lecturer/status', function (req, res) {
-    let reserving_id = req.body.reserving_id;
-    let room_status = req.body.room_status;
-    let message = req.body.message;
-    let user_id = req.body.user_id;
 
-    if (!reserving_id || !room_status || !user_id) {
-        return res.send({ msg: 'error' });
+app.put('/Lecturer/updateStatus/:id', (req, res) => {
+    const reservingId = req.body.reserving_id;
+    const message = req.body.message;
+    const approved = req.body.approved;
+    const approver = req.session.username;
+    console.log(approver)
+    console.log(reservingId)
+    if (!approver) {
+        return res.status(400).send('Unauthorized: Approver field cannot be empty');
     }
 
-    con.query('SELECT role FROM user WHERE user_id = ?', [user_id], function (error, results, fields) {
-        if (error) throw error;
-
-        if (results.length > 0 && results[0].role == 2) {
-            let data;
-            let sqlParams;
-
-            switch (parseInt(room_status)) {
-                case 1:
-                    data = 1; // Approved
-                    sqlParams = [data, user_id, reserving_id];
-                    break;
-                case 2:
-                    data = 2; // Disapproved
-                    if (!message) {
-                        return res.send({ msg: 'Please provide a message for disapproval' });
-                    }
-                    sqlParams = [data, message, user_id, reserving_id];
-                    break;
-                case 3:
-                    data = 3; // Waiting
-                    sqlParams = [data, user_id, reserving_id];
-                    break;
-                default:
-                    return res.send({ msg: 'Invalid status' });
-            }
-
-            const sql = `UPDATE reserving SET approved = ?, ${room_status == '2' ? 'message = ?,' : ''} approver = ? WHERE reserving_id = ?`;
-            con.query(sql, sqlParams, function (error, result, field) {
-                if (error) throw error;
-                return res.send({ data: result, msg: 'update Successfully' });
-            });
+    const sql = "UPDATE reserving SET approved=? , message=?,approver=? WHERE reserving_id=?"
+    con.query(sql, [approved, message, approver, reservingId], function (err, result) {
+        if (err) {
+            res.status(500).send('DB error');
         } else {
-            return res.send({ msg: 'User is not authorized for this action' });
+            if (result.affectedRows > 0) {
+                res.send('Update successful');
+            } else {
+                res.status(404).send('Room not found');
+            }
         }
-    });
+    })
+});
+
+
+
+// ----status----
+app.get('/Lecturer/status', function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
 });
 
 

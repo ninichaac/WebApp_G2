@@ -11,7 +11,7 @@ const timeSet = new Set(["8-10 A.M.", "10-12 P.M.", "12-15 P.M.", "15-17 P.M."])
 const roomlist = document.querySelector('#roomlist');
 async function getroomlist() {
     try {
-        const response = await fetch('/Student/rooms-list');
+        const response = await fetch('/Staff/roomslist');
         if (response.ok) {
             const data = await response.json();
             let rows = '';
@@ -59,7 +59,7 @@ async function getroomlist() {
                     }
 
                     rows += '</table> </div>';
-                    rows += `<button onclick="Booking('${room.room_id}')" class="btn btn-dark mt-3 mb-3 mx-5">Reserving</button></div>`;
+                    rows += `</div>`;
                 }
             }
 
@@ -79,7 +79,7 @@ getroomlist();
 
 async function Status(roomId, time) {
     try {
-        const response = await fetch(`/Student/rooms-status?roomId=${roomId}&time=${time}`);
+        const response = await fetch(`/Staff/rooms-status?roomId=${roomId}&time=${time}`);
         if (response.ok) {
             const data = await response.json();
             // console.log(data, roomId,time)
@@ -101,14 +101,11 @@ async function Status(roomId, time) {
 }
 
 
-function Booking(roomId) {
-    window.location.href = `/Student/booking?room_id=${roomId}`;
-}
 
 // Function to update status to "Available"
 async function resetStatusToAvailable() {
     try {
-        const response = await fetch('/Student/rooms-list');
+        const response = await fetch('/Staff/roomslist');
         if (response.ok) {
             const data = await response.json();
             for (const room of data) {

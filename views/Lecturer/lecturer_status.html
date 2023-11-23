@@ -8,6 +8,7 @@
     <script src="/public/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="/public/css/Lucterer/status2.css">
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Reserving Status</title>
 </head>
 
@@ -73,7 +74,10 @@
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <h1 class="dash">Reserving Status</h1>
-            <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+            <div class="date">
+                <i class="uil uil-calendar-alt me-2"></i>
+                <span id="current-date" class="fw-bold"></span>
+              </div>
             <div class="search-box">
                 <i class="uil uil-search"></i>
                 <input type="text" placeholder="Search here...">
@@ -120,7 +124,7 @@
 
     </section>
 
-    <script src="/public/js/status.js"></script>
+    <script src="/public/js/lecturer_status.js"></script>
 </body>
 
 </html>

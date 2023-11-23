@@ -15,72 +15,75 @@
 </head>
 
 <body>
-   <!-- nav -->
-   <nav>
-    <div class="logo-name pt-3">
-        <div class="logo-image">
-            <img src="/public/img/staff.png" alt="">
+    <!-- nav -->
+    <nav>
+        <div class="logo-name pt-3">
+            <div class="logo-image">
+                <img src="/public/img/staff.png" alt="">
+            </div>
         </div>
-    </div>
-    <div class="logo-name1">
-        <h3 class="logo_name1" id="username"></h3>
-        <h6 id="email" class="logo_name1"></h6>
-        <div class="role-box">
-          <p id="role" class="logo_name1 text-info fw-bold">STAFF</p>
+        <div class="logo-name1">
+            <h3 class="logo_name1" id="username"></h3>
+            <h6 id="email" class="logo_name1"></h6>
+            <div class="role-box">
+                <p id="role" class="logo_name1 text-info fw-bold">STAFF</p>
+            </div>
         </div>
-    </div>
 
-    <div class="menu-items">
-        <ul class="nav-links">
-            <li>
-              <a href="/Staff/dashboard">
-                <i class="uil uil-estate"></i>
-                <span class="link-name">Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a href="/Staff/update-room">
-                <i class="uil uil-arrow-circle-up"></i>
-                <span class="link-name">Update Room</span>
-              </a>                
-            </li>
-            <li>
-              <a href="/Staff/room-list">
-                <i class="uil uil-apps"></i>
-                <span class="link-name">Room List</span>
-              </a>
-            </li>
-            <li>
-              <a href="/Staff/reservations"><!--link -->
-                <i class="uil uil-chart"></i>
-                <span class="link-name">Reserving Status</span>
-              </a>
-            </li>
-            <li>
-              <a href="/Staff/history"><!--link -->
-                <i class="uil uil-history"></i>
-                <span class="link-name">History</span>
-              </a>
-            </li>
-          </ul>
+        <div class="menu-items">
+            <ul class="nav-links">
+                <li>
+                    <a href="/Staff/dashboard">
+                        <i class="uil uil-estate"></i>
+                        <span class="link-name">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Staff/update-room">
+                        <i class="uil uil-arrow-circle-up"></i>
+                        <span class="link-name">Update Room</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Staff/room-list">
+                        <i class="uil uil-apps"></i>
+                        <span class="link-name">Room List</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Staff/reservations"><!--link -->
+                        <i class="uil uil-chart"></i>
+                        <span class="link-name">Reserving Status</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Staff/history"><!--link -->
+                        <i class="uil uil-history"></i>
+                        <span class="link-name">History</span>
+                    </a>
+                </li>
+            </ul>
 
-        <ul class="logout-mode mb-5">
-            <li>
-                <a href="/logout">
-                    <i class="uil uil-signout" style="color: red;"></i>
-                    <span class="link-name1 ">Log out</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+            <ul class="logout-mode mb-5">
+                <li>
+                    <a href="/logout">
+                        <i class="uil uil-signout" style="color: red;"></i>
+                        <span class="link-name1 ">Log out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     <!-- dashboard -->
     <section class="dashboard">
         <div class="top">
             <i class="uil uil-bars sidebar-toggle"></i>
             <h1 class="dash">Dashboard</h1>
-            <date-picker class="date-picker" format="MMMM DD (DDD), YYYY"></date-picker>
+            <div class="date">
+                <i class="uil uil-calendar-alt me-2"></i>
+                <span id="current-date" class="fw-bold"></span>
+            </div>
             <div class="search-box">
                 <i class="uil uil-search"></i>
                 <input type="text" placeholder="Search here...">
@@ -176,7 +179,7 @@
         </div>
     </section>
 
-    <script src="/public/js/dashboard.js"></script>
+    <script src="/public/js/staff_dashboard.js"></script>
 </body>
 
 </html>
