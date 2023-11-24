@@ -15,39 +15,44 @@ async function Student_status() {
             const data = await response.json();
             console.log(data);
             let rows = '';
-            data.forEach(function (status) {
-                rows += `<div class="card" style="width: 340px;">`;
-                rows += `<div class="row g-0" id="room-${status.room_id}">`;
-                rows += `<div class="col-md-4 mt-2">`;
-                rows += `<img src="${status.room_img}" class=" img-fluid rounded-start" id="img"></div>`;
-                rows += `<div class="col-md-8">`;
-                rows += `<div class="card-body ms-2">`;
-                rows += `<h6 class="card-title"><b>${status.room_name}</b></h6>`;
-                rows += `<i class="uil uil-map-marker"></i>`;
-                rows += `<span class="card-text"> ${status.room_place}</span> <br>`;
-                rows += `<i class="uil uil-user"></i>`;
-                rows += `<span class="card-text"> ${status.room_people}</span></div></div></div> `;
-                rows += `<div class="mx-2">`;
-                rows += '<table class="table table-bordered text-center">';
-                rows += `<tr><td>${status.time_reserving}</td></tr>`
-                rows += `<tr><td>${status.date_reserving}</td></tr>`
+            if (data.length === 0) {
+                // If user hasn't reserved any rooms
+                bookstatus.innerHTML = `<h5>The status will be show up if you make a reservation.</h5>
+                 <h5>You haven't booked any rooms yet.</h5>`;
+            } else {
+                data.forEach(function (status) {
+                    rows += `<div class="card" style="width: 340px;">`;
+                    rows += `<div class="row g-0" id="room-${status.room_id}">`;
+                    rows += `<div class="col-md-4 mt-2">`;
+                    rows += `<img src="${status.room_img}" class=" img-fluid rounded-start" id="img"></div>`;
+                    rows += `<div class="col-md-8">`;
+                    rows += `<div class="card-body ms-2">`;
+                    rows += `<h6 class="card-title"><b>${status.room_name}</b></h6>`;
+                    rows += `<i class="uil uil-map-marker"></i>`;
+                    rows += `<span class="card-text"> ${status.room_place}</span> <br>`;
+                    rows += `<i class="uil uil-user"></i>`;
+                    rows += `<span class="card-text"> ${status.room_people}</span></div></div></div> `;
+                    rows += `<div class="mx-2">`;
+                    rows += '<table class="table table-bordered text-center">';
+                    rows += `<tr><td>${status.time_reserving}</td></tr>`
+                    rows += `<tr><td>${status.date_reserving}</td></tr>`
 
-                if(status.approved == 'Waiting'){
-                    rows += `<tr><td><span class="dot bg-warning" style="height: 9px;width: 9px;border-radius: 50%;display: inline-block;"></span>
+                    if (status.approved == 'Waiting') {
+                        rows += `<tr><td><span class="dot bg-warning" style="height: 9px;width: 9px;border-radius: 50%;display: inline-block;"></span>
                     Wait for the teacher to accept your request.</td></tr>`
-                }else if (status.approved == 'Approve'){
-                    rows += `<tr><td class="text-success"><span class="dot bg-success" style="height: 9px;width: 9px;border-radius: 50%;display: inline-block;"></span>
+                    } else if (status.approved == 'Approve') {
+                        rows += `<tr><td class="text-success"><span class="dot bg-success" style="height: 9px;width: 9px;border-radius: 50%;display: inline-block;"></span>
                     Your request has been accepted.</td></tr>`
-                }else{
-                    rows += `<tr><td class="text-danger"><span class="dot bg-danger" style="height: 9px;width: 9px;border-radius: 50%;display: inline-block;">
+                    } else {
+                        rows += `<tr><td class="text-danger"><span class="dot bg-danger" style="height: 9px;width: 9px;border-radius: 50%;display: inline-block;">
                     </span>
                     Your request was rejected.</td></tr>`;
-                    rows += `<tr><td class="bg-danger text-white">${status.message}</td></tr>`;
-                }
-                rows += '</table></div></div>';
-            })
-            bookstatus.innerHTML = rows;
-
+                        rows += `<tr><td class="bg-danger text-white">${status.message}</td></tr>`;
+                    }
+                    rows += '</table></div></div>';
+                })
+                bookstatus.innerHTML = rows;
+            }
         } else if (response.status == 500) {
             const data = await response.text();
             throw Error(data);
@@ -58,14 +63,6 @@ async function Student_status() {
 }
 
 Student_status()
-
-
-
-
-
-
-
-
 
 
 const body = document.querySelector("body"),

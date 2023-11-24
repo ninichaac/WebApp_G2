@@ -228,13 +228,26 @@ app.post("/Student/booking-room", function (req, res) {
     const { room_id, date_reserving, time_reserving, comment_user } = req.body;
     user_id = req.session.user_id;
 
-    const checkExistingBooking = "SELECT * FROM reserving WHERE room_id = ? AND date_reserving = ? AND time_reserving = ? AND (approved = 'Waiting' OR approved = 'Disapprove')";
+    const checkExistingBooking = "SELECT * FROM reserving WHERE room_id = ? AND date_reserving = ? AND time_reserving = ? AND approved IN ('Waiting', 'Approve')";
     con.query(checkExistingBooking, [room_id, date_reserving, time_reserving], function (checkErr, checkResult) {
         if (checkErr) {
             res.status(500).send('DB error');
         } else {
-            if (checkResult.length > 0 && checkResult[0].approved === 'Waiting') {
-                res.status(400).send('This time has already been booked');
+            if (checkResult.length > 0) {
+                const alreadyBooked = checkResult.some(row => row.approved === 'Waiting' || row.approved === 'Approve');
+                if (alreadyBooked) {
+                    res.status(400).send('This time has already been booked');
+                } else {
+                    const insertBookingQuery = `INSERT INTO reserving (room_id, user_id, time_reserving, date_reserving, approved, comment_user) VALUES (?, ?, ?, ?, 'Waiting', ?)`;
+                    con.query(insertBookingQuery, [room_id, user_id, time_reserving, date_reserving, comment_user], function (err, result) {
+                        if (err) {
+                            console.error(err.message);
+                            res.status(500).send(err.message);
+                        } else {
+                            res.send('/Student/status');
+                        }
+                    });
+                }
             } else {
                 const insertBookingQuery = `INSERT INTO reserving (room_id, user_id, time_reserving, date_reserving, approved, comment_user) VALUES (?, ?, ?, ?, 'Waiting', ?)`;
                 con.query(insertBookingQuery, [room_id, user_id, time_reserving, date_reserving, comment_user], function (err, result) {
@@ -253,10 +266,10 @@ app.post("/Student/booking-room", function (req, res) {
 
 app.get('/Student/get-booked-times', (req, res) => {
     const roomId = req.query.room_id;
-    const CurrentDate = req.query.date;
+    const currentDate = req.query.date;
 
-    const checkBookingQuery = `SELECT time_reserving FROM reserving WHERE room_id = ? AND date_reserving = ? AND approved IN ('Waiting', 'Approved')`;
-    con.query(checkBookingQuery, [roomId, CurrentDate], (err, result) => {
+    const checkBookingQuery = `SELECT time_reserving FROM reserving WHERE room_id = ? AND date_reserving = ? AND approved IN ('Waiting', 'Approve')`;
+    con.query(checkBookingQuery, [roomId, currentDate], (err, result) => {
         if (err) {
             console.error(err);
             res.status(500).json({ error: 'Database error' });
@@ -393,6 +406,24 @@ app.get("/Staff/rooms-status", function (req, res) {
 // -----status------
 app.get("/Staff/reservations", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
+});
+
+app.get('/Staff/Status', function (req, res){
+    const approver = req.session.username;
+    const sql = `
+        SELECT reserving.*, user.username AS username, room.room_name AS room_name
+        FROM reserving
+        INNER JOIN user ON reserving.user_id = user.user_id
+        INNER JOIN room ON reserving.room_id = room.room_id
+        WHERE reserving.approved IN ('Approve', 'Disapprove')`;
+    
+    con.query(sql, [approver], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
 });
 
 // -----history------
@@ -629,10 +660,27 @@ app.put('/Lecturer/updateStatus/:id', (req, res) => {
 });
 
 
-
 // ----status----
 app.get('/Lecturer/status', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
+});
+
+app.get('/Lecturer/reserving_status', function (req, res){
+    const approver = req.session.username;
+    const sql = `
+        SELECT reserving.*, user.username AS username, room.room_name AS room_name
+        FROM reserving
+        INNER JOIN user ON reserving.user_id = user.user_id
+        INNER JOIN room ON reserving.room_id = room.room_id
+        WHERE reserving.approved IN ('Approve', 'Disapprove')`;
+    
+    con.query(sql, [approver], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
 });
 
 
@@ -698,7 +746,7 @@ app.post('/login', function (req, res) {
                         res.send('/Staff/dashboard');
                     }
                 } else {
-                    res.status(401).send('Login failed - Invalid credentials');
+                    res.status(401).send('Login failed!');
                 }
             });
         }

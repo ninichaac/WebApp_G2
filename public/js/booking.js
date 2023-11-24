@@ -48,6 +48,7 @@ async function bookroom() {
 
 
                 book_room.innerHTML = roomInfo;
+                fetchAndSetBookedTimes();
             } else {
                 throw new Error('Room data not found');
             }
@@ -76,6 +77,17 @@ function getCurrentDate() {
     return currentDate.toLocaleDateString('en-US', options);
 }
 
+async function fetchAndSetBookedTimes() {
+    const roomId = urlParams.get('room_id');
+    const bookedTimes = await fetchBookedTimes(roomId, getCurrentDate());
+    const timeOptions = document.getElementById('time');
+
+    Array.from(timeOptions.options).forEach(option => {
+        if (bookedTimes.includes(option.value)) {
+            option.disabled = true;
+        }
+    });
+}
 
 async function fetchBookedTimes(roomId, date) {
     try {
@@ -123,12 +135,15 @@ async function bookRoom() {
             const response = await fetch('/Student/booking-room', options);
 
             const bookedTimes = await fetchBookedTimes(roomId, CurrentDate);
-            const timeOptions = document.getElementById('time');
-            Array.from(timeOptions.options).forEach(option => {
-                if (bookedTimes.includes(option.value)) {
-                    option.disabled = true;
-                }
-            });
+            if (bookedTimes.length > 0) {
+                const timeOptions = document.getElementById('time');
+                bookedTimes.forEach(bookedTime => {
+                    const option = timeOptions.querySelector(`option[value="${bookedTime}"]`);
+                    if (option) {
+                        option.disabled = true;
+                    }
+                });
+            }
             if (response.ok) {
                 const data = await response.text();
                 window.location.replace(data);

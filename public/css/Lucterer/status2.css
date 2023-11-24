@@ -246,7 +246,7 @@ nav.close~.dashboard {
     width: calc(100% - 250px);
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 30px 14px;
     background-color: var(--panel-color);
     transition: var(--tran-05);
     z-index: 10;
@@ -345,7 +345,7 @@ nav.close~.dashboard .top {
     font-size: 16px;
 }
 .table td {
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .approve-button {

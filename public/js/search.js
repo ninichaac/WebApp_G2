@@ -108,7 +108,7 @@ function Booking(roomId) {
 // Function to update status to "Available"
 async function resetStatusToAvailable() {
     try {
-        const response = await fetch('/Student/rooms-list');
+        const response = await fetch('/Student/rooms-status');
         if (response.ok) {
             const data = await response.json();
             for (const room of data) {
@@ -126,6 +126,7 @@ async function resetStatusToAvailable() {
         console.error(error.message);
     }
 }
+
 
 // Function to get current time and reset status at midnight
 function resetStatusAtMidnight() {
@@ -145,10 +146,6 @@ function resetStatusAtMidnight() {
 
 // Call the function to start resetting status
 resetStatusAtMidnight();
-
-
-
-
 
 
 
