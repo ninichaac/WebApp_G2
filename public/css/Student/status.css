@@ -357,7 +357,11 @@ table tr {
     margin-bottom: 10px;
 }
 
-
+#hhh{
+    padding-left: 400px;
+    padding-top: 80px;
+    text-align: center;
+}
 
 @media (max-width: 1000px) {
     nav {

@@ -17,8 +17,8 @@ async function Student_status() {
             let rows = '';
             if (data.length === 0) {
                 // If user hasn't reserved any rooms
-                bookstatus.innerHTML = `<h5>The status will be show up if you make a reservation.</h5>
-                 <h5>You haven't booked any rooms yet.</h5>`;
+                bookstatus.innerHTML = `<div id="hhh"><h5>The status will be show up if you make a reservation.</h5>
+                 <h5>You haven't booked any rooms yet.</h5></div>`;
             } else {
                 data.forEach(function (status) {
                     rows += `<div class="card" style="width: 340px;">`;
