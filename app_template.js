@@ -172,7 +172,6 @@ app.get("/Student/rooms-list", function (req, res) {
     });
 });
 
-
 app.get("/Student/rooms-status", function (req, res) {
     const roomId = req.query.roomId;
     const timeReserving = req.query.time;
@@ -198,7 +197,6 @@ app.get("/Student/rooms-status", function (req, res) {
         }
     });
 });
-
 
 
 // --------------booking room page-----------
@@ -263,7 +261,6 @@ app.post("/Student/booking-room", function (req, res) {
     });
 });
 
-
 app.get('/Student/get-booked-times', (req, res) => {
     const roomId = req.query.room_id;
     const currentDate = req.query.date;
@@ -287,6 +284,7 @@ app.get("/Student/status", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
 });
 
+// booking status for user_id
 app.get("/Student/status_booking", function (req, res) {
     const user_id = req.session.user_id;
     const sql = `SELECT reserving.*, room.room_img, room.room_name, room.room_place, room.room_people
@@ -302,7 +300,6 @@ app.get("/Student/status_booking", function (req, res) {
         res.json(results);
     });
 });
-
 
 
 // ----------forfile------------
@@ -331,144 +328,6 @@ app.put('/Student/editprofile/:id', function (req, res) {
         })
     });
 });
-
-
-
-
-
-
-
-
-
-
-
-// ================STAFF===========================
-
-// ----dashboard
-app.get("/Staff/dashboard", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
-});
-
-app.get("/Staff/dashboard-list", function (req, res) {
-    const sql = "SELECT room_status FROM room";
-    con.query(sql, function (err, results) {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("DB error");
-        }
-        res.json(results);
-    });
-});
-
-// ------room list-----
-app.get("/Staff/room-list", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
-});
-
-app.get("/Staff/roomslist", function (req, res) {
-    const sql = `SELECT * FROM room`;
-    con.query(sql, function (err, results) {
-        if (err) {
-            console.log(err.message);
-            return res.status(500).send("DB error");
-        }
-        res.json(results);
-    });
-});
-
-app.get("/Staff/rooms-status", function (req, res) {
-    const roomId = req.query.roomId;
-    const timeReserving = req.query.time;
-    const sql = `
-    SELECT r.approved 
-    FROM reserving r 
-    INNER JOIN (
-        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
-        FROM reserving 
-        WHERE room_id = ? AND time_reserving = ?
-        GROUP BY room_id, time_reserving
-    ) latest 
-    ON r.reserving_id = latest.latest_reserving_id`;
-    con.query(sql, [roomId, timeReserving], function (err, results) {
-        if (err) {
-            console.log(err.message);
-            return res.status(500).send("DB error");
-        }
-        if (results.length > 0) {
-            res.json({ status: results[0].approved });
-        } else {
-            res.json({ status: "Available" });
-        }
-    });
-});
-
-
-// -----status------
-app.get("/Staff/reservations", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
-});
-
-app.get('/Staff/Status', function (req, res){
-    const approver = req.session.username;
-    const sql = `
-        SELECT reserving.*, user.username AS username, room.room_name AS room_name
-        FROM reserving
-        INNER JOIN user ON reserving.user_id = user.user_id
-        INNER JOIN room ON reserving.room_id = room.room_id
-        WHERE reserving.approved IN ('Approve', 'Disapprove')`;
-    
-    con.query(sql, [approver], function (err, results) {
-        if (err) {
-            console.log(err.message);
-            return res.status(500).send("DB error");
-        }
-        res.json(results);
-    });
-});
-
-// -----history------
-app.get("/Staff/history", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
-});
-
-// ------------- Add a new room --------------
-app.get("/Staff/update-room", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
-});
-
-app.post("/Staff/update-room", function (req, res) {
-    const { roomImg, roomNum, roomLoca, people } = req.body;
-    if (!roomImg || !roomNum || !roomLoca || !people) {
-        return res.status(400).send("Please fill out all information completely.");
-    }
-    const sql = `INSERT INTO room (room_img,room_name, room_place, room_people, time_slots,room_status) VALUES (?,?,?,?,'8-10 A.M.,10-12 P.M.,12-15 P.M.,15-17 P.M.','Available')`;
-    con.query(sql, [roomImg, roomNum, roomLoca, people], function (err, _results) {
-        if (err) {
-            console.error(err);
-            res.status(500).send("Incomplete data: Missing fields");
-        } else {
-            // res.send('Room added successfully');
-            res.send('/Staff/update-room');
-        }
-    });
-});
-
-// ------------- disabled a room --------------
-app.post('/Staff/update-room/update-room-status', (req, res) => {
-    const { rooms, status } = req.body;
-    const sql = `UPDATE room SET room_status = ? WHERE room_id IN (?)`;
-
-    con.query(sql, [status, rooms], (err, result) => {
-        if (err) {
-            console.error('Error updating room status:', err);
-            res.status(500).send('Error updating room status');
-            return;
-        }
-        console.log('Room status updated successfully');
-        res.status(200).send('Room status updated successfully');
-    });
-});
-
 
 
 
@@ -551,6 +410,143 @@ app.post('/forgot-password/reset-password/:id', function (req, res) {
 
 
 
+
+
+
+// ================STAFF===========================
+
+// ----dashboard
+app.get("/Staff/dashboard", function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
+});
+
+app.get("/Staff/dashboard-list", function (req, res) {
+    const sql = "SELECT room_status FROM room";
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+// ------room list-----
+app.get("/Staff/room-list", function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
+});
+
+app.get("/Staff/roomslist", function (req, res) {
+    const sql = `SELECT * FROM room`;
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+app.get("/Staff/rooms-status", function (req, res) {
+    const roomId = req.query.roomId;
+    const timeReserving = req.query.time;
+    const sql = `
+    SELECT r.approved 
+    FROM reserving r 
+    INNER JOIN (
+        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
+        FROM reserving 
+        WHERE room_id = ? AND time_reserving = ?
+        GROUP BY room_id, time_reserving
+    ) latest 
+    ON r.reserving_id = latest.latest_reserving_id`;
+    con.query(sql, [roomId, timeReserving], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        if (results.length > 0) {
+            res.json({ status: results[0].approved });
+        } else {
+            res.json({ status: "Available" });
+        }
+    });
+});
+
+
+// -----status------
+app.get("/Staff/reservations", function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
+});
+
+// allstatus
+app.get('/Staff/Status', function (req, res){
+    const approver = req.session.username;
+    const sql = `
+        SELECT reserving.*, user.username AS username, room.room_name AS room_name
+        FROM reserving
+        INNER JOIN user ON reserving.user_id = user.user_id
+        INNER JOIN room ON reserving.room_id = room.room_id
+        WHERE reserving.approved IN ('Approve', 'Disapprove')`;
+    
+    con.query(sql, [approver], function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+
+// -----history------
+app.get("/Staff/history", function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
+});
+
+// ------------- Add a new room --------------
+app.get("/Staff/update-room", function (req, res) {
+    res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
+});
+
+app.post("/Staff/update-room", function (req, res) {
+    const { roomImg, roomNum, roomLoca, people } = req.body;
+    if (!roomImg || !roomNum || !roomLoca || !people) {
+        return res.status(400).send("Please fill out all information completely.");
+    }
+    const sql = `INSERT INTO room (room_img,room_name, room_place, room_people, time_slots,room_status) VALUES (?,?,?,?,'8-10 A.M.,10-12 P.M.,12-15 P.M.,15-17 P.M.','Available')`;
+    con.query(sql, [roomImg, roomNum, roomLoca, people], function (err, _results) {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Incomplete data: Missing fields");
+        } else {
+            // res.send('Room added successfully');
+            res.send('/Staff/update-room');
+        }
+    });
+});
+
+// ------------- disabled a room --------------
+app.post('/Staff/update-room/update-room-status', (req, res) => {
+    const { rooms, status } = req.body;
+    const sql = `UPDATE room SET room_status = ? WHERE room_id IN (?)`;
+
+    con.query(sql, [status, rooms], (err, result) => {
+        if (err) {
+            console.error('Error updating room status:', err);
+            res.status(500).send('Error updating room status');
+            return;
+        }
+        console.log('Room status updated successfully');
+        res.status(200).send('Room status updated successfully');
+    });
+});
+
+
+
+
+
+
 // ====================TEACHER==========================================
 // -----dashboard-----------
 app.get('/Lecturer/dashboard', function (req, res) {
@@ -573,6 +569,7 @@ app.get('/Lecturer/room-list', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
 });
 
+//allroomlist
 app.get("/Lecturer/roomslist", function (req, res) {
     const sql = `SELECT * FROM room`;
     con.query(sql, function (err, results) {
@@ -584,6 +581,7 @@ app.get("/Lecturer/roomslist", function (req, res) {
     });
 });
 
+// statusroom
 app.get("/Lecturer/rooms-status", function (req, res) {
     const roomId = req.query.roomId;
     const timeReserving = req.query.time;
@@ -611,6 +609,7 @@ app.get("/Lecturer/rooms-status", function (req, res) {
 });
 
 
+
 // ---request---
 app.get('/Lecturer/request', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
@@ -633,7 +632,7 @@ app.get('/Lecturer/allrequest', function (req, res) {
     });
 });
 
-
+// approve/disapprove
 app.put('/Lecturer/updateStatus/:id', (req, res) => {
     const reservingId = req.body.reserving_id;
     const message = req.body.message;
@@ -690,6 +689,8 @@ app.get('/Lecturer/reserving_status', function (req, res){
 app.get('/Lecturer/history', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
 });
+
+
 
 
 
