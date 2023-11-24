@@ -58,11 +58,10 @@ async function restatus() {
                 if (status.approved == 'Approve') {
                     rows += `<td class="text-success">Approve</td>`
                     rows += `</tr>`;
-                } else {
-                    rows += `<td class="text-danger>Disapprove</td>`
+                } else if (status.approved == 'Disapprove') {
+                    rows += `<td class="text-danger">Disapprove</td>`
                     rows += `</tr>`;
                 }
-
             }
             re_status.innerHTML = rows;
         } else if (response.status == 500) {
