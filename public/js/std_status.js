@@ -21,7 +21,7 @@ async function Student_status() {
                  <h5>You haven't booked any rooms yet.</h5></div>`;
             } else {
                 data.forEach(function (status) {
-                    rows += `<div class="card" style="width: 340px;">`;
+                    rows += `<div class="card" style="width: 380px;">`;
                     rows += `<div class="row g-0" id="room-${status.room_id}">`;
                     rows += `<div class="col-md-4 mt-2">`;
                     rows += `<img src="${status.room_img}" class=" img-fluid rounded-start" id="img"></div>`;

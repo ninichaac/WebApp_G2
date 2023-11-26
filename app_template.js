@@ -41,7 +41,7 @@ app.get('/user', function (req, res) {
 
 
 
-// ===================STUDENT===================================
+// ==============================STUDENT===================================
 
 // ------------------register-----------------
 app.get('/register', function (_req, res) {
@@ -198,7 +198,6 @@ app.get("/Student/rooms-status", function (req, res) {
     });
 });
 
-
 // --------------booking room page-----------
 app.get("/Student/booking", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
@@ -278,7 +277,6 @@ app.get('/Student/get-booked-times', (req, res) => {
 });
 
 
-
 // ------------booking status--------------
 app.get("/Student/status", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
@@ -328,7 +326,6 @@ app.put('/Student/editprofile/:id', function (req, res) {
         })
     });
 });
-
 
 
 // ===============forget password==============
@@ -413,14 +410,15 @@ app.post('/forgot-password/reset-password/:id', function (req, res) {
 
 
 
-// ================STAFF===========================
+// ==========================STAFF============================
 
 // ----dashboard
 app.get("/Staff/dashboard", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
 });
 
-app.get("/Staff/dashboard-list", function (req, res) {
+//count of Available/Disable room
+app.get("/Staff/dashboard-list/room", function (req, res) {
     const sql = "SELECT room_status FROM room";
     con.query(sql, function (err, results) {
         if (err) {
@@ -431,11 +429,46 @@ app.get("/Staff/dashboard-list", function (req, res) {
     });
 });
 
+//count of reserving slots
+app.get("/Staff/dashboard-list/reserving", function (req, res) {
+    const sql = `
+    SELECT reserving.*,room.room_name AS room_name
+    FROM reserving
+    INNER JOIN room ON reserving.room_id = room.room_id
+    WHERE reserving.approved = 'Approve'`;
+
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+
+// recent activity of all teacher for staff
+app.get("/Staff/activity", function (req, res) {
+    const sql = `
+    SELECT reserving.*, user.username, room.room_name
+    FROM reserving
+    INNER JOIN user ON reserving.user_id = user.user_id
+    INNER JOIN room ON reserving.room_id = room.room_id 
+    `;
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
 // ------room list-----
 app.get("/Staff/room-list", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
 });
-
+// getroom detail
 app.get("/Staff/roomslist", function (req, res) {
     const sql = `SELECT * FROM room`;
     con.query(sql, function (err, results) {
@@ -446,7 +479,7 @@ app.get("/Staff/roomslist", function (req, res) {
         res.json(results);
     });
 });
-
+// get status for timeslots of room
 app.get("/Staff/rooms-status", function (req, res) {
     const roomId = req.query.roomId;
     const timeReserving = req.query.time;
@@ -473,14 +506,13 @@ app.get("/Staff/rooms-status", function (req, res) {
     });
 });
 
-
 // -----status------
 app.get("/Staff/reservations", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
 });
 
 // allstatus
-app.get('/Staff/Status', function (req, res){
+app.get('/Staff/Status', function (req, res) {
     const approver = req.session.username;
     const sql = `
         SELECT reserving.*, user.username AS username, room.room_name AS room_name
@@ -488,7 +520,7 @@ app.get('/Staff/Status', function (req, res){
         INNER JOIN user ON reserving.user_id = user.user_id
         INNER JOIN room ON reserving.room_id = room.room_id
         WHERE reserving.approved IN ('Approve', 'Disapprove')`;
-    
+
     con.query(sql, [approver], function (err, results) {
         if (err) {
             console.log(err.message);
@@ -502,6 +534,23 @@ app.get('/Staff/Status', function (req, res){
 // -----history------
 app.get("/Staff/history", function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
+});
+
+// ----history ดึงข้อมูลทั้งหมดในตารางของ reserving ดึงชื่อคนจองผ่าน user_id และดึงชื่อห้องผ่าน room_id
+app.get("/Staff/getHistory", function (req, res) {
+    const sql = `
+    SELECT reserving.*, user.username, room.room_name
+    FROM reserving
+    INNER JOIN user ON reserving.user_id = user.user_id
+    INNER JOIN room ON reserving.room_id = room.room_id 
+    `;
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
 });
 
 // ------------- Add a new room --------------
@@ -547,17 +596,55 @@ app.post('/Staff/update-room/update-room-status', (req, res) => {
 
 
 
-// ====================TEACHER==========================================
+// ===============================TEACHER==========================================
 // -----dashboard-----------
 app.get('/Lecturer/dashboard', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'))
 });
 
-app.get("/Lecturer/dashboard-list", function (req, res) {
-    const sql = "SELECT room_status FROM room";
+//count of Available/Disable room
+app.get("/Lecturer/dashboard-list/room", function (req, res) {
+    const sql = "SELECT * FROM room";
     con.query(sql, function (err, results) {
         if (err) {
             console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+//count of reserving slots
+app.get("/Lecturer/dashboard-list/reserving", function (req, res) {
+    const sql = `
+    SELECT reserving.*,room.room_name AS room_name
+    FROM reserving
+    INNER JOIN room ON reserving.room_id = room.room_id
+    WHERE reserving.approved = 'Approve'`;
+
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.error(err);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
+// get recent activity for teacher
+app.get("/Lecturer/activity", function (req, res) {
+    const approverUsername = req.session.username;
+    const sql = `
+    SELECT reserving.*, user.username, room.room_name
+    FROM reserving
+    INNER JOIN user ON reserving.user_id = user.user_id
+    INNER JOIN room ON reserving.room_id = room.room_id
+    WHERE reserving.approver = '${approverUsername}'
+    `;
+
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
             return res.status(500).send("DB error");
         }
         res.json(results);
@@ -608,8 +695,6 @@ app.get("/Lecturer/rooms-status", function (req, res) {
     });
 });
 
-
-
 // ---request---
 app.get('/Lecturer/request', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
@@ -658,22 +743,22 @@ app.put('/Lecturer/updateStatus/:id', (req, res) => {
     })
 });
 
-
 // ----status----
 app.get('/Lecturer/status', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
 });
 
-app.get('/Lecturer/reserving_status', function (req, res){
+// get status for teacher who approver
+app.get('/Lecturer/reserving_status', function (req, res) {
     const approver = req.session.username;
     const sql = `
         SELECT reserving.*, user.username AS username, room.room_name AS room_name
         FROM reserving
         INNER JOIN user ON reserving.user_id = user.user_id
         INNER JOIN room ON reserving.room_id = room.room_id
-        WHERE reserving.approved IN ('Approve', 'Disapprove')`;
-    
-    con.query(sql, [approver], function (err, results) {
+        WHERE reserving.approved IN ('Approve', 'Disapprove') AND  reserving.approver = '${approver}'`;
+
+    con.query(sql, function (err, results) {
         if (err) {
             console.log(err.message);
             return res.status(500).send("DB error");
@@ -682,13 +767,31 @@ app.get('/Lecturer/reserving_status', function (req, res){
     });
 });
 
-
-
-
 // -----history----
 app.get('/Lecturer/history', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
 });
+
+// get history for teacher who approver
+app.get("/Lecturer/getHistory", function (req, res) {
+    const approverUsername = req.session.username;
+    const sql = `
+    SELECT reserving.*, user.username, room.room_name
+    FROM reserving
+    INNER JOIN user ON reserving.user_id = user.user_id
+    INNER JOIN room ON reserving.room_id = room.room_id
+    WHERE reserving.approver = '${approverUsername}'
+    `;
+
+    con.query(sql, function (err, results) {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).send("DB error");
+        }
+        res.json(results);
+    });
+});
+
 
 
 
@@ -757,6 +860,7 @@ app.post('/login', function (req, res) {
 
 
 // ============ Page routes =================
+// teacher page
 app.get('/Lecturer/dashboard', function (req, res) {
     if (req.session.role == 2) {
         res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'));
@@ -766,6 +870,7 @@ app.get('/Lecturer/dashboard', function (req, res) {
 
 });
 
+// staff page
 app.get('/Staff/dashboard', function (req, res) {
     if (req.session.role == 3) {
         res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
@@ -775,7 +880,7 @@ app.get('/Staff/dashboard', function (req, res) {
 
 });
 
-// ------------ product page ----------
+// student page
 app.get('/Student/homepage', function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/homepage.html'))

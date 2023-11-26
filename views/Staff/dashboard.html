@@ -98,21 +98,6 @@
                 </div>
 
                 <div class="boxes" id="boxesroom">
-                    <!-- <div class="box box1">
-                        <i class="uil uil-check-circle"></i>
-                        <span class="text">Available Room</span>
-                        <span class="number">6 (Rooms)</span>
-                    </div>
-                    <div class="box box2">
-                        <i class="uil uil-presentation-check"></i>
-                        <span class="text">Reserved Room</span>
-                        <span class="number">10 (Rooms)</span>
-                    </div>
-                    <div class="box box3">
-                        <i class="uil uil-ban"></i>
-                        <span class="text">Disabled Room</span>
-                        <span class="number">4 (Rooms)</span>
-                    </div> -->
                 </div>
             </div>
 
@@ -122,57 +107,64 @@
                     <span class="text">Recent Activity</span>
                 </div>
 
-                <div class="activity-data">
-                    <div class="data names">
-                        <span class="data-title">Name</span>
-                        <span class="data-list">Prem Shahi</span>
-                        <span class="data-list">Deepa Chand</span>
-                        <span class="data-list">Manisha Chand</span>
-                        <span class="data-list">Pratima Shahi</span>
-                        <span class="data-list">Man Shahi</span>
-                        <span class="data-list">Ganesh Chand</span>
-                        <span class="data-list">Bikash Chand</span>
-                    </div>
-                    <div class="data email">
-                        <span class="data-title">Room Reserved</span>
-                        <span class="data-list">Meeting Room 3</span>
-                        <span class="data-list">Meeting Room 1</span>
-                        <span class="data-list">Meeting Room 6</span>
-                        <span class="data-list">Meeting Room 5</span>
-                        <span class="data-list">Meeting Room 4</span>
-                        <span class="data-list">Meeting Room 4</span>
-                        <span class="data-list">Meeting Room 2</span>
-                    </div>
-                    <div class="data joined">
-                        <span class="data-title">Date Reserved</span>
-                        <span class="data-list">21 October 2023</span>
-                        <span class="data-list">24 October 2023</span>
-                        <span class="data-list">24 October 2023</span>
-                        <span class="data-list">25 October 2023</span>
-                        <span class="data-list">25 October 2023</span>
-                        <span class="data-list">25 October 2023</span>
-                        <span class="data-list">25 October 2023</span>
-                    </div>
-                    <div class="data type">
-                        <span class="data-title">Time Reserved</span>
-                        <span class="data-list">12-15 P.M.</span>
-                        <span class="data-list">10-12 P.M.</span>
-                        <span class="data-list">10-12 P.M.</span>
-                        <span class="data-list">12-15 P.M.</span>
-                        <span class="data-list">15-17 P.M.</span>
-                        <span class="data-list">8-10 P.M.</span>
-                        <span class="data-list">12-15 P.M.</span>
+                <div class="activity-data row p-3">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr class="fs-5 fw-bold">
+                                <td>Name</td>
+                                <td>Room Reserved</td>
+                                <td>Date Reserved</td>
+                                <td>Time Reserved</td>
+                                <td>Status</td>
+                                <td>Approver</td>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyHistorycontent"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
+        <!-- Modal สำหรับข้อมูล Available Room -->
+        <div class="modal fade" id="availableRoomModal" tabindex="-1" aria-labelledby="availableRoomModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="availableRoomModalLabel">Available Room</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="data status">
-                        <span class="data-title">Status</span>
-                        <span class="data-list">Approve</span>
-                        <span class="data-list">Approve</span>
-                        <span class="data-list">Approve</span>
-                        <span class="data-list">Approve</span>
-                        <span class="data-list">Approve</span>
-                        <span class="data-list">Approve</span>
-                        <span class="data-list">Approve</span>
+                    <div class="modal-body" id="availableRoomlist">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal สำหรับข้อมูล Reserved Room -->
+        <div class="modal fade" id="reservedRoomModal" tabindex="-1" aria-labelledby="reservedRoomModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="reservedRoomModalLabel">Reserved Slots</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="reservedRoomlist">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal สำหรับข้อมูล Disabled Room -->
+        <div class="modal fade" id="disabledRoomModal" tabindex="-1" aria-labelledby="disabledRoomModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="disabledRoomModalLabel">Disabled Room</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="disabledRoomlist">
                     </div>
                 </div>
             </div>

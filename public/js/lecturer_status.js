@@ -55,6 +55,7 @@ async function restatus() {
                 rows += `<td>${status.time_reserving}</td>`
                 rows += `<td>${status.date_reserving}</td>`
                 rows += `<td>${status.comment_user}</td>`
+                rows += `<td>${status.message}</td>`
                 if (status.approved == 'Approve') {
                     rows += `<td class="text-success">Approve</td>`
                     rows += `</tr>`;

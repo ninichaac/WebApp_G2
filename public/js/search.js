@@ -105,47 +105,43 @@ function Booking(roomId) {
     window.location.href = `/Student/booking?room_id=${roomId}`;
 }
 
-// Function to update status to "Available"
-async function resetStatusToAvailable() {
-    try {
-        const response = await fetch('/Student/rooms-status');
-        if (response.ok) {
-            const data = await response.json();
-            for (const room of data) {
-                for (const time of timeSet) {
-                    const statusCell = document.getElementById(`status-${room.room_id}-${time}`);
-                    if (statusCell) {
-                        statusCell.textContent = 'Available';
-                    }
-                }
-            }
-        } else {
-            throw Error('Failed to fetch room data');
-        }
-    } catch (error) {
-        console.error(error.message);
-    }
-}
-
-
-// Function to get current time and reset status at midnight
-function resetStatusAtMidnight() {
+// Function to update status to 'Available' at midnight
+function updateStatusAtMidnight() {
     const now = new Date();
     const midnight = new Date(
         now.getFullYear(),
         now.getMonth(),
-        now.getDate() + 1, // Next day
-        0, 0, 0 // Midnight
+        now.getDate() + 1, // This sets the update time to midnight
+        0, // Hours
+        0, // Minutes
+        0 // Seconds
     );
-    const timeUntilMidnight = midnight - now; // Calculate time until midnight
-    setTimeout(function() {
-        resetStatusToAvailable(); // Reset status at midnight
-        setInterval(resetStatusToAvailable, 24 * 60 * 60 * 1000); // Set interval to reset status every day
+    const timeUntilMidnight = midnight - now;
+
+    setTimeout(async () => {
+        try {
+            // Iterate through each room to update the status at midnight
+            const roomElements = document.querySelectorAll('.card');
+            for (const roomElement of roomElements) {
+                const roomId = roomElement.id.split('-')[1]; // Extract room ID from element ID
+
+                for (const time of timeSet) {
+                    // Update status cell for each time slot
+                    const statusCell = document.getElementById(`status-${roomId}-${time}`);
+                    if (statusCell) {
+                        statusCell.innerHTML = '<span class="dot bg-success" style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span> Avaliable';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
     }, timeUntilMidnight);
 }
 
-// Call the function to start resetting status
-resetStatusAtMidnight();
+// Call the function to start the countdown to midnight update
+updateStatusAtMidnight();
+
 
 
 
