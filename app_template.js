@@ -106,91 +106,7 @@ app.post('/register', function (req, res) {
 });
 
 app.get("/Student/getallrooms", function (req, res) {
-    const timeSet = new Set(["8-10 A.M.", "10-12 P.M.", "12-15 P.M.", "15-17 P.M."]);
-    const sql = `
-    SELECT room.*, reserving.approved, reserving.date_reserving, reserving.time_reserving
-    FROM room 
-    LEFT JOIN reserving ON room.room_id = reserving.room_id`;
-
-    con.query(sql, (err, result) => {
-        if (err) {
-            console.error('มีข้อผิดพลาดในการดึงข้อมูล: ', err);
-            res.status(500).send('ข้อผิดพลาดของเซิร์ฟเวอร์');
-            return;
-        }
-
-        if (result.length <= 0) {
-            return res.status(400).send("ไม่มีรายการห้อง");
-        }
-
-        // สร้างแผนที่เพื่อเก็บรายละเอียดห้อง
-        const roomMap = new Map();
-
-        // ประมวลผลข้อมูลแต่ละรายการและจัดกลุ่มตามรายละเอียดห้อง
-        result.forEach((row) => {
-            const { room_id, room_name, room_people, room_place, approved, date_reserving, time_reserving } = row;
-
-            if (!roomMap.has(room_id)) {
-                roomMap.set(room_id, {
-                    room_id,
-                    room_name,
-                    room_people,
-                    room_place,
-                    reservations: [],
-                });
-            }
-
-            // เพิ่มรายละเอียดการจองหรือทำเครื่องหมายว่า available
-            if (approved !== null) {
-                roomMap.get(room_id).reservations.push({
-                    time_reserving,
-                    approved,
-                    date_reserving,
-                });
-            } else {
-                const today = new Date();
-                const date_show = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-                let reservationStatus = 'Available';
-
-                // ตรวจสอบสถานะการจองของแต่ละเวลา
-                if (timeSet.has(time_reserving)) {
-                    // เช็คสถานะการจองจากฐานข้อมูล
-                    const roomStatusSql = `
-                    SELECT r.approved 
-                    FROM reserving r 
-                    INNER JOIN (
-                        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
-                        FROM reserving 
-                        WHERE room_id = ? AND time_reserving = ?
-                        GROUP BY room_id, time_reserving
-                    ) latest 
-                    ON r.reserving_id = latest.latest_reserving_id`;
-
-                    con.query(roomStatusSql, [room_id, time_reserving], (statusErr, statusResults) => {
-                        if (statusErr) {
-                            console.log(statusErr.message);
-                            return res.status(500).send("DB error");
-                        }
-                        if (statusResults.length > 0) {
-                            reservationStatus = statusResults[0].approved;
-                        }
-                        roomMap.get(room_id).reservations.push({
-                            time_reserving,
-                            approved: reservationStatus,
-                            date_reserving: date_show,
-                        });
-                        res.json(groupedResult);
-                    });
-                } else {
-                    roomMap.get(room_id).reservations.push({
-                        time_reserving: 'Invalid Time', // หรือสิ่งที่ต้องการให้แสดงเมื่อเวลาไม่ถูกต้อง
-                        approved: 'Invalid Time',
-                        date_reserving: date_show,
-                    });
-                }
-            }
-        });
-    });
+   
 });
 
 // get room information
@@ -323,24 +239,6 @@ app.get("/Student/status_booking", function (req, res) {
     });
 });
 
-// update profile
-app.put('/Student/editprofile/:id', function (req, res) {
-    const id = req.params.id;
-    const updatedUsername = req.body.username;
-
-    const updateSql = `UPDATE user SET username = ? WHERE user_id = ?`;
-
-    con.query(updateSql, [updatedUsername, id], function (err, result) {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Database error!');
-        }
-        if (result.affectedRows !== 1) {
-            return res.status(500).send('More than one row deleted');
-        }
-        res.send({ status: 'success', message: 'Username has been changed!!!' });
-    });
-});
 
 
 
@@ -952,15 +850,6 @@ app.get('/Student/booking', ensureAuthenticated, function (req, res) {
 app.get('/Student/status', ensureAuthenticated, function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/status.html'));
-    } else {
-        res.redirect('/');
-    }
-});
-
-// profile page
-app.get("/Student/profile", ensureAuthenticated, function (req, res) {
-    if (req.session.role == 1) {
-        res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
     } else {
         res.redirect('/');
     }

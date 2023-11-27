@@ -31,10 +31,6 @@ async function bookroom() {
                 timeSet.forEach(function (time) {
                     roomInfo += `<option value="${time}">${time}</option>`;
                 });
-                // roomInfo += `<option value="8-10 A.M.">8-10 A.M.</option>`;
-                // roomInfo += `<option value="10-12 P.M.">10-12 P.M.</option>`;
-                // roomInfo += `<option value="12-15 P.M.">12-15 P.M.</option>`;
-                // roomInfo += `<option value="15-17 P.M.">15-17 P.M.</option>`;
                 roomInfo += `</select></div>`;
                 roomInfo += `<div class="mt-3"><p class="text-start">Reason for requesting a meeting room?</p>`;
                 roomInfo += `<select name="reason" id="reason" class="form-select">`;
