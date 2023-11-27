@@ -200,7 +200,7 @@ async function history() {
 function createTable(startIndex, endIndex) {
     let rows = '';
     // Filter and display only approved entries
-    const approvedEntries = data.filter(entry => entry.approved === 'Approve');
+    const approvedEntries = data.filter(entry => entry.approved);
     // Display the latest 10 approved entries
     const latestApprovedEntries = approvedEntries.slice(0, 10);
     latestApprovedEntries.forEach(h => {

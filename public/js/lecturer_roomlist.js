@@ -77,6 +77,73 @@ async function getroomlist() {
 getroomlist();
 
 
+// Function to update status to "Available"
+function resetStatusToAvailable() {
+    console.log('Resetting status to Available');
+    try {
+        const response = fetch('/Student/rooms-status');
+        if (response.ok) {
+            const data = response.json();
+            for (const room of data) {
+                for (const time of timeSet) {
+                    const statusCell = document.getElementById(`status-${room.room_id}-${time}`);
+                    if (statusCell) {
+                        if (timeIsAfterMidnight()) {
+                            statusCell.innerHTML = '<span class="dot bg-success" style="height: 11px;width: 11px;border-radius: 50%;display: inline-block;"></span> Available';
+                        } else {
+                            statusCell.textContent = 'Available';
+                        }
+                    }
+                }
+            }
+        } else {
+            throw Error('Failed to fetch room data');
+        }
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+// Function to get current time and reset status at midnight
+function resetStatusAtMidnight() {
+    const now = new Date();
+    const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1, // Next day
+        0, 0, 0 // Midnight
+    );
+    const timeUntilMidnight = midnight - now; // Calculate time until midnight
+
+    setTimeout(async function() {
+        resetStatusToAvailable(); // Reset status at midnight
+        await deleteAllReservations(); // Call the function to delete all reservations
+
+        // Move setInterval outside of setTimeout
+        setInterval(async function() {
+            resetStatusToAvailable(); // Set interval to reset status every day
+            await deleteAllReservations(); // Call the function to delete all reservations
+        }, 24 * 60 * 60 * 1000);
+    }, timeUntilMidnight);
+}
+
+// Call the function to start resetting status
+resetStatusAtMidnight();
+
+async function deleteAllReservations() {
+    try {
+        const response = await fetch('/delete-all-reservations', { method: 'DELETE' });
+        if (response.ok) {
+            console.log('Deleted all reservations successfully');
+        } else {
+            throw Error('Failed to delete all reservations');
+        }
+    } catch (error) {
+        console.error('Failed to delete all reservations:', error.message);
+    }
+}
+
+
 async function Status(roomId, time) {
     try {
         const response = await fetch(`/Lecturer/rooms-status?roomId=${roomId}&time=${time}`);
@@ -100,47 +167,6 @@ async function Status(roomId, time) {
     }
 }
 
-
-// Function to update status to "Available"
-async function resetStatusToAvailable() {
-    try {
-        const response = await fetch('/Lecturer/roomslist');
-        if (response.ok) {
-            const data = await response.json();
-            for (const room of data) {
-                for (const time of timeSet) {
-                    const statusCell = document.getElementById(`status-${room.room_id}-${time}`);
-                    if (statusCell) {
-                        statusCell.textContent = 'Available';
-                    }
-                }
-            }
-        } else {
-            throw Error('Failed to fetch room data');
-        }
-    } catch (error) {
-        console.error(error.message);
-    }
-}
-
-// Function to get current time and reset status at midnight
-function resetStatusAtMidnight() {
-    const now = new Date();
-    const midnight = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate() + 1, // Next day
-        0, 0, 0 // Midnight
-    );
-    const timeUntilMidnight = midnight - now; // Calculate time until midnight
-    setTimeout(function() {
-        resetStatusToAvailable(); // Reset status at midnight
-        setInterval(resetStatusToAvailable, 24 * 60 * 60 * 1000); // Set interval to reset status every day
-    }, timeUntilMidnight);
-}
-
-// Call the function to start resetting status
-resetStatusAtMidnight();
 
 
 

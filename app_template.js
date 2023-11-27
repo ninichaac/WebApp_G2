@@ -57,7 +57,6 @@ app.delete('/delete-all-reservations', async (req, res) => {
 
 
 // ==============================STUDENT===================================
-
 // ------------------register-----------------
 app.get('/register', function (_req, res) {
     res.sendFile(path.join(__dirname, 'views/Student/register.html'));
@@ -103,10 +102,6 @@ app.post('/register', function (req, res) {
             };
         });
     });
-});
-
-app.get("/Student/getallrooms", function (req, res) {
-   
 });
 
 // get room information
@@ -240,9 +235,8 @@ app.get("/Student/status_booking", function (req, res) {
 });
 
 
-
-
 // ===============forget password==============
+// forget password page
 app.get('/forgot-password', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/forgetpass.html'))
 });
@@ -269,6 +263,7 @@ app.post('/forgot-password', function (req, res) {
 });
 
 // =============reset password==========
+// reset password page
 app.get('/forgot-password/reset-password', function (req, res) {
     res.sendFile(path.join(__dirname, 'views/resetpass.html'))
 });
@@ -358,6 +353,7 @@ app.get("/Staff/activity", function (req, res) {
     FROM reserving
     INNER JOIN user ON reserving.user_id = user.user_id
     INNER JOIN room ON reserving.room_id = room.room_id 
+    WHERE reserving.approved IN ('Approve', 'Disapprove')
     `;
     con.query(sql, function (err, results) {
         if (err) {
@@ -520,7 +516,7 @@ app.get("/Lecturer/activity", function (req, res) {
     FROM reserving
     INNER JOIN user ON reserving.user_id = user.user_id
     INNER JOIN room ON reserving.room_id = room.room_id
-    WHERE reserving.approver = '${approverUsername}'
+    WHERE reserving.approved IN ('Approve', 'Disapprove') AND reserving.approver = '${approverUsername}'
     `;
 
     con.query(sql, function (err, results) {
@@ -531,7 +527,6 @@ app.get("/Lecturer/activity", function (req, res) {
         res.json(results);
     });
 });
-
 
 //allroomlist
 app.get("/Lecturer/roomslist", function (req, res) {
@@ -642,7 +637,7 @@ app.get("/Lecturer/getHistory", function (req, res) {
     FROM reserving
     INNER JOIN user ON reserving.user_id = user.user_id
     INNER JOIN room ON reserving.room_id = room.room_id
-    WHERE reserving.approver = '${approverUsername}'
+    WHERE reserving.approved IN ('Approve', 'Disapprove') AND reserving.approver = '${approverUsername}'
     `;
 
     con.query(sql, function (err, results) {
@@ -854,7 +849,6 @@ app.get('/Student/status', ensureAuthenticated, function (req, res) {
         res.redirect('/');
     }
 });
-
 
 function ensureAuthenticated(req, res, next) {
     // Check if the user is logged in (authenticated)

@@ -103,8 +103,6 @@ function resetStatusToAvailable() {
     }
 }
 
-
-
 // Function to get current time and reset status at midnight
 function resetStatusAtMidnight() {
     const now = new Date();
@@ -143,25 +141,6 @@ async function deleteAllReservations() {
         console.error('Failed to delete all reservations:', error.message);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 async function Status(roomId, time) {

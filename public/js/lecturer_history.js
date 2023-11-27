@@ -71,7 +71,7 @@ function createTable(startIndex, endIndex) {
     for (let i = startIndex; i < endIndex; i++) { 
         if (!data[i]) break; // Stop if there are no more items
         const h = data[i];
-       if(h.approved == 'Approve'){ //loop เพื่อไล่เช็คแต่ละตารางว่าได้ Approve หรือไม่ถ้าใช่ก็จะสร้างตารางไว้ใน tbHistory
+       if(h.approved){ //loop เพื่อไล่เช็คแต่ละตารางว่าได้ Approve หรือไม่ถ้าใช่ก็จะสร้างตารางไว้ใน tbHistory
         rows += `<tr><td>${h.username}</td>`;
         rows += `<td>${h.room_name}</td>`;
         rows += `<td>${h.date_reserving}</td>`;

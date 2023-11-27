@@ -149,10 +149,10 @@ async function bookRoom() {
                     timer: 2000,
                     showConfirmButton: false
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     window.location.replace(data);
                 }, 2000);
-            } 
+            }
             else if (response.status == 401) {
                 const data = await response.text();
                 throw Error(data);
@@ -160,9 +160,8 @@ async function bookRoom() {
                 const data = await response.text();
                 throw Error(data);
             }
-            else {
-                Swal.fire('Cancelled', 'Your booking request was not processed.', 'info');
-            }
+        } else {
+            window.location.replace('/Student/rooms/:id');
         }
     } catch (err) {
         console.error(err.message);
