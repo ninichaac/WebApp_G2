@@ -146,8 +146,17 @@ async function bookRoom() {
             }
             if (response.ok) {
                 const data = await response.text();
-                window.location.replace(data);
-            }
+                Swal.fire({
+                    title: 'Booked!',
+                    text: 'Your booking has been submitted and is awaiting approval.',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                setTimeout(function() {
+                    window.location.replace(data);
+                }, 2000);
+            } 
             else if (response.status == 401) {
                 const data = await response.text();
                 throw Error(data);

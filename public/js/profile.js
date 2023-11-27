@@ -26,68 +26,71 @@ sidebarToggle.addEventListener("click", () => {
 })
 
 
-// const getnaem = document.querySelector('#getnaem');
-// const getemail = document.querySelector('#getemail');
-// let id = '';
-// getUser();
-// //get user info
-// async function getUser() {
-//   try {
-//     const response = await fetch('/user');
-//     if (response.ok) {
-//       const data = await response.json();
-//       // document.querySelector('#user').innerText = 'Welcome ' + data.username;
-//       getnaem.innerHTML = data.username;
-//       getemail.innerHTML = data.email;
-//       console.log(data);
-//       editprofilebyid();
-//       id = data.user_id;
+const getname = document.querySelector('#getname');
+const getemail = document.querySelector('#getemail');
+let id = '';
+
+//get user info
+async function getUser() {
+  try {
+    const response = await fetch('/user');
+    if (response.ok) {
+      const data = await response.json();
+      getname.value = data.username;
+      getemail.value = data.email;
+      id = data.user_id;
+    }
+    else {
+      throw Error('Connection error');
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 
-//     }
-//     else {
-//       throw Error('Connection error');
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     alert(err.message);
-//   }
-// };
+// Edit profile by ID
+async function editProfileById() {
+  const btnEdit = document.querySelector('#btnedit');
+  // let id = '';
 
-// function editprofilebyid() {
-//   bntedititemByid = document.querySelector('#editprofilebyid');
-//   bntedititemByid.onclick = async function () {
-//     const formedit = document.querySelector('#formedit');
-//     if (formedit['username'].value != '' || formedit['password'].value != '') {
-//       const updatedItem = {
-//         username: formedit['username'].value,
-//         password: formedit['password'].value,
+  btnEdit.onclick = async () => {
+    if (btnEdit.innerText == 'Edit Profile') {
+      document.querySelector('#getname').disabled = false;
+      btnEdit.innerText = 'Save';
+    } else {
+      const username = document.querySelector('#getname').value;
+      if (username.trim() !== '') {
+        try {
+          const updatedItem = { username };
 
-//       }
+          const response = await fetch(`/Student/editprofile/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedItem),
+          });
 
-//       // console.log(`${formedit['username'].value} ${formedit['password'].value}`);
-//       try {
-//         const response = await fetch(`/Student/editprofile/${id}`, {
-//           method: 'PUT',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify(updatedItem),
-//         });
+          const data = await response.json();
 
-//         const data = await response.json();
+          if (data.status == 'success') {
+            getUser();
+            window.location.reload();
 
-//         if (data.status == 'success') {
-//           alert('updated successfully');
-//           window.location.reload();
-//         } else {
-//           alert(`Error: ${data.message}`);
-//         }
-//       } catch (error) {
-//         console.error('Error updating product:', error);
-//       }
-//     } else {
-//       alert('please fill username or password')
-//     }
-//   }
-// }
+          } else {
+            alert(`Error: ${data.message}`);
+          }
+        } catch (error) {
+          console.error('Error updating username:');
+        }
+      } else {
+        alert('Please fill in the username');
+      }
+      document.querySelector('#getname').disabled = true;
+      btnEdit.innerText = 'Edit Profile';
+    }
+  };
+}
+getUser();
+editProfileById()

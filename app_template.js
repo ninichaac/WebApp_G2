@@ -5,7 +5,7 @@ const con = require('./config/db');
 const session = require('express-session');
 const { error } = require('console');
 const memorystore = require('memorystore')(session);
-const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
     cookie: { maxAge: 24 * 60 * 60 * 1000 },
-    secret: 'kuyyyyy',
+    secret: 'yyyyy',
     resave: false,
     saveUninitialized: true,
     store: new memorystore({ checkPeriod: 24 * 60 * 60 * 1000 })
@@ -34,10 +34,25 @@ app.get('/logout', function (req, res) {
 
 //-------------- Get User info ---------------
 app.get('/user', function (req, res) {
-    res.json({ "user_id": req.session.user_id, "username": req.session.username, "role": req.session.role, "email": req.session.email });
+    res.json({
+        "user_id": req.session.user_id,
+        "username": req.session.username,
+        "role": req.session.role,
+        "email": req.session.email
+    });
 });
 
+app.delete('/delete-all-reservations', async (req, res) => {
+    try {
+        const [results, fields] = await con.execute('DELETE FROM reserving');
+        console.log('Deleted all reservations successfully');
 
+        res.status(200).json({ message: 'Deleted all reservations successfully' });
+    } catch (error) {
+
+        res.status(500).json({ error: 'Failed to delete all reservations' });
+    }
+});
 
 
 
@@ -91,16 +106,17 @@ app.post('/register', function (req, res) {
 });
 
 // ------------- homepage--------------
-app.get("/Student/homepage", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Student/homepage.html'));
-});
+// app.get("/Student/homepage", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Student/homepage.html'));
+// });
 
 // --------------all room------------
-app.get("/Student/rooms/:id", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Student/search.html'));
-});
+// app.get("/Student/rooms/:id", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Student/search.html'));
+// });
 
 app.get("/Student/getallrooms", function (req, res) {
+    const timeSet = new Set(["8-10 A.M.", "10-12 P.M.", "12-15 P.M.", "15-17 P.M."]);
     const sql = `
     SELECT room.*, reserving.approved, reserving.date_reserving, reserving.time_reserving
     FROM room 
@@ -122,7 +138,7 @@ app.get("/Student/getallrooms", function (req, res) {
 
         // ประมวลผลข้อมูลแต่ละรายการและจัดกลุ่มตามรายละเอียดห้อง
         result.forEach((row) => {
-            const { room_id, room_name, room_people, room_place, time_slots, approved, date_reserving, time_reserving } = row;
+            const { room_id, room_name, room_people, room_place, approved, date_reserving, time_reserving } = row;
 
             if (!roomMap.has(room_id)) {
                 roomMap.set(room_id, {
@@ -137,29 +153,56 @@ app.get("/Student/getallrooms", function (req, res) {
             // เพิ่มรายละเอียดการจองหรือทำเครื่องหมายว่า available
             if (approved !== null) {
                 roomMap.get(room_id).reservations.push({
-                    time_slots,
+                    time_reserving,
                     approved,
                     date_reserving,
                 });
             } else {
                 const today = new Date();
                 const date_show = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-                const availableTimeslots = time_reserving ? 'Available' : time_slots; // ตรวจสอบว่ามีการจองหรือไม่
+                let reservationStatus = 'Available';
 
-                roomMap.get(room_id).reservations.push({
-                    time_slots: availableTimeslots,
-                    approved: availableTimeslots == 'Available' ? 'Available' : 'Available',
-                    date_reserving: date_show,
-                });
+                // ตรวจสอบสถานะการจองของแต่ละเวลา
+                if (timeSet.has(time_reserving)) {
+                    // เช็คสถานะการจองจากฐานข้อมูล
+                    const roomStatusSql = `
+                    SELECT r.approved 
+                    FROM reserving r 
+                    INNER JOIN (
+                        SELECT room_id, MAX(reserving_id) AS latest_reserving_id
+                        FROM reserving 
+                        WHERE room_id = ? AND time_reserving = ?
+                        GROUP BY room_id, time_reserving
+                    ) latest 
+                    ON r.reserving_id = latest.latest_reserving_id`;
+
+                    con.query(roomStatusSql, [room_id, time_reserving], (statusErr, statusResults) => {
+                        if (statusErr) {
+                            console.log(statusErr.message);
+                            return res.status(500).send("DB error");
+                        }
+                        if (statusResults.length > 0) {
+                            reservationStatus = statusResults[0].approved;
+                        }
+                        roomMap.get(room_id).reservations.push({
+                            time_reserving,
+                            approved: reservationStatus,
+                            date_reserving: date_show,
+                        });
+                        res.json(groupedResult);
+                    });
+                } else {
+                    roomMap.get(room_id).reservations.push({
+                        time_reserving: 'Invalid Time', // หรือสิ่งที่ต้องการให้แสดงเมื่อเวลาไม่ถูกต้อง
+                        approved: 'Invalid Time',
+                        date_reserving: date_show,
+                    });
+                }
             }
         });
-
-        // แปลงค่าในแผนที่ (รายละเอียดห้องพร้อมกับการจอง) เป็นอาร์เรย์
-        const groupedResult = Array.from(roomMap.values());
-
-        res.json(groupedResult);
     });
 });
+
 
 app.get("/Student/rooms-list", function (req, res) {
     const sql = `SELECT * FROM room`;
@@ -199,9 +242,9 @@ app.get("/Student/rooms-status", function (req, res) {
 });
 
 // --------------booking room page-----------
-app.get("/Student/booking", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
-});
+// app.get("/Student/booking", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
+// });
 
 // get room for booking room of room_id
 app.get('/Student/booking/:roomId', (req, res) => {
@@ -278,9 +321,9 @@ app.get('/Student/get-booked-times', (req, res) => {
 
 
 // ------------booking status--------------
-app.get("/Student/status", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Student/status.html'));
-});
+// app.get("/Student/status", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
+// });
 
 // booking status for user_id
 app.get("/Student/status_booking", function (req, res) {
@@ -300,32 +343,30 @@ app.get("/Student/status_booking", function (req, res) {
 });
 
 
-// ----------forfile------------
-app.get("/Student/profile", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
-});
+// ----------profile------------
+// app.get("/Student/profile", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
+// });
 
-// update frofile
+// update profile
 app.put('/Student/editprofile/:id', function (req, res) {
-    const userid = req.params.id;
-    const updatedProduct = req.body;
-    bcrypt.hash(updatedProduct.password, 10, function (err, hash) {
+    const id = req.params.id;
+    const updatedUsername = req.body.username;
+
+    const updateSql = `UPDATE user SET username = ? WHERE user_id = ?`;
+
+    con.query(updateSql, [updatedUsername, id], function (err, result) {
         if (err) {
-            return res.status(500).send('Hash error!');
+            console.error(err);
+            return res.status(500).send('Database error!');
         }
-        const updateSql = `UPDATE user SET username = ?, password = ? WHERE user_id = ?`;
-        con.query(updateSql, [updatedProduct.username, hash, userid], function (err, result) {
-            if (err) {
-                console.error(err);
-                return res.status(500).send('Database error!');
-            }
-            if (result.affectedRows !== 1) {
-                return res.status(500).send('More than one row deleted');
-            }
-            res.send({ status: 'success', message: 'Username and Password has been changed!!!' });
-        })
+        if (result.affectedRows !== 1) {
+            return res.status(500).send('More than one row deleted');
+        }
+        res.send({ status: 'success', message: 'Username has been changed!!!' });
     });
 });
+
 
 
 // ===============forget password==============
@@ -335,7 +376,7 @@ app.get('/forgot-password', function (req, res) {
 
 app.post('/forgot-password', function (req, res) {
     const { email } = req.body;
-    const sql = `SELECT email,role FROM user WHERE email = ?`;
+    const sql = `SELECT email,role,user_id FROM user WHERE email = ?`;
     con.query(sql, [email], function (err, result) {
         // check for error
         if (err) {
@@ -347,7 +388,8 @@ app.post('/forgot-password', function (req, res) {
             if (result[0].role == 2 || result[0].role == 3) {
                 res.status(400).send("This is Staff or Lecturer email!");
             } else {
-                res.send(`${result[0].user_id}`);
+                const user_id = result[0].user_id;
+                res.send(`${user_id}`);
             }
         }
     });
@@ -394,7 +436,6 @@ app.post('/forgot-password/reset-password/:id', function (req, res) {
                             return res.status(500).send('More than one row deleted');
                         }
                         res.send('Password has been changed!!!');
-                        res.redirect('/login');
                     })
                 });
             }
@@ -406,16 +447,12 @@ app.post('/forgot-password/reset-password/:id', function (req, res) {
 
 
 
-
-
-
-
 // ==========================STAFF============================
 
 // ----dashboard
-app.get("/Staff/dashboard", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
-});
+// app.get("/Staff/dashboard", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
+// });
 
 //count of Available/Disable room
 app.get("/Staff/dashboard-list/room", function (req, res) {
@@ -465,9 +502,10 @@ app.get("/Staff/activity", function (req, res) {
 });
 
 // ------room list-----
-app.get("/Staff/room-list", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
-});
+// app.get("/Staff/room-list", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
+// });
+
 // getroom detail
 app.get("/Staff/roomslist", function (req, res) {
     const sql = `SELECT * FROM room`;
@@ -507,9 +545,9 @@ app.get("/Staff/rooms-status", function (req, res) {
 });
 
 // -----status------
-app.get("/Staff/reservations", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
-});
+// app.get("/Staff/reservations", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
+// });
 
 // allstatus
 app.get('/Staff/Status', function (req, res) {
@@ -532,9 +570,9 @@ app.get('/Staff/Status', function (req, res) {
 
 
 // -----history------
-app.get("/Staff/history", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
-});
+// app.get("/Staff/history", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
+// });
 
 // ----history ดึงข้อมูลทั้งหมดในตารางของ reserving ดึงชื่อคนจองผ่าน user_id และดึงชื่อห้องผ่าน room_id
 app.get("/Staff/getHistory", function (req, res) {
@@ -554,9 +592,9 @@ app.get("/Staff/getHistory", function (req, res) {
 });
 
 // ------------- Add a new room --------------
-app.get("/Staff/update-room", function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
-});
+// app.get("/Staff/update-room", function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
+// });
 
 app.post("/Staff/update-room", function (req, res) {
     const { roomImg, roomNum, roomLoca, people } = req.body;
@@ -598,9 +636,9 @@ app.post('/Staff/update-room/update-room-status', (req, res) => {
 
 // ===============================TEACHER==========================================
 // -----dashboard-----------
-app.get('/Lecturer/dashboard', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'))
-});
+// app.get('/Lecturer/dashboard', function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'))
+// });
 
 //count of Available/Disable room
 app.get("/Lecturer/dashboard-list/room", function (req, res) {
@@ -652,9 +690,9 @@ app.get("/Lecturer/activity", function (req, res) {
 });
 
 // -----roomlist----
-app.get('/Lecturer/room-list', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
-});
+// app.get('/Lecturer/room-list', function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
+// });
 
 //allroomlist
 app.get("/Lecturer/roomslist", function (req, res) {
@@ -696,9 +734,9 @@ app.get("/Lecturer/rooms-status", function (req, res) {
 });
 
 // ---request---
-app.get('/Lecturer/request', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
-});
+// app.get('/Lecturer/request', function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
+// });
 
 // get allrequest 
 app.get('/Lecturer/allrequest', function (req, res) {
@@ -744,9 +782,9 @@ app.put('/Lecturer/updateStatus/:id', (req, res) => {
 });
 
 // ----status----
-app.get('/Lecturer/status', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
-});
+// app.get('/Lecturer/status', function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
+// });
 
 // get status for teacher who approver
 app.get('/Lecturer/reserving_status', function (req, res) {
@@ -768,9 +806,9 @@ app.get('/Lecturer/reserving_status', function (req, res) {
 });
 
 // -----history----
-app.get('/Lecturer/history', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
-});
+// app.get('/Lecturer/history', function (req, res) {
+//     res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
+// });
 
 // get history for teacher who approver
 app.get("/Lecturer/getHistory", function (req, res) {
@@ -867,8 +905,41 @@ app.get('/Lecturer/dashboard', function (req, res) {
     } else {
         res.redirect('/');
     }
-
 });
+
+app.get('/Lecturer/room-list', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 2) {
+        res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Lecturer/request', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 2) {
+        res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Lecturer/status', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 2) {
+        res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Lecturer/history', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 2) {
+        res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
+    } else {
+        res.redirect('/');
+    }
+});
+
+
 
 // staff page
 app.get('/Staff/dashboard', function (req, res) {
@@ -880,6 +951,38 @@ app.get('/Staff/dashboard', function (req, res) {
 
 });
 
+app.get('/Staff/room-list', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 3) {
+        res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Staff/reservations', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 3) {
+        res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Staff/history', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 3) {
+        res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Staff/update-room', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 3) {
+        res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
 // student page
 app.get('/Student/homepage', function (req, res) {
     if (req.session.role == 1) {
@@ -889,9 +992,62 @@ app.get('/Student/homepage', function (req, res) {
     }
 });
 
+app.get('/Student/rooms/:id', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 1) {
+        res.sendFile(path.join(__dirname, 'views/Student/search.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Student/booking', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 1) {
+        res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get('/Student/status', ensureAuthenticated, function (req, res) {
+    if (req.session.role == 1) {
+        res.sendFile(path.join(__dirname, 'views/Student/status.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+app.get("/Student/profile", ensureAuthenticated, function (req, res) {
+    if (req.session.role == 1) {
+        res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
+    } else {
+        res.redirect('/');
+    }
+});
+
+
+function ensureAuthenticated(req, res, next) {
+    // Check if the user is logged in (authenticated)
+    if (req.session && req.session.user_id) {
+        // If authenticated, continue to the next middleware/route handler
+        return next();
+    } else {
+        // If not authenticated, redirect to the login page or send an unauthorized response
+        res.status(401).redirect('/login'); // You can customize the redirect URL or response as needed
+    }
+}
+
 // ------------ root service ----------
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '/views/login.html'))
+    if (req.session.role == 1) {
+        res.redirect('/Student/homepage');
+    } else if (req.session.role == 2) {
+        res.redirect('/Staff/dashboard');
+    }
+    else if (req.session.role == 3) {
+        res.redirect('/Lecturer/dashboard');
+    } else {
+        res.sendFile(path.join(__dirname, '/views/login.html'))
+    }
 });
 
 const PORT = 3000;
