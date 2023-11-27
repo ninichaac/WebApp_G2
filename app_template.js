@@ -105,16 +105,6 @@ app.post('/register', function (req, res) {
     });
 });
 
-// ------------- homepage--------------
-// app.get("/Student/homepage", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Student/homepage.html'));
-// });
-
-// --------------all room------------
-// app.get("/Student/rooms/:id", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Student/search.html'));
-// });
-
 app.get("/Student/getallrooms", function (req, res) {
     const timeSet = new Set(["8-10 A.M.", "10-12 P.M.", "12-15 P.M.", "15-17 P.M."]);
     const sql = `
@@ -203,7 +193,7 @@ app.get("/Student/getallrooms", function (req, res) {
     });
 });
 
-
+// get room information
 app.get("/Student/rooms-list", function (req, res) {
     const sql = `SELECT * FROM room`;
     con.query(sql, function (err, results) {
@@ -215,6 +205,7 @@ app.get("/Student/rooms-list", function (req, res) {
     });
 });
 
+// get status for timeslots
 app.get("/Student/rooms-status", function (req, res) {
     const roomId = req.query.roomId;
     const timeReserving = req.query.time;
@@ -240,11 +231,6 @@ app.get("/Student/rooms-status", function (req, res) {
         }
     });
 });
-
-// --------------booking room page-----------
-// app.get("/Student/booking", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
-// });
 
 // get room for booking room of room_id
 app.get('/Student/booking/:roomId', (req, res) => {
@@ -303,6 +289,7 @@ app.post("/Student/booking-room", function (req, res) {
     });
 });
 
+// get time booking
 app.get('/Student/get-booked-times', (req, res) => {
     const roomId = req.query.room_id;
     const currentDate = req.query.date;
@@ -318,12 +305,6 @@ app.get('/Student/get-booked-times', (req, res) => {
         }
     });
 });
-
-
-// ------------booking status--------------
-// app.get("/Student/status", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Student/status.html'));
-// });
 
 // booking status for user_id
 app.get("/Student/status_booking", function (req, res) {
@@ -341,12 +322,6 @@ app.get("/Student/status_booking", function (req, res) {
         res.json(results);
     });
 });
-
-
-// ----------profile------------
-// app.get("/Student/profile", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
-// });
 
 // update profile
 app.put('/Student/editprofile/:id', function (req, res) {
@@ -449,11 +424,6 @@ app.post('/forgot-password/reset-password/:id', function (req, res) {
 
 // ==========================STAFF============================
 
-// ----dashboard
-// app.get("/Staff/dashboard", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
-// });
-
 //count of Available/Disable room
 app.get("/Staff/dashboard-list/room", function (req, res) {
     const sql = "SELECT room_status FROM room";
@@ -483,7 +453,6 @@ app.get("/Staff/dashboard-list/reserving", function (req, res) {
     });
 });
 
-
 // recent activity of all teacher for staff
 app.get("/Staff/activity", function (req, res) {
     const sql = `
@@ -500,11 +469,6 @@ app.get("/Staff/activity", function (req, res) {
         res.json(results);
     });
 });
-
-// ------room list-----
-// app.get("/Staff/room-list", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
-// });
 
 // getroom detail
 app.get("/Staff/roomslist", function (req, res) {
@@ -544,11 +508,6 @@ app.get("/Staff/rooms-status", function (req, res) {
     });
 });
 
-// -----status------
-// app.get("/Staff/reservations", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
-// });
-
 // allstatus
 app.get('/Staff/Status', function (req, res) {
     const approver = req.session.username;
@@ -568,12 +527,6 @@ app.get('/Staff/Status', function (req, res) {
     });
 });
 
-
-// -----history------
-// app.get("/Staff/history", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
-// });
-
 // ----history ดึงข้อมูลทั้งหมดในตารางของ reserving ดึงชื่อคนจองผ่าน user_id และดึงชื่อห้องผ่าน room_id
 app.get("/Staff/getHistory", function (req, res) {
     const sql = `
@@ -592,10 +545,6 @@ app.get("/Staff/getHistory", function (req, res) {
 });
 
 // ------------- Add a new room --------------
-// app.get("/Staff/update-room", function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
-// });
-
 app.post("/Staff/update-room", function (req, res) {
     const { roomImg, roomNum, roomLoca, people } = req.body;
     if (!roomImg || !roomNum || !roomLoca || !people) {
@@ -635,10 +584,6 @@ app.post('/Staff/update-room/update-room-status', (req, res) => {
 
 
 // ===============================TEACHER==========================================
-// -----dashboard-----------
-// app.get('/Lecturer/dashboard', function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'))
-// });
 
 //count of Available/Disable room
 app.get("/Lecturer/dashboard-list/room", function (req, res) {
@@ -689,10 +634,6 @@ app.get("/Lecturer/activity", function (req, res) {
     });
 });
 
-// -----roomlist----
-// app.get('/Lecturer/room-list', function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
-// });
 
 //allroomlist
 app.get("/Lecturer/roomslist", function (req, res) {
@@ -732,11 +673,6 @@ app.get("/Lecturer/rooms-status", function (req, res) {
         }
     });
 });
-
-// ---request---
-// app.get('/Lecturer/request', function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
-// });
 
 // get allrequest 
 app.get('/Lecturer/allrequest', function (req, res) {
@@ -781,11 +717,6 @@ app.put('/Lecturer/updateStatus/:id', (req, res) => {
     })
 });
 
-// ----status----
-// app.get('/Lecturer/status', function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
-// });
-
 // get status for teacher who approver
 app.get('/Lecturer/reserving_status', function (req, res) {
     const approver = req.session.username;
@@ -804,11 +735,6 @@ app.get('/Lecturer/reserving_status', function (req, res) {
         res.json(results);
     });
 });
-
-// -----history----
-// app.get('/Lecturer/history', function (req, res) {
-//     res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
-// });
 
 // get history for teacher who approver
 app.get("/Lecturer/getHistory", function (req, res) {
@@ -853,7 +779,6 @@ app.get('/password/:raw', function (req, res) {
     });
 });
 
-
 // ---------- login -----------
 app.get('/login', function (req, res) {
     res.sendFile(path.join(__dirname, '/views/login.html'));
@@ -896,9 +821,10 @@ app.post('/login', function (req, res) {
 });
 
 
-
 // ============ Page routes =================
-// teacher page
+
+//================ teacher page =================
+// dashboard page
 app.get('/Lecturer/dashboard', function (req, res) {
     if (req.session.role == 2) {
         res.sendFile(path.join(__dirname, 'views/Lecturer/dashboard.html'));
@@ -907,6 +833,7 @@ app.get('/Lecturer/dashboard', function (req, res) {
     }
 });
 
+// room list page
 app.get('/Lecturer/room-list', ensureAuthenticated, function (req, res) {
     if (req.session.role == 2) {
         res.sendFile(path.join(__dirname, 'views/Lecturer/roomlist.html'))
@@ -915,6 +842,7 @@ app.get('/Lecturer/room-list', ensureAuthenticated, function (req, res) {
     }
 });
 
+// request page
 app.get('/Lecturer/request', ensureAuthenticated, function (req, res) {
     if (req.session.role == 2) {
         res.sendFile(path.join(__dirname, 'views/Lecturer/request.html'))
@@ -923,6 +851,7 @@ app.get('/Lecturer/request', ensureAuthenticated, function (req, res) {
     }
 });
 
+// status page
 app.get('/Lecturer/status', ensureAuthenticated, function (req, res) {
     if (req.session.role == 2) {
         res.sendFile(path.join(__dirname, 'views/Lecturer/lecturer_status.html'))
@@ -931,6 +860,7 @@ app.get('/Lecturer/status', ensureAuthenticated, function (req, res) {
     }
 });
 
+// history page
 app.get('/Lecturer/history', ensureAuthenticated, function (req, res) {
     if (req.session.role == 2) {
         res.sendFile(path.join(__dirname, 'views/Lecturer/history.html'))
@@ -941,7 +871,8 @@ app.get('/Lecturer/history', ensureAuthenticated, function (req, res) {
 
 
 
-// staff page
+//================ staff page ===================
+// dashboard page
 app.get('/Staff/dashboard', function (req, res) {
     if (req.session.role == 3) {
         res.sendFile(path.join(__dirname, 'views/Staff/dashboard.html'));
@@ -951,6 +882,7 @@ app.get('/Staff/dashboard', function (req, res) {
 
 });
 
+// room list page
 app.get('/Staff/room-list', ensureAuthenticated, function (req, res) {
     if (req.session.role == 3) {
         res.sendFile(path.join(__dirname, 'views/Staff/roomlist.html'));
@@ -959,6 +891,7 @@ app.get('/Staff/room-list', ensureAuthenticated, function (req, res) {
     }
 });
 
+// status page
 app.get('/Staff/reservations', ensureAuthenticated, function (req, res) {
     if (req.session.role == 3) {
         res.sendFile(path.join(__dirname, 'views/Staff/status_staff.html'));
@@ -967,6 +900,7 @@ app.get('/Staff/reservations', ensureAuthenticated, function (req, res) {
     }
 });
 
+// history page
 app.get('/Staff/history', ensureAuthenticated, function (req, res) {
     if (req.session.role == 3) {
         res.sendFile(path.join(__dirname, 'views/Staff/history.html'));
@@ -975,6 +909,7 @@ app.get('/Staff/history', ensureAuthenticated, function (req, res) {
     }
 });
 
+// update room page
 app.get('/Staff/update-room', ensureAuthenticated, function (req, res) {
     if (req.session.role == 3) {
         res.sendFile(path.join(__dirname, 'views/Staff/UpdateRoom.html'));
@@ -983,7 +918,10 @@ app.get('/Staff/update-room', ensureAuthenticated, function (req, res) {
     }
 });
 
-// student page
+
+
+//================ student page ===================
+// home page
 app.get('/Student/homepage', function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/homepage.html'))
@@ -992,6 +930,7 @@ app.get('/Student/homepage', function (req, res) {
     }
 });
 
+// room list page
 app.get('/Student/rooms/:id', ensureAuthenticated, function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/search.html'));
@@ -1000,6 +939,7 @@ app.get('/Student/rooms/:id', ensureAuthenticated, function (req, res) {
     }
 });
 
+// booking page
 app.get('/Student/booking', ensureAuthenticated, function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/booking.html'));
@@ -1008,6 +948,7 @@ app.get('/Student/booking', ensureAuthenticated, function (req, res) {
     }
 });
 
+// status booking page
 app.get('/Student/status', ensureAuthenticated, function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/status.html'));
@@ -1016,6 +957,7 @@ app.get('/Student/status', ensureAuthenticated, function (req, res) {
     }
 });
 
+// profile page
 app.get("/Student/profile", ensureAuthenticated, function (req, res) {
     if (req.session.role == 1) {
         res.sendFile(path.join(__dirname, 'views/Student/profile.html'));
