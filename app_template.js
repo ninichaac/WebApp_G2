@@ -481,7 +481,7 @@ app.post('/Staff/update-room/update-room-status', (req, res) => {
 
 //count of Available/Disable room
 app.get("/Lecturer/dashboard-list/room", function (req, res) {
-    const sql = "SELECT * FROM room";
+    const sql = "SELECT room_status FROM room";
     con.query(sql, function (err, results) {
         if (err) {
             console.error(err);
@@ -581,6 +581,7 @@ app.get('/Lecturer/allrequest', function (req, res) {
             return res.status(500).send("DB error");
         }
         res.json(results);
+        console.log(results)
     });
 });
 
@@ -590,8 +591,7 @@ app.put('/Lecturer/updateStatus/:id', (req, res) => {
     const message = req.body.message;
     const approved = req.body.approved;
     const approver = req.session.username;
-    console.log(approver)
-    console.log(reservingId)
+
     if (!approver) {
         return res.status(400).send('Unauthorized: Approver field cannot be empty');
     }

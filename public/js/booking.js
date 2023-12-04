@@ -146,12 +146,12 @@ async function bookRoom() {
                     title: 'Booked!',
                     text: 'Your booking has been submitted and is awaiting approval.',
                     icon: 'success',
-                    timer: 2000,
+                    timer: 1000,
                     showConfirmButton: false
                 });
                 setTimeout(function () {
                     window.location.replace(data);
-                }, 2000);
+                }, 1000);
             }
             else if (response.status == 401) {
                 const data = await response.text();

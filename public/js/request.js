@@ -43,7 +43,6 @@ async function requestlist() {
     const response = await fetch('/Lecturer/allrequest');
     if (response.ok) {
       const data = await response.json();
-      console.log(data)
       let rows = '';
       for (const request of data) {
         rows += `<tr>`;
