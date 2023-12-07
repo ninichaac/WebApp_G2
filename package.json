@@ -1,9 +1,17 @@
 {
+  "name": "webapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "scripts": {
-    "serve": "npx json-server --watch product.json --port 9000 -H 127.0.0.1"
+    "serve": "npx json-server --watch product.json --port 9000 -H 127.0.0.1",
+    "dev": "nodemon app_template.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "json": "^11.0.0",
@@ -12,14 +20,10 @@
     "memorystore": "^1.6.7",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.3",
-    "nodemon": "^3.0.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0"
   },
-  "name": "webapp",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
 }
